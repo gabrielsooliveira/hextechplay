@@ -30,5 +30,7 @@ return [
     "lorequestion_title" => "LoreQuestion",
     "lorequestion_desc" => "Test your knowledge about Runeterra lore",
     "wordlol_title" => "WordLoL",
-    "wordlol_desc" => "Guess the hidden word related to the League of Legends universe."
+    "wordlol_desc" => "Guess the hidden word related to the League of Legends universe.",
+    "clickchallenger_title" => "ClickChallenger",
+    "clickchallenger_desc" => "Test your reaction speed and accuracy in the ClickChallenger game."
 ];

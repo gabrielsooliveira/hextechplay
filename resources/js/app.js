@@ -24,7 +24,7 @@ createInertiaApp({
     resolve: name => {
         const pages = import.meta.glob('./Pages/**/*.vue');
         const importPage = pages[`./Pages/${name}.vue`];
-        if (!importPage) throw new Error(`Page not found: ./Pages/${name}.vue`);
+        if (!importPage) throw new Error(`Page not found: ${name}`);
         return importPage().then(module => {
             module.default.layout = LayoutSite;
             return module;
