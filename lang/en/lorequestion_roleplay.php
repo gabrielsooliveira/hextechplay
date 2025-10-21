@@ -20,7 +20,7 @@ return [
     'correct_answer' => 'Correct answer',
 
     'play_again' => 'Play Again',
-    'back_to_menu' => 'Back to Menu',
+    'back_to_games' => 'Back to Games',
 
     'no_questions_found' => 'No questions found.',
     'try_again' => 'Try Again',

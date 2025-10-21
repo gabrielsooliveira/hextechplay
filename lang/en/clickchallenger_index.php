@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'page_title' => 'LoreQuestion',
+    'page_title' => 'ClickChallenger',
     'page_description' => 'LoreQuestion is a HextechPlay game about questions involving the Runeterra universe',
     'page_keywords' => 'HextechPlay, LoL mini games, online games, League of Legends quiz, runeterra, fun, quick games',
     'og_title' => 'HextechPlay – Mini Games and League of Legends Quizzes',
@@ -16,11 +16,11 @@ return [
     'coming_soon' => 'Coming soon',
 
     'config_text' => 'Game settings',
-    'mode_phrase' => 'Choose difficulty',
+    'mode_phrase' => 'Choose mode',
     'mode' => [
-        'one' => 'Easy',
-        'two' => 'Medium',
-        'three' => 'Hard',
+        'one' => 'Classic',
+        'two' => 'Relax',
+        'three' => 'Survival',
     ],
 
     'guide' => [

@@ -1,9 +1,9 @@
 <script setup>
-import axios from 'axios';
-import { Head, Link } from '@inertiajs/vue3';
-import { ref, onMounted } from 'vue';
+import axios from "axios";
+import { Head, Link } from "@inertiajs/vue3";
+import { ref, onMounted } from "vue";
 
-const selectedCarousel = ref('correct');
+const selectedCarousel = ref("correct");
 const loading = ref(true);
 const questions = ref([]);
 const currentQuestionIndex = ref(0);
@@ -25,7 +25,7 @@ function startTimer() {
             timer.value--;
         } else {
             clearInterval(timerInterval.value);
-            submitAnswer('timeout');
+            submitAnswer("timeout");
         }
     }, 1000);
 }
@@ -37,7 +37,7 @@ function stopTimer() {
 async function fetchQuestions() {
     loading.value = true;
     try {
-        const response = await axios.get(route('startGame'));
+        const response = await axios.get(route("startGame"));
         questions.value = response.data.questions;
         if (questions.value.length > 0) {
             currentQuestion.value = questions.value[currentQuestionIndex.value];
@@ -56,7 +56,7 @@ function submitAnswer(answerValue) {
 
     userAnswers.value.push({
         question_id: currentQuestion.value.uuid,
-        answer: answerValue
+        answer: answerValue,
     });
 
     if (currentQuestionIndex.value + 1 >= questions.value.length) {
@@ -77,8 +77,8 @@ function submitAnswer(answerValue) {
 async function finishGame() {
     isSubmitting.value = true;
     try {
-        const response = await axios.post(route('finishGame'), {
-            answers: userAnswers.value
+        const response = await axios.post(route("finishGame"), {
+            answers: userAnswers.value,
         });
         gameResults.value = response.data;
         gameFinished.value = true;
@@ -96,143 +96,329 @@ onMounted(() => {
 
 <template>
     <Head>
-        <title>{{ $t('page_title') }}</title>
+        <title>{{ $t("page_title") }}</title>
         <meta name="description" :content="$t('page_description')" />
         <meta name="keywords" :content="$t('page_keywords')" />
         <meta property="og:title" :content="$t('og_title')" />
         <meta property="og:description" :content="$t('og_description')" />
-        <meta property="og:url" content="https://hextechplay.com/lorequestion/roleplay" />
-        <link rel="canonical" href="https://hextechplay.com/lorequestion/roleplay" />
+        <meta
+            property="og:url"
+            content="https://hextechplay.com/lorequestion/roleplay"
+        />
+        <link
+            rel="canonical"
+            href="https://hextechplay.com/lorequestion/roleplay"
+        />
     </Head>
 
-    <div class="d-flex justify-content-center align-items-center py-5 min-vh-100">
+    <div
+        class="d-flex justify-content-center align-items-center py-5 min-vh-100"
+    >
         <div class="container">
             <div class="row justify-content-center">
                 <div class="mt-3">
-                    <div v-if="loading" class="text-center text-secondary text-light animate-fade">
+                    <div
+                        v-if="loading"
+                        class="text-center text-secondary text-light animate-fade"
+                    >
                         <div class="spinner-border mb-3" role="status"></div>
-                        <p>{{ $t('loading_questions') }}</p>
+                        <p>{{ $t("loading_questions") }}</p>
                     </div>
 
-                    <div v-else-if="gameFinished" class="card shadow-lg p-4 animate-fade">
-                        <h2 class="card-title text-center fw-bold mb-4">{{ $t('game_finished') }}</h2>
+                    <div
+                        v-else-if="gameFinished"
+                        class="card shadow-lg p-4 animate-fade"
+                    >
+                        <h2 class="card-title text-center fw-bold mb-4">
+                            {{ $t("game_finished") }}
+                        </h2>
                         <div class="card-body row">
                             <div class="col-lg-3">
-                                <h5 class="mb-3">{{ $t('results') }}</h5>
+                                <h5 class="mb-3">{{ $t("results") }}</h5>
                                 <ul class="list-group list-group-flush mb-4">
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <span>{{ $t('total_questions') }}</span>
-                                        <strong>{{ gameResults.total_questions }}</strong>
+                                    <li
+                                        class="list-group-item d-flex justify-content-between"
+                                    >
+                                        <span>{{ $t("total_questions") }}</span>
+                                        <strong>{{
+                                            gameResults.total_questions
+                                        }}</strong>
                                     </li>
 
-                                    <li class="list-group-item d-flex justify-content-between text-success fw-bold hover-glow"
-                                        role="button" tabindex="0"
-                                        @click="selectedCarousel = 'correct'">
-                                        <span>{{ $t('correct_answers') }}</span>
-                                        <strong>{{ gameResults.correct_answers.length }}</strong>
+                                    <li
+                                        class="list-group-item d-flex justify-content-between text-success fw-bold hover-glow"
+                                        role="button"
+                                        tabindex="0"
+                                        @click="selectedCarousel = 'correct'"
+                                    >
+                                        <span>{{ $t("correct_answers") }}</span>
+                                        <strong>{{
+                                            gameResults.correct_answers.length
+                                        }}</strong>
                                     </li>
 
-                                    <li class="list-group-item d-flex justify-content-between text-danger fw-bold hover-glow"
-                                        role="button" tabindex="0"
-                                        v-if="gameResults.wrong_answers.length > 0"
-                                        @click="selectedCarousel = 'wrong'">
-                                        <span>{{ $t('wrong_answers') }}</span>
-                                        <strong>{{ gameResults.wrong_answers.length }}</strong>
+                                    <li
+                                        class="list-group-item d-flex justify-content-between text-danger fw-bold hover-glow"
+                                        role="button"
+                                        tabindex="0"
+                                        v-if="
+                                            gameResults.wrong_answers.length > 0
+                                        "
+                                        @click="selectedCarousel = 'wrong'"
+                                    >
+                                        <span>{{ $t("wrong_answers") }}</span>
+                                        <strong>{{
+                                            gameResults.wrong_answers.length
+                                        }}</strong>
                                     </li>
                                 </ul>
                             </div>
 
                             <div class="col-lg-9">
                                 <h5 class="mb-3">
-                                    {{ $t(selectedCarousel === 'correct' ? 'questions_you_got_right' : 'questions_you_got_wrong') }}
+                                    {{
+                                        $t(
+                                            selectedCarousel === "correct"
+                                                ? "questions_you_got_right"
+                                                : "questions_you_got_wrong"
+                                        )
+                                    }}
                                 </h5>
 
-                                <div v-if="selectedCarousel === 'correct' && gameResults.correct_answers.length > 0">
-                                    <div id="carouselCorrect" class="carousel slide px-5" data-bs-ride="carousel">
+                                <div
+                                    v-if="
+                                        selectedCarousel === 'correct' &&
+                                        gameResults.correct_answers.length > 0
+                                    "
+                                >
+                                    <div
+                                        id="carouselCorrect"
+                                        class="carousel slide px-5"
+                                        data-bs-ride="carousel"
+                                    >
                                         <div class="carousel-inner">
-                                            <div v-for="(answer, index) in gameResults.correct_answers" :key="'correct-' + index" :class="['carousel-item', { active: index === 0 }]">
-                                                <div class="px-auto text-center">
-                                                    <p>{{ answer.question_text }}</p>
-                                                    <p class="text-success"><strong>{{ $t('your_answer') }}:</strong> {{ answer.user_answer }}</p>
+                                            <div
+                                                v-for="(
+                                                    answer, index
+                                                ) in gameResults.correct_answers"
+                                                :key="'correct-' + index"
+                                                :class="[
+                                                    'carousel-item',
+                                                    { active: index === 0 },
+                                                ]"
+                                            >
+                                                <div
+                                                    class="px-auto text-center"
+                                                >
+                                                    <p>
+                                                        {{
+                                                            answer.question_text
+                                                        }}
+                                                    </p>
+                                                    <p class="text-success">
+                                                        <strong
+                                                            >{{
+                                                                $t(
+                                                                    "your_answer"
+                                                                )
+                                                            }}:</strong
+                                                        >
+                                                        {{ answer.user_answer }}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
-                                        <button class="carousel-control-prev text-white" type="button" data-bs-target="#carouselCorrect" data-bs-slide="prev">
-                                            <font-awesome-icon icon="fa-solid fa-caret-left" size="xl" />
+                                        <button
+                                            class="carousel-control-prev text-white"
+                                            type="button"
+                                            data-bs-target="#carouselCorrect"
+                                            data-bs-slide="prev"
+                                        >
+                                            <font-awesome-icon
+                                                icon="fa-solid fa-caret-left"
+                                                size="xl"
+                                            />
                                         </button>
-                                        <button class="carousel-control-next text-white" type="button" data-bs-target="#carouselCorrect" data-bs-slide="next">
-                                            <font-awesome-icon icon="fa-solid fa-caret-right" size="xl" />
+                                        <button
+                                            class="carousel-control-next text-white"
+                                            type="button"
+                                            data-bs-target="#carouselCorrect"
+                                            data-bs-slide="next"
+                                        >
+                                            <font-awesome-icon
+                                                icon="fa-solid fa-caret-right"
+                                                size="xl"
+                                            />
                                         </button>
                                     </div>
                                 </div>
 
-                                <div v-if="selectedCarousel === 'wrong' && gameResults.wrong_answers.length > 0">
-                                    <div id="carouselWrong" class="carousel slide px-5" data-bs-ride="carousel">
+                                <div
+                                    v-if="
+                                        selectedCarousel === 'wrong' &&
+                                        gameResults.wrong_answers.length > 0
+                                    "
+                                >
+                                    <div
+                                        id="carouselWrong"
+                                        class="carousel slide px-5"
+                                        data-bs-ride="carousel"
+                                    >
                                         <div class="carousel-inner">
-                                            <div v-for="(error, index) in gameResults.wrong_answers" :key="'wrong-' + index" :class="['carousel-item', { active: index === 0 }]">
-                                                <div class="px-auto text-center">
-                                                    <p><strong>{{ $t('your_answer') }}:</strong> <span class="text-decoration-line-through">{{ error.user_answer === 'timeout' ? $t('timeout') : error.user_answer }}</span></p>
-                                                    <p><strong>{{ $t('correct_answer') }}:</strong> <span class="text-success">{{ error.correct_answer }}</span></p>
+                                            <div
+                                                v-for="(
+                                                    error, index
+                                                ) in gameResults.wrong_answers"
+                                                :key="'wrong-' + index"
+                                                :class="[
+                                                    'carousel-item',
+                                                    { active: index === 0 },
+                                                ]"
+                                            >
+                                                <div
+                                                    class="px-auto text-center"
+                                                >
+                                                    <p>
+                                                        <strong
+                                                            >{{
+                                                                $t(
+                                                                    "your_answer"
+                                                                )
+                                                            }}:</strong
+                                                        >
+                                                        <span
+                                                            class="text-decoration-line-through"
+                                                            >{{
+                                                                error.user_answer ===
+                                                                "timeout"
+                                                                    ? $t(
+                                                                          "timeout"
+                                                                      )
+                                                                    : error.user_answer
+                                                            }}</span
+                                                        >
+                                                    </p>
+                                                    <p>
+                                                        <strong
+                                                            >{{
+                                                                $t(
+                                                                    "correct_answer"
+                                                                )
+                                                            }}:</strong
+                                                        >
+                                                        <span
+                                                            class="text-success"
+                                                            >{{
+                                                                error.correct_answer
+                                                            }}</span
+                                                        >
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
-                                        <button class="carousel-control-prev text-white" type="button" data-bs-target="#carouselWrong" data-bs-slide="prev">
-                                            <font-awesome-icon icon="fa-solid fa-caret-left" size="xl" />
+                                        <button
+                                            class="carousel-control-prev text-white"
+                                            type="button"
+                                            data-bs-target="#carouselWrong"
+                                            data-bs-slide="prev"
+                                        >
+                                            <font-awesome-icon
+                                                icon="fa-solid fa-caret-left"
+                                                size="xl"
+                                            />
                                         </button>
-                                        <button class="carousel-control-next text-white" type="button" data-bs-target="#carouselWrong" data-bs-slide="next">
-                                            <font-awesome-icon icon="fa-solid fa-caret-right" size="xl" />
+                                        <button
+                                            class="carousel-control-next text-white"
+                                            type="button"
+                                            data-bs-target="#carouselWrong"
+                                            data-bs-slide="next"
+                                        >
+                                            <font-awesome-icon
+                                                icon="fa-solid fa-caret-right"
+                                                size="xl"
+                                            />
                                         </button>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="mt-4 d-flex flex-column flex-md-row justify-content-center align-items-center gap-2">
-                                <Link class="btn btn-warning btn-lg w-100" :href="route('lorequestion.roleplay')">
-                                    {{ $t('play_again') }}
+                            <div
+                                class="mt-4 d-flex flex-column flex-md-row justify-content-center align-items-center gap-2"
+                            >
+                                <Link
+                                    class="btn btn-warning btn-lg w-100"
+                                    :href="route('lorequestion.roleplay')"
+                                >
+                                    {{ $t("play_again") }}
                                 </Link>
-                                <Link class="btn btn-dark btn-lg w-100" :href="route('lorequestion.index')">
-                                    {{ $t('back_to_menu') }}
+                                <Link
+                                    class="btn btn-dark btn-lg w-100"
+                                    :href="route('lorequestion.index')"
+                                >
+                                    {{ $t("back_to_games") }}
                                 </Link>
                             </div>
                         </div>
                     </div>
 
-                    <div v-else-if="!currentQuestion" class="card shadow-lg p-4 animate-fade text-center">
-                        <p class="text-danger mb-3">{{ $t('no_questions_found') }}</p>
-                        <button class="btn btn-primary" @click="fetchQuestions">{{ $t('try_again') }}</button>
+                    <div
+                        v-else-if="!currentQuestion"
+                        class="card shadow-lg p-4 animate-fade text-center"
+                    >
+                        <p class="text-danger mb-3">
+                            {{ $t("no_questions_found") }}
+                        </p>
+                        <button class="btn btn-primary" @click="fetchQuestions">
+                            {{ $t("try_again") }}
+                        </button>
                     </div>
 
                     <div v-else class="card shadow-lg p-4 animate-fade">
                         <div class="card-body">
                             <div class="container py-4 text-center">
-                                <p class="fw-bold fs-3 mb-4">{{ currentQuestion.text }}</p>
-                                <div class="d-inline-block py-2 rounded-1 bg-warning text-white fs-4 shadow col-3 col-lg-1">
-                                    {{ timer }}{{ $t('seconds') }}
+                                <p class="fw-bold fs-3 mb-4">
+                                    {{ currentQuestion.text }}
+                                </p>
+                                <div
+                                    class="d-inline-block py-2 rounded-1 bg-warning text-white fs-4 shadow col-3 col-lg-1"
+                                >
+                                    {{ timer }}{{ $t("seconds") }}
                                 </div>
 
-                                <div class="row g-3 justify-content-center mt-3">
+                                <div
+                                    class="row g-3 justify-content-center mt-3"
+                                >
                                     <div
-                                        v-for="(option, index) in currentQuestion.options"
+                                        v-for="(
+                                            option, index
+                                        ) in currentQuestion.options"
                                         :key="index"
                                         class="col-12 col-sm-10 col-md-6"
                                     >
                                         <button
-                                        type="button"
-                                        class="btn btn-dark w-100 py-3 fs-5 rounded-3 shadow text-wrap"
-                                        :class="{
-                                            'btn-primary': !selectedAnswer,
-                                            'btn-success': isSubmitting && selectedAnswer === option,
-                                            'btn-secondary': selectedAnswer && !isSubmitting,
-                                        }"
-                                        :disabled="isSubmitting"
-                                        @click="submitAnswer(option)"
+                                            type="button"
+                                            class="btn btn-dark w-100 py-3 fs-5 rounded-3 shadow text-wrap"
+                                            :class="{
+                                                'btn-primary': !selectedAnswer,
+                                                'btn-success':
+                                                    isSubmitting &&
+                                                    selectedAnswer === option,
+                                                'btn-secondary':
+                                                    selectedAnswer &&
+                                                    !isSubmitting,
+                                            }"
+                                            :disabled="isSubmitting"
+                                            @click="submitAnswer(option)"
                                         >
-                                        {{ option }}
+                                            {{ option }}
                                         </button>
                                     </div>
                                 </div>
                                 <div v-if="isSubmitting" class="mt-4">
-                                    <div class="spinner-border text-warning" role="status"></div>
+                                    <div
+                                        class="spinner-border text-warning"
+                                        role="status"
+                                    ></div>
                                 </div>
                             </div>
                         </div>
@@ -242,4 +428,3 @@ onMounted(() => {
         </div>
     </div>
 </template>
-

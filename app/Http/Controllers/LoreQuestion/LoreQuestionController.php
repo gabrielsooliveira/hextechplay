@@ -11,14 +11,23 @@ use App\UseCases\LoreQuestion\FinishGameUseCase;
 use App\UseCases\LoreQuestion\StartRoleplayGameUseCase;
 use App\UseCases\LoreQuestion\StartGameUseCase;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Route;
 
-class RoleplayController extends Controller
+class LoreQuestionController extends Controller
 {
     public function __construct(
         protected FinishGameUseCase $finishGameUseCase,
         protected StartRoleplayGameUseCase $startRoleplayGame,
         protected StartGameUseCase $startGame
     ) {}
+
+    public function index()
+    {
+
+        return inertia('Menu', [
+            'currentRoute' => Route::currentRouteName()
+        ]);
+    }
 
     public function roleplay(SettingsRequest $request)
     {

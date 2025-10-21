@@ -7,7 +7,7 @@ import homeImage2 from "@/assets/images/home-image-2.png";
 import logo from "@/assets/images/icon.png";
 import LolQuestionBackground from "@/assets/images/lorequestion.png";
 import WordLoLBackground from "@/assets/images/wordlol.png";
-import { useI18n } from 'vue-i18n';
+import { useI18n } from "vue-i18n";
 
 // Configurar i18n
 const { t } = useI18n();
@@ -16,25 +16,41 @@ const isVisible = ref(false);
 const statsVisible = ref(false);
 
 const stats = ref([
-    { value: 250, target: 10000, label: t('stats.active_players'), icon: "users" },
-    { value: 2, target: 2, label: t('stats.mini_games'), icon: "gamepad" },
-    { value: 850, target: 1000000, label: t('stats.matches_played'), icon: "trophy" },
-    { value: 90, target: 99, label: t('stats.satisfaction'), icon: "star", suffix: "%" },
+    {
+        value: 250,
+        target: 10000,
+        label: t("stats.active_players"),
+        icon: "users",
+    },
+    { value: 3, target: 3, label: t("stats.mini_games"), icon: "gamepad" },
+    {
+        value: 850,
+        target: 1000000,
+        label: t("stats.matches_played"),
+        icon: "trophy",
+    },
+    {
+        value: 90,
+        target: 99,
+        label: t("stats.satisfaction"),
+        icon: "star",
+        suffix: "%",
+    },
 ]);
 
 const featuredGames = ref([
     {
         id: 1,
-        title: t('featured_games.lorequestion.title'),
-        description: t('featured_games.lorequestion.description'),
+        title: t("featured_games.lorequestion.title"),
+        description: t("featured_games.lorequestion.description"),
         image: LolQuestionBackground,
         route: "lorequestion.index",
         players: 2500,
     },
     {
         id: 2,
-        title: t('featured_games.wordlol.title'),
-        description: t('featured_games.wordlol.description'),
+        title: t("featured_games.wordlol.title"),
+        description: t("featured_games.wordlol.description"),
         image: WordLoLBackground,
         route: "wordlol.game",
         players: 1800,
@@ -44,22 +60,22 @@ const featuredGames = ref([
 const recentAchievements = ref([
     {
         id: 1,
-        title: t('achievements.master_lore.title'),
-        description: t('achievements.master_lore.description'),
+        title: t("achievements.master_lore.title"),
+        description: t("achievements.master_lore.description"),
         icon: "crown",
         rarity: "legendary",
     },
     {
         id: 2,
-        title: t('achievements.speedster.title'),
-        description: t('achievements.speedster.description'),
+        title: t("achievements.speedster.title"),
+        description: t("achievements.speedster.description"),
         icon: "bolt",
         rarity: "epic",
     },
     {
         id: 3,
-        title: t('achievements.explorer.title'),
-        description: t('achievements.explorer.description'),
+        title: t("achievements.explorer.title"),
+        description: t("achievements.explorer.description"),
         icon: "map",
         rarity: "rare",
     },
@@ -100,7 +116,7 @@ onMounted(() => {
 
 <template>
     <Head>
-        <title>{{ $t('page_title') }}</title>
+        <title>{{ $t("page_title") }}</title>
         <meta name="description" :content="$t('page_description')" />
         <meta name="keywords" :content="$t('page_keywords')" />
         <meta property="og:title" :content="$t('og_title')" />
@@ -115,27 +131,47 @@ onMounted(() => {
             background: `linear-gradient(rgba(17, 24, 39, 0.8), rgba(15, 23, 42, 0.9)), url(${heroBackground}) center / cover no-repeat`,
             minHeight: '100vh',
             paddingTop: 'env(safe-area-inset-top)',
-        }">
+        }"
+    >
         <div class="container position-relative">
             <!-- Logo -->
             <div class="hero-logo mb-4" :class="{ 'fade-in': isVisible }">
-                <img :src="logo" class="img-fluid hover-scale" width="280" alt="HextechPlay Logo" />
+                <img
+                    :src="logo"
+                    class="img-fluid hover-scale"
+                    width="280"
+                    alt="HextechPlay Logo"
+                />
             </div>
 
             <!-- Title & Subtitle -->
-            <h1 class="hero-title display-1 fw-bold mb-4 text-glow slide-in-left delay-200"
-                :class="{ 'fade-in': isVisible }">
+            <h1
+                class="hero-title display-1 fw-bold mb-4 text-glow slide-in-left delay-200"
+                :class="{ 'fade-in': isVisible }"
+            >
                 {{ $t("play_phrase") }}
             </h1>
-            <p class="hero-subtitle lead mb-5 slide-in-right delay-300" :class="{ 'fade-in': isVisible }">
+            <p
+                class="hero-subtitle lead mb-5 slide-in-right delay-300"
+                :class="{ 'fade-in': isVisible }"
+            >
                 {{ $t("play_phrase_sub") }}
             </p>
 
             <!-- CTA Buttons -->
-            <div class="hero-actions slide-in-left delay-400" :class="{ 'fade-in': isVisible }">
-                <Link :href="route('menu')" class="btn btn-accent btn-lg me-3 mb-3 hover-lift fw-semibold">
-                <font-awesome-icon icon="fas fa-play" class="me-2"></font-awesome-icon>
-                {{ $t("play_button") }}
+            <div
+                class="hero-actions slide-in-left delay-400"
+                :class="{ 'fade-in': isVisible }"
+            >
+                <Link
+                    :href="route('games')"
+                    class="btn btn-accent btn-lg me-3 mb-3 hover-lift fw-semibold"
+                >
+                    <font-awesome-icon
+                        icon="fas fa-play"
+                        class="me-2"
+                    ></font-awesome-icon>
+                    {{ $t("play_button") }}
                 </Link>
             </div>
         </div>
@@ -145,19 +181,33 @@ onMounted(() => {
         <div class="container">
             <div class="row text-center mb-5">
                 <div class="col-12">
-                    <h2 class="section-title display-4 fw-bold text-gradient mb-3">
-                        {{ $t('featured_games_title') }}
+                    <h2
+                        class="section-title display-4 fw-bold text-gradient mb-3"
+                    >
+                        {{ $t("featured_games_title") }}
                     </h2>
                     <p class="section-subtitle text-light opacity-75 lead">
-                        {{ $t('featured_games_subtitle') }}
+                        {{ $t("featured_games_subtitle") }}
                     </p>
                 </div>
             </div>
             <div class="row justify-content-center">
-                <div class="col-lg-4 col-md-6 mb-4" v-for="(game, index) in featuredGames" :key="game.id">
-                    <div class="card card-game h-100 fade-in" :class="`delay-${(index + 1) * 100}`">
+                <div
+                    class="col-lg-4 col-md-6 mb-4"
+                    v-for="(game, index) in featuredGames"
+                    :key="game.id"
+                >
+                    <div
+                        class="card card-game h-100 fade-in"
+                        :class="`delay-${(index + 1) * 100}`"
+                    >
                         <div class="card-img-wrapper position-relative">
-                            <img :src="game.image" class="card-img-top" :alt="game.title" loading="lazy" />
+                            <img
+                                :src="game.image"
+                                class="card-img-top"
+                                :alt="game.title"
+                                loading="lazy"
+                            />
                         </div>
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-2">
@@ -165,15 +215,30 @@ onMounted(() => {
                                     {{ game.title }}
                                 </h5>
                             </div>
-                            <p class="card-text text-light text-truncate opacity-75 mb-3">
+                            <p
+                                class="card-text text-light text-truncate opacity-75 mb-3"
+                            >
                                 {{ game.description }}
                             </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-secondary"><font-awesome-icon icon="fas fa-users" class="me-1"></font-awesome-icon>
+                            <div
+                                class="d-flex justify-content-between align-items-center"
+                            >
+                                <small class="text-secondary"
+                                    ><font-awesome-icon
+                                        icon="fas fa-users"
+                                        class="me-1"
+                                    ></font-awesome-icon>
                                     {{ game.players.toLocaleString() }}
-                                    {{ $t('players') }}</small>
-                                <Link :href="route(game.route)" class="btn btn-sm btn-accent"><font-awesome-icon icon="fas fa-play"></font-awesome-icon>
-                                {{ $t('play_game_button') }}</Link>
+                                    {{ $t("players") }}</small
+                                >
+                                <Link
+                                    :href="route(game.route)"
+                                    class="btn btn-sm btn-accent"
+                                    ><font-awesome-icon
+                                        icon="fas fa-play"
+                                    ></font-awesome-icon>
+                                    {{ $t("play_game_button") }}</Link
+                                >
                             </div>
                         </div>
                     </div>
@@ -186,22 +251,37 @@ onMounted(() => {
         <div class="container">
             <div class="row text-center mb-5">
                 <div class="col-12">
-                    <h2 class="section-title display-4 fw-bold text-gradient mb-3">
-                        {{ $t('community_title') }}
+                    <h2
+                        class="section-title display-4 fw-bold text-gradient mb-3"
+                    >
+                        {{ $t("community_title") }}
                     </h2>
                     <p class="section-subtitle text-light opacity-75 lead">
-                        {{ $t('community_subtitle') }}
+                        {{ $t("community_subtitle") }}
                     </p>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-3 col-md-6 mb-4" v-for="(stat, index) in stats" :key="stat.label">
-                    <div class="stat-card text-center h-100 fade-in" :class="`delay-${(index + 1) * 100}`">
+                <div
+                    class="col-lg-3 col-md-6 mb-4"
+                    v-for="(stat, index) in stats"
+                    :key="stat.label"
+                >
+                    <div
+                        class="stat-card text-center h-100 fade-in"
+                        :class="`delay-${(index + 1) * 100}`"
+                    >
                         <div class="stat-icon-large mb-3">
-                            <font-awesome-icon :icon="`fas fa-${stat.icon}`" class="text-accent"></font-awesome-icon>
+                            <font-awesome-icon
+                                :icon="`fas fa-${stat.icon}`"
+                                class="text-accent"
+                            ></font-awesome-icon>
                         </div>
-                        <div class="stat-value-large text-gradient fw-bold mb-2">
-                            {{ Math.floor(stat.value).toLocaleString() }}{{ stat.suffix || "" }}
+                        <div
+                            class="stat-value-large text-gradient fw-bold mb-2"
+                        >
+                            {{ Math.floor(stat.value).toLocaleString()
+                            }}{{ stat.suffix || "" }}
                         </div>
                         <div class="stat-label-large text-light">
                             {{ stat.label }}
@@ -216,44 +296,65 @@ onMounted(() => {
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0">
-                    <img :src="homeImage2" class="img-fluid hover-scale" :alt="$t('home_about_image_alt')"
-                        loading="lazy" />
+                    <img
+                        :src="homeImage2"
+                        class="img-fluid hover-scale"
+                        :alt="$t('home_about_image_alt')"
+                        loading="lazy"
+                    />
                 </div>
                 <div class="col-lg-6 order-lg-1">
-                    <h2 class="section-title display-4 fw-bold text-gradient mb-4">
+                    <h2
+                        class="section-title display-4 fw-bold text-gradient mb-4"
+                    >
                         {{ $t("home_about_title") }}
                     </h2>
-                    <p class="section-description text-light opacity-75 lead mb-4">
+                    <p
+                        class="section-description text-light opacity-75 lead mb-4"
+                    >
                         {{ $t("home_about_description") }}
                     </p>
                     <div class="features-list">
-                        <div class="feature-item d-flex align-items-center mb-3" v-for="feat in [
-                            {
-                                icon: 'gamepad',
-                                text: $t('home_feature_free_games'),
-                            },
-                            {
-                                icon: 'globe',
-                                text: $t('home_feature_lol_universe'),
-                            },
-                            {
-                                icon: 'mobile-alt',
-                                text: $t('home_feature_multiplatform'),
-                            },
-                            {
-                                icon: 'bolt',
-                                text: $t('home_feature_updates'),
-                            },
-                        ]" :key="feat.text">
+                        <div
+                            class="feature-item d-flex align-items-center mb-3"
+                            v-for="feat in [
+                                {
+                                    icon: 'gamepad',
+                                    text: $t('home_feature_free_games'),
+                                },
+                                {
+                                    icon: 'globe',
+                                    text: $t('home_feature_lol_universe'),
+                                },
+                                {
+                                    icon: 'mobile-alt',
+                                    text: $t('home_feature_multiplatform'),
+                                },
+                                {
+                                    icon: 'bolt',
+                                    text: $t('home_feature_updates'),
+                                },
+                            ]"
+                            :key="feat.text"
+                        >
                             <div class="feature-icon me-3">
-                                <font-awesome-icon :icon="`fas fa-${feat.icon}`" class="text-accent"></font-awesome-icon>
+                                <font-awesome-icon
+                                    :icon="`fas fa-${feat.icon}`"
+                                    class="text-accent"
+                                ></font-awesome-icon>
                             </div>
                             <span class="text-light">{{ feat.text }}</span>
                         </div>
                     </div>
-                    <Link :href="route('menu')" class="btn btn-accent btn-lg hover-lift mt-3">
-                    <font-awesome-icon icon="fas fa-rocket" class="me-2"></font-awesome-icon>
-                    {{ $t('get_started_button') }}
+                    <Link
+                        :href="route('games')"
+                        class="btn btn-accent btn-lg hover-lift mt-3"
+                    >
+                        <font-awesome-icon
+                            icon="fas fa-rocket"
+                            class="me-2"
+                        ></font-awesome-icon>
+                        {{ $t("get_started_button") }}
                     </Link>
                 </div>
             </div>
@@ -265,21 +366,31 @@ onMounted(() => {
         <div class="container">
             <div class="row text-center mb-5">
                 <div class="col-12">
-                    <h2 class="section-title display-4 fw-bold text-gradient mb-3">
-                       {{ $t('achievements_title') }}
+                    <h2
+                        class="section-title display-4 fw-bold text-gradient mb-3"
+                    >
+                        {{ $t("achievements_title") }}
                     </h2>
                     <p class="section-subtitle text-light opacity-75 lead">
-                        {{ $t('achievements_subtitle') }}
+                        {{ $t("achievements_subtitle") }}
                     </p>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-4 col-md-6 mb-4" v-for="(achievement, index) in recentAchievements"
-                    :key="achievement.id">
-                    <div class="card card-achievement h-100 unlocked fade-in" :class="`delay-${(index + 1) * 100}`">
+                <div
+                    class="col-lg-4 col-md-6 mb-4"
+                    v-for="(achievement, index) in recentAchievements"
+                    :key="achievement.id"
+                >
+                    <div
+                        class="card card-achievement h-100 unlocked fade-in"
+                        :class="`delay-${(index + 1) * 100}`"
+                    >
                         <div class="card-body text-center">
                             <div class="achievement-icon mb-3">
-                                <font-awesome-icon :icon="`fas fa-${achievement.icon}`"></font-awesome-icon>
+                                <font-awesome-icon
+                                    :icon="`fas fa-${achievement.icon}`"
+                                ></font-awesome-icon>
                             </div>
                             <h5 class="achievement-title text-light mb-2">
                                 {{ achievement.title }}
@@ -289,11 +400,11 @@ onMounted(() => {
                             </p>
                             <span :class="`badge rarity-${achievement.rarity}`">
                                 {{
-                                    achievement.rarity === 'legendary'
-                                        ? $t('rarity_legendary')
-                                        : achievement.rarity === 'epic'
-                                            ? $t('rarity_epic')
-                                            : $t('rarity_rare')
+                                    achievement.rarity === "legendary"
+                                        ? $t("rarity_legendary")
+                                        : achievement.rarity === "epic"
+                                        ? $t("rarity_epic")
+                                        : $t("rarity_rare")
                                 }}
                             </span>
                         </div>

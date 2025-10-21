@@ -14,14 +14,9 @@ class PageController extends Controller
         return inertia('Home');
     }
 
-    public function menu()
+    public function games()
     {
-        return inertia('Menu');
-    }
-
-    public function loreQuestion()
-    {
-        return inertia('LoreQuestion/Index');
+        return inertia('Games');
     }
 
     public function privatePolicy()

@@ -1,338 +1,783 @@
 <script setup>
-import { ref, reactive, computed, onMounted } from "vue";
-import axios from "axios";
+import { usePage } from "@inertiajs/vue3";
+import { ref, reactive, computed, onUnmounted, nextTick } from "vue";
 
-/* Subcomponents */
-import GameArea from "@/js/Components/ClickChallenger/GameArea.vue";
-import StatsPanel from "@/js/Components/ClickChallenger/StatsPanel.vue";
-import Leaderboard from "@/js/Components/ClickChallenger/Leaderboard.vue";
-import AchievementToast from "@/js/Components/ClickChallenger/AchievementToast.vue";
-import ControlsPanel from "@/js/Components/ClickChallenger/ControlsPanel.vue";
-import GameOverModal from "@/js/Components/ClickChallenger/GameOverModal.vue";
-// import CustomizationPanel from "@/js/Components/ClickChallenger/CustomizationPanel.vue";
+const page = usePage();
+const MODE_CONFIGS = {
+    classic: {
+        time: 60,
+        lives: Infinity,
+        spawnRate: 600,
+        redChance: 0.35,
+        scoreMultiplier: 1.0,
+        name: "Clássico",
+        description: "60 segundos para pontuar o máximo.",
+    },
+    zen: {
+        time: Infinity,
+        lives: Infinity,
+        spawnRate: 1000,
+        redChance: 0.15,
+        scoreMultiplier: 0.8,
+        name: "Zen",
+        description: "Tempo infinito, relaxe e acerte.",
+    },
+    survival: {
+        time: Infinity,
+        lives: 3,
+        spawnRate: 450,
+        redChance: 0.5,
+        scoreMultiplier: 1.5,
+        name: "Sobrevivência",
+        description: "3 vidas, cuidado com os círculos vermelhos!",
+    },
+};
 
-const gameArea = ref(null);
-const leaderboard = ref(null);
-const achToast = ref(null);
+const MAX_COMBO = 5;
+const GAME_AREA_WIDTH = 1200;
+const GAME_AREA_HEIGHT = 420;
 
-/* State */
-const score = ref(0);
-const timeLeft = ref(60);
-const combo = ref(1);
-const gameActive = ref(false);
-const gamePaused = ref(false);
-const showGameOver = ref(false);
-const highScore = ref(
-    parseInt(localStorage.getItem("clickRushHighScore") || "0", 10)
-);
-const currentPlayerId = ref(localStorage.getItem("clickRushPlayerId") || "");
-const mode = ref("classic");
-const lives = ref(3);
-const seededRng = ref(null);
+// Estado do Jogo (Reactive)
+const game = reactive({
+    mode: page.props.mode, // Padrão inicial
+    score: 0,
+    combo: 1,
+    lives: MODE_CONFIGS[page.props.mode].lives,
+    timeLeft: MODE_CONFIGS[page.props.mode].time,
+    gameActive: false,
+    gamePaused: false,
+    showGameOver: false,
+    stats: {
+        targetsHit: 0,
+        targetsMissed: 0,
+        totalTargets: 0,
+        reactionTimes: [],
+        scoreHistory: [],
+    },
 
-/* Stats */
-const stats = reactive({
-    targetsHit: 0,
-    targetsMissed: 0,
-    totalTargets: 0,
-    reactionTimes: [],
-    scoreHistory: [],
-    gameStartTime: null,
+    highScores: {
+        classic: parseInt(
+            localStorage.getItem("clickRushHighScore_classic") || "0",
+            10
+        ),
+        zen: parseInt(
+            localStorage.getItem("clickRushHighScore_zen") || "0",
+            10
+        ),
+        survival: parseInt(
+            localStorage.getItem("clickRushHighScore_survival") || "0",
+            10
+        ),
+    },
 });
 
-/* Customization */
-const customization = reactive(
-    JSON.parse(
-        localStorage.getItem("clickRushCustomization") ||
-            JSON.stringify({
-                theme: "default",
-                shape: "circle",
-                colors: {
-                    pink: "#ff9a9e",
-                    blue: "#1F51FF",
-                    green: "#7CFC00",
-                    gold: "gold",
-                    violet: "#9400D3",
-                    multi: "#FF69B4",
-                },
-            })
-    )
-);
+// Alvos e Popups
+const areaRef = ref(null);
+let nextTargetId = 1;
+const targets = reactive([]);
+const popups = reactive([]);
+let spawnIntervalId = null;
+let timerInterval = null;
+const audioLoaded = ref(false);
 
-/* Computed displays */
-const timeDisplay = computed(() =>
-    mode.value === "zen" ? "∞" : timeLeft.value
-);
-const difficultyLabel = ref("FÁCIL");
-const dailySeedDisplay = ref("—");
-const comboDisplay = computed(() => combo.value);
+// --- Lógica de Áudio (Tone.js) ---
 
-function updateDifficultyLabel(label) {
-    difficultyLabel.value = label;
+function initializeAudio() {
+    if (typeof Tone === "undefined") {
+        console.warn("Tone.js não carregado. Áudio desabilitado.");
+        audioLoaded.value = false;
+        return;
+    }
+
+    try {
+        const hitSynth = new Tone.Synth({
+            oscillator: { type: "sine" },
+            envelope: { attack: 0.005, decay: 0.1, sustain: 0.0, release: 0.1 },
+        }).toDestination();
+
+        const missSynth = new Tone.NoiseSynth({
+            noise: { type: "pink" },
+            envelope: { attack: 0.005, decay: 0.2, sustain: 0.0, release: 0.1 },
+        }).toDestination();
+
+        const redHitSynth = new Tone.Synth({
+            oscillator: { type: "square" },
+            envelope: { attack: 0.005, decay: 0.1, sustain: 0.0, release: 0.5 },
+        }).toDestination();
+
+        window.hitSynth = hitSynth;
+        window.missSynth = missSynth;
+        window.redHitSynth = redHitSynth;
+        audioLoaded.value = true;
+    } catch (error) {
+        console.error("Erro ao inicializar o áudio com Tone.js:", error);
+        audioLoaded.value = false;
+    }
 }
 
-/* Lifecycle */
-onMounted(() => {
-    // load leaderboard
-    leaderboard.value?.load();
+function playSound(type) {
+    if (!audioLoaded.value) return;
+    try {
+        if (type === "hit" && window.hitSynth) {
+            window.hitSynth.triggerAttackRelease("C5", "8n");
+        } else if (type === "miss" && window.missSynth) {
+            window.missSynth.triggerAttackRelease("4n");
+        } else if (type === "red" && window.redHitSynth) {
+            window.redHitSynth.triggerAttackRelease("F#3", "4n");
+        }
+    } catch (e) {
+        console.error("Erro ao tocar áudio:", e);
+    }
+}
+
+// --- COMPUTED PROPERTIES ---
+
+const timeDisplay = computed(() => (game.mode === "zen" ? "∞" : game.timeLeft));
+const accuracy = computed(() => {
+    const total = game.stats.totalTargets || 0;
+    return total > 0
+        ? Math.round((game.stats.targetsHit / total) * 100) + "%"
+        : "0%";
 });
+const avgReaction = computed(() => {
+    const arr = game.stats.reactionTimes || [];
+    return arr.length
+        ? Math.round(arr.reduce((a, b) => a + b, 0) / arr.length)
+        : 0;
+});
+const recentScores = computed(() => game.stats.scoreHistory.slice(-20));
+const maxScore = computed(() => Math.max(0, ...game.stats.scoreHistory));
+const currentHighScore = computed(() => game.highScores[game.mode] || 0);
 
-/* Methods (bridge between GameArea and overall app) */
-function initGame() {
-    // Reset basic state and ask GameArea to start spawning
-    mode.value = mode.value || "classic";
-    if (mode.value === "zen") {
-        timeLeft.value = Infinity;
-    } else if (mode.value === "survival") {
-        lives.value = 3;
-    } else {
-        timeLeft.value = 60;
-    }
+// --- LÓGICA DO TEMPORIZADOR ---
 
-    score.value = 0;
-    combo.value = 1;
-    stats.targetsHit = 0;
-    stats.targetsMissed = 0;
-    stats.totalTargets = 0;
-    stats.reactionTimes = [];
-    stats.scoreHistory = [];
-    stats.gameStartTime = Date.now();
-    gameActive.value = true;
-    gamePaused.value = false;
-    showGameOver.value = false;
+function startTimer() {
+    clearInterval(timerInterval);
+    if (game.mode !== "classic") return;
 
-    // delegate to game area
-    gameArea.value.start(mode.value);
-    // timer for timeLeft if not zen
-    if (mode.value !== "zen") {
-        // simple timer handled inside GameArea or here; for clarity we handle it here:
-        const tick = () => {
-            if (!gameActive.value || gamePaused.value || mode.value === "zen")
-                return;
-            timeLeft.value--;
-            // update difficulty label via event (GameArea could emit)
-            if (timeLeft.value <= 0) {
-                endGame();
+    timerInterval = setInterval(() => {
+        if (!game.gameActive || game.gamePaused) return;
+
+        if (game.timeLeft > 0) {
+            game.timeLeft--;
+        } else {
+            endGame();
+        }
+    }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+}
+
+// --- LÓGICA DE SPAWN E ALVOS ---
+
+function createTarget() {
+    if (!game.gameActive || game.gamePaused) return;
+
+    const { redChance } = MODE_CONFIGS[game.mode];
+    const isRed = Math.random() < redChance;
+
+    // Tamanhos e Pontos
+    const size = Math.floor(Math.random() * 20) + 40; // 40px a 60px
+    const points = isRed ? 0 : size > 50 ? 25 : 10;
+    const comboInc = isRed ? 0 : 0.5;
+
+    // Posição
+    const x = Math.floor(Math.random() * (GAME_AREA_WIDTH - size));
+    const y = Math.floor(Math.random() * (GAME_AREA_HEIGHT - size));
+
+    const color = isRed ? "#dc3545" : "#198754";
+
+    const newTarget = {
+        id: nextTargetId++,
+        x,
+        y,
+        size,
+        color,
+        points,
+        comboInc,
+        type: isRed ? "red" : "normal",
+        createdAt: Date.now(),
+    };
+
+    targets.push(newTarget);
+    game.stats.totalTargets++;
+
+    // Lógica de Miss: Remove o alvo automaticamente após 1.5s
+    setTimeout(() => {
+        const index = targets.findIndex((t) => t.id === newTarget.id);
+        if (index !== -1) {
+            // Se o alvo não for o vermelho (no survival, o miss não conta como red hit)
+            if (targets[index].type === "normal") {
+                handleMiss();
             }
-            // adapt difficulty for visual
-            if (timeLeft.value < 15) updateDifficultyLabel("EXTREMO");
-            else if (timeLeft.value < 35) updateDifficultyLabel("DIFÍCIL");
-            else if (timeLeft.value < 50) updateDifficultyLabel("MÉDIO");
-            else updateDifficultyLabel("FÁCIL");
-        };
-        // clear existing interval stored on component
-        clearInterval(window.__clickrush_timer);
-        window.__clickrush_timer = setInterval(tick, 1000);
-    }
+            targets.splice(index, 1);
+        }
+    }, 1500);
+}
+
+function startSpawning(mode = "classic") {
+    stopSpawning();
+    const { spawnRate } = MODE_CONFIGS[mode];
+    spawnIntervalId = setInterval(createTarget, spawnRate);
+}
+
+function stopSpawning() {
+    if (spawnIntervalId) clearInterval(spawnIntervalId);
+    spawnIntervalId = null;
+    targets.splice(0, targets.length);
 }
 
 function togglePause() {
-    if (!gameActive.value) return;
-    gamePaused.value = !gamePaused.value;
-    if (gamePaused.value) {
-        gameArea.value.pause();
-    } else {
-        gameArea.value.resume();
+    if (!game.gameActive) return;
+    game.gamePaused = !game.gamePaused;
+    game.gamePaused ? stopSpawning() : startSpawning(game.mode);
+}
+
+// --- FUNÇÃO CENTRAL DE JOGO (HIT & MISS) ---
+
+function handleMiss() {
+    game.stats.targetsMissed++;
+    game.combo = 1;
+    playSound("miss");
+
+    if (game.mode === "survival" && game.gameActive && !game.gamePaused) {
+        game.lives--;
+        if (game.lives <= 0) endGame();
     }
 }
 
-function onHit(payload) {
-    // payload: { points, type, reactionTime }
-    const now = Date.now();
-    const points = payload.points || 0;
-    // apply combo
-    if (points > 0) {
-        score.value += Math.round(points * combo.value);
-        stats.targetsHit++;
-        stats.scoreHistory.push(score.value);
-        combo.value = Math.min(5, combo.value + (payload.comboInc || 0));
+function onTargetClick(target) {
+    if (!game.gameActive || game.gamePaused) return;
+
+    // 1. Calcular tempo de reação
+    const reactionTime = Date.now() - target.createdAt;
+    game.stats.reactionTimes.push(reactionTime);
+
+    // 2. Remover o alvo clicado
+    const targetIndex = targets.findIndex((t) => t.id === target.id);
+    if (targetIndex !== -1) {
+        targets.splice(targetIndex, 1);
     } else {
-        // penalty
-        combo.value = 1;
-        stats.targetsMissed++;
-        if (mode.value === "survival") {
-            lives.value--;
-            if (lives.value <= 0) endGame();
+        return; // Já foi removido (timeout)
+    }
+
+    const config = MODE_CONFIGS[game.mode];
+    let scoreGain = 0;
+    let popUpText = "";
+    let popUpColor = "";
+
+    if (target.type === "red") {
+        // CÍRCULO VERMELHO (PENALIDADE)
+        game.combo = 1;
+        playSound("red");
+
+        switch (game.mode) {
+            case "classic":
+                game.score = Math.max(0, game.score - 15);
+                popUpText = "-15 Pts";
+                popUpColor = "text-danger";
+                break;
+            case "survival":
+                game.lives--;
+                popUpText = "VIDA PERDIDA!";
+                popUpColor = "text-danger";
+                if (game.lives <= 0) {
+                    endGame();
+                }
+                break;
+            case "zen":
+                // Penalidade mínima no Zen (embora o alvo vermelho dificilmente apareça)
+                game.score = Math.max(0, game.score - 5);
+                popUpText = "-5 Pts";
+                popUpColor = "text-danger";
+                break;
         }
+    } else {
+        // CÍRCULO NORMAL (ACERTO)
+        scoreGain = Math.round(
+            target.points * game.combo * config.scoreMultiplier
+        );
+        game.score += scoreGain;
+        game.combo = Math.min(MAX_COMBO, game.combo + target.comboInc);
+        game.stats.targetsHit++;
+
+        popUpText = `+${scoreGain}` + (game.combo > 1 ? ` x${game.combo}` : "");
+        popUpColor = game.combo >= MAX_COMBO ? "text-success" : "text-primary";
+        playSound("hit");
     }
-    // record reaction
-    if (payload.reactionTime) stats.reactionTimes.push(payload.reactionTime);
 
-    // show achievement toast if present
-    if (payload.achievement) achToast.value?.show(payload.achievement);
+    game.stats.scoreHistory.push(game.score);
 
-    updateStats();
-}
+    // Adiciona Popup
+    popups.push({
+        id: Date.now(),
+        x: target.x + target.size / 2,
+        y: target.y + target.size / 2,
+        text: popUpText,
+        color: popUpColor,
+    });
 
-function onMiss() {
-    // simple miss
-    stats.targetsMissed++;
-    combo.value = 1;
-    if (mode.value === "survival") {
-        lives.value--;
-        if (lives.value <= 0) endGame();
-    }
-    updateStats();
-}
-
-function onSpawned() {
-    stats.totalTargets++;
-    updateStats();
-}
-
-function updateStats() {
-    // update computed UI or child panels by passing `stats` reactive object
-    // compute accuracy or avg reaction
-    // implemented in StatsPanel which receives :stats
+    // Remove o popup após um tempo
+    setTimeout(() => {
+        popups.shift();
+    }, 800);
 }
 
 function endGame() {
-    gameActive.value = false;
-    clearInterval(window.__clickrush_timer);
-    gameArea.value.stop();
-    showGameOver.value = true;
-    // save highscore locally
-    if (score.value > highScore.value) {
-        highScore.value = score.value;
-        localStorage.setItem("clickRushHighScore", String(highScore.value));
-    }
-    // refresh leaderboard list
-    leaderboard.value?.load();
-}
+    game.gameActive = false;
+    stopTimer();
+    stopSpawning();
+    game.showGameOver = true;
 
-async function saveScore({ name }) {
-    // called from Leaderboard component (will emit save-score)
-    try {
-        const payload = { name, score: highScore.value, mode: mode.value };
-        // Endpoint expected: POST /api/scores
-        await axios.post("/api/scores", payload);
-        // ask leaderboard to refresh
-        leaderboard.value?.load();
-    } catch (e) {
-        console.warn("Erro ao salvar score", e);
+    // Atualiza High Score
+    const modeKey = game.mode;
+    if (game.score > game.highScores[modeKey]) {
+        game.highScores[modeKey] = game.score;
+        localStorage.setItem(`clickRushHighScore_${modeKey}`, game.score);
     }
 }
 
-function onModeChange() {
-    // update daily seed if necessary
-    if (mode.value === "daily") {
-        const today = new Date().toISOString().slice(0, 10);
-        dailySeedDisplay.value = today;
-        // seeded PRNG could be passed to GameArea
+// --- INICIALIZAÇÃO E REINÍCIO ---
+
+function initGame(selectedMode) {
+    // Inicializa o áudio na primeira interação
+    if (typeof Tone !== "undefined" && !audioLoaded.value) {
+        Tone.start().then(initializeAudio);
+    }
+
+    const modeKey = selectedMode || game.mode;
+    const modeConfig = MODE_CONFIGS[modeKey];
+
+    // Reset de estado
+    game.mode = modeKey;
+    game.score = 0;
+    game.combo = 1;
+    game.lives = modeConfig.lives;
+    game.timeLeft = modeConfig.time;
+    game.stats.targetsHit = 0;
+    game.stats.targetsMissed = 0;
+    game.stats.totalTargets = 0;
+    game.stats.reactionTimes.splice(0, game.stats.reactionTimes.length);
+    game.stats.scoreHistory.splice(0, game.stats.scoreHistory.length);
+    game.gameActive = true;
+    game.gamePaused = false;
+    game.showGameOver = false;
+
+    // HighScore garantido
+    game.highScores.classic = parseInt(
+        localStorage.getItem("clickRushHighScore_classic") || "0",
+        10
+    );
+    game.highScores.zen = parseInt(
+        localStorage.getItem("clickRushHighScore_zen") || "0",
+        10
+    );
+    game.highScores.survival = parseInt(
+        localStorage.getItem("clickRushHighScore_survival") || "0",
+        10
+    );
+
+    startSpawning(modeKey);
+
+    if (modeKey === "classic") {
+        startTimer();
     } else {
-        dailySeedDisplay.value = "—";
+        stopTimer();
     }
 }
+
+function handlePlayAgain() {
+    game.showGameOver = false;
+    nextTick(() => initGame(game.mode));
+}
+
+onUnmounted(() => {
+    stopSpawning();
+    stopTimer();
+    // Limpeza do Tone.js se necessário
+    if (typeof Tone !== "undefined" && audioLoaded.value) {
+        Tone.Transport.stop();
+    }
+});
 </script>
 
 <template>
-    <Head>
-        <!-- <title>{{ $t("page_title") }}</title>
-        <meta name="description" :content="$t('page_description')" />
-        <meta name="keywords" :content="$t('page_keywords')" />
-        <meta property="og:title" :content="$t('og_title')" />
-        <meta property="og:description" :content="$t('og_description')" /> -->
-        <meta property="og:url" content="https://hextechplay.com" />
-        <link rel="canonical" href="https://hextechplay.com" />
-    </Head>
+    <!-- O componente é envolvido em uma div que simula o container centralizado -->
+    <div class="container padding-navbar">
+        <!-- Título e Subtítulo -->
+        <div class="text-center text-white mb-4">
+            <h1 class="display-3 fw-bold text-white">Click Challenger</h1>
+            <p class="lead text-secondary">
+                {{ MODE_CONFIGS[game.mode].description }}
+            </p>
+        </div>
 
-    <div class="padding-navbar container">
-        <!-- <div
-            class="top-controls d-flex flex-wrap justify-content-center gap-2 mb-3 mt-5"
+        <!-- Modo Ativo / Status do Jogo -->
+        <div
+            class="d-flex justify-content-between p-3 mb-3 bg-dark text-white rounded shadow-sm"
         >
-            <label class="mode-info me-2 align-self-center">Modo:</label>
-            <select
-                class="form-select w-auto"
-                v-model="mode"
-                @change="onModeChange"
-            >
-                <option value="classic">Clássico</option>
-                <option value="zen">Zen (sem tempo)</option>
-                <option value="survival">Sobrevivência (3 vidas)</option>
-                <option value="daily">Desafio Diário</option>
-            </select>
-
-            <div
-                class="mode-info badge bg-dark text-white align-self-center"
-                v-if="mode === 'survival'"
-            >
-                Vidas: <strong class="ms-1">{{ lives }}</strong>
+            <div class="text-start">
+                <small class="text-muted">Modo</small>
+                <h4 class="mb-0 text-warning">
+                    {{ MODE_CONFIGS[game.mode].name }}
+                </h4>
             </div>
-
-            <div class="mode-info badge bg-dark text-white align-self-center">
-                Seed Diária:
-                <strong class="ms-1">{{ dailySeedDisplay }}</strong>
+            <div class="text-center">
+                <small class="text-muted">Pontuação</small>
+                <h4 class="mb-0 text-success">{{ game.score }}</h4>
             </div>
-        </div> -->
-
-        <achievement-toast ref="achToast" />
-
-        <div class="main-content d-lg-flex gap-4 mt-5">
-            <div class="flex-fill">
-                <game-area
-                    ref="gameArea"
-                    :customization="customization"
-                    :mode="mode"
-                    :game-active="gameActive"
-                    :game-paused="gamePaused"
-                    @hit="onHit"
-                    @miss="onMiss"
-                    @spawned="onSpawned"
-                    class="game-area mb-3"
-                />
-
-                <controls-panel
-                    :game-active="gameActive"
-                    :game-paused="gamePaused"
-                    @start="initGame"
-                    @pause="togglePause"
-                />
-            </div>
-
-            <div class="bg-card p-3 rounded">
-                <div
-                    class="difficulty-box p-2 mb-3 bg-card rounded text-center"
+            <div class="text-end">
+                <small class="text-muted" v-if="game.mode === 'classic'"
+                    >Tempo</small
                 >
-                    Modo: <strong id="difficulty">{{ difficultyLabel }}</strong>
-                </div>
-                <div class="d-flex gap-3 mb-3 stats">
-                    <div class="stat-box p-3 rounded text-center bg-card">
-                        <div class="stat-value h3">{{ score }}</div>
-                        <div class="stat-label small">Pontuação</div>
-                    </div>
-                    <div class="stat-box p-3 rounded text-center bg-card">
-                        <div class="stat-value h3">{{ timeDisplay }}</div>
-                        <div class="stat-label small">Tempo</div>
-                    </div>
-                    <div class="stat-box p-3 rounded text-center bg-card">
-                        <div class="stat-value h3">{{ combo }}x</div>
-                        <div class="stat-label small">Multiplicador</div>
-                    </div>
-                </div>
-                <h6>
-                    Recorde Atual: <strong>{{ highScore }}</strong>
-                </h6>
-                <p class="mb-0">• Círculos verdes: +10 pontos (rápidos)</p>
-                <p class="mb-0">• Círculos azuis: +5 pontos</p>
-                <p class="mb-0">• Círculos rosas: +3 pontos (lentos)</p>
-                <p class="mb-0">• Dourados: Power-up 2x por 10s</p>
-                <p class="mb-0">• Roxos: Slow Motion</p>
-                <p class="mb-0">• Rosa-claro: Multi-hit</p>
-                <p class="mb-0">• Vermelhos: penalidade (evite clicar!)</p>
+                <small class="text-muted" v-else-if="game.mode === 'survival'"
+                    >Vidas</small
+                >
+                <small class="text-muted" v-else>Tempo</small>
+
+                <h4
+                    class="mb-0"
+                    :class="{
+                        'text-danger':
+                            game.mode === 'survival' && game.lives <= 1,
+                        'text-info': game.mode !== 'survival',
+                    }"
+                >
+                    <span v-if="game.mode === 'classic'"
+                        >{{ timeDisplay }}s</span
+                    >
+                    <span v-else-if="game.mode === 'survival'">{{
+                        game.lives
+                    }}</span>
+                    <span v-else>∞</span>
+                </h4>
             </div>
         </div>
 
-        <stats-panel
-            class="mt-5"
-            :stats="stats"
-            :score-history="stats.scoreHistory"
-        />
+        <!-- Área do Jogo -->
+        <div
+            ref="areaRef"
+            class="game-area position-relative rounded-3 bg-light shadow-lg border border-primary"
+            :style="{
+                margin: '0 auto',
+                overflow: 'hidden',
+            }"
+            @click="handleMiss"
+        >
+            <!-- targets are rendered dynamically as absolutely positioned divs -->
+            <div
+                v-for="t in targets"
+                :key="t.id"
+                class="target position-absolute rounded-circle shadow-sm d-flex align-items-center justify-content-center fw-bold text-white cursor-pointer"
+                :style="{
+                    left: t.x + 'px',
+                    top: t.y + 'px',
+                    width: t.size + 'px',
+                    height: t.size + 'px',
+                    backgroundColor: t.color,
+                    transition: 'transform 0.1s',
+                    cursor: 'pointer',
+                    zIndex: 10,
+                    border: t.type === 'red' ? '3px solid #ff7a7a' : 'none',
+                }"
+                @click.stop="onTargetClick(t)"
+            >
+                <font-awesome-icon
+                    :icon="
+                        t.type === 'normal' ? 'fas fa-circle' : 'fas fa-times'
+                    "
+                ></font-awesome-icon>
+            </div>
 
-        <game-over-modal
-            v-if="showGameOver"
-            :score="score"
-            :high-score="highScore"
-            @play-again="initGame"
-        />
+            <!-- points popups -->
+            <div
+                v-for="p in popups"
+                :key="p.id"
+                class="points-popup position-absolute fw-bolder"
+                :class="[p.color]"
+                :style="{
+                    left: p.x + 'px',
+                    top: p.y + 'px',
+                    transform: 'translate(-50%, -50%)',
+                    fontSize: '1.2rem',
+                    animation: 'popup-animate 0.8s ease-out forwards',
+                    pointerEvents: 'none',
+                    zIndex: 20,
+                }"
+            >
+                {{ p.text }}
+            </div>
+
+            <!-- Game Paused Overlay -->
+            <div
+                v-if="game.gamePaused"
+                class="position-absolute top-0 start-0 w-100 h-100 bg-black bg-opacity-75 d-flex align-items-center justify-content-center"
+                style="z-index: 50"
+            >
+                <span class="text-white h3">PAUSADO</span>
+            </div>
+
+            <!-- Game Over Modal -->
+            <div
+                v-if="game.showGameOver"
+                class="position-absolute top-0 start-0 w-100 h-100 bg-black bg-opacity-90 d-flex align-items-center justify-content-center"
+                style="z-index: 100"
+            >
+                <div
+                    class="modal-content bg-dark text-white py-3 w-75 rounded-3 shadow-lg border border-warning"
+                >
+                    <div class="text-center">
+                        <h2 class="mb-2 text-warning display-4 fw-bold">
+                            FIM DE JOGO!
+                        </h2>
+                        <p class="lead mb-1">
+                            Pontuação Final:
+                            <strong class="text-success">{{
+                                game.score
+                            }}</strong>
+                        </p>
+                        <p class="text-muted small">
+                            Recorde no modo
+                            {{ MODE_CONFIGS[game.mode].name }}:
+                            <strong class="text-info">{{
+                                currentHighScore
+                            }}</strong>
+                        </p>
+
+                        <button
+                            class="btn btn-primary btn-lg mt-3"
+                            @click="handlePlayAgain"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                fill="currentColor"
+                                class="bi bi-arrow-repeat me-2"
+                                viewBox="0 0 16 16"
+                            >
+                                <path
+                                    d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.397 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-6.191 0a.25.25 0 0 0-.192.41L5.676 9.77a.25.25 0 0 0 .397 0l1.966-2.36a.25.25 0 0 0-.192-.41H5.343z"
+                                />
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M8 3c-1.552 0-2.94.707-3.857 1.758 1.487-.828 3.328-.828 4.815 0C11.459 5.861 12 7.152 12 8.5c0 1.348-.541 2.639-1.472 3.742-.931 1.103-2.32 1.758-3.857 1.758C4.541 14 3 12.518 3 10.5h1.25c.571 0 1.05.343 1.25.834.195.485.474.908.793 1.266C6.892 13.914 7.429 14 8 14c1.233 0 2.39-.516 3.166-1.391.777-.875 1.284-2.193 1.284-3.609 0-1.416-.507-2.734-1.284-3.609C10.39 3.516 9.233 3 8 3z"
+                                />
+                            </svg>
+                            Jogar Novamente
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controles e Seleção de Modo -->
+        <div
+            class="d-flex flex-column flex-sm-row gap-2 justify-content-center mt-3 mb-4"
+        >
+            <button
+                class="btn btn-success flex-fill fw-bold shadow text-white"
+                :disabled="game.gameActive"
+                @click="initGame(game.mode)"
+            >
+                Iniciar ({{ MODE_CONFIGS[game.mode].name }})
+            </button>
+
+            <button
+                class="btn btn-outline-secondary text-white flex-fill shadow"
+                :disabled="!game.gameActive || game.showGameOver"
+                @click="togglePause()"
+            >
+                <font-awesome-icon
+                    :icon="game.gamePaused ? 'fas fa-play' : 'fas fa-pause'"
+                ></font-awesome-icon>
+                <span v-if="game.gamePaused"> Continuar</span>
+                <span v-else> Pausar</span>
+            </button>
+        </div>
+
+        <!-- Painel de Estatísticas -->
+        <div class="stats-panel bg-dark p-4 rounded-3 shadow-lg text-white">
+            <h5 class="mb-3 text-white fw-bold">📊 Estatísticas Detalhadas</h5>
+            <div class="row g-3 text-center">
+                <div class="col-6 col-sm-3">
+                    <div class="p-2 bg-primary rounded">
+                        <small class="text-muted d-block">Combo</small>
+                        <div class="h5 fw-bold text-info">
+                            x{{ game.combo }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-3">
+                    <div class="p-2 bg-primary rounded">
+                        <small class="text-muted d-block">Precisão</small>
+                        <div class="h5 fw-bold text-warning">
+                            {{ accuracy }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-3">
+                    <div class="p-2 bg-primary rounded">
+                        <small class="text-muted d-block">Tempo Reação</small>
+                        <div class="h5 fw-bold text-light">
+                            {{ avgReaction }}ms
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-3">
+                    <div class="p-2 bg-primary rounded">
+                        <small class="text-muted d-block"
+                            >Recorde ({{ MODE_CONFIGS[game.mode].name }})</small
+                        >
+                        <div class="h5 fw-bold text-success">
+                            {{ currentHighScore }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart Placeholder -->
+            <div class="chart-container mt-4 pt-3 border-top border-secondary">
+                <small class="text-muted d-block mb-1"
+                    >Histórico de Pontuação Recente</small
+                >
+                <div
+                    class="chart-line d-flex align-items-end justify-content-between gap-1 p-1 bg-primary rounded"
+                    style="height: 100px; width: 100%"
+                >
+                    <div
+                        v-for="(s, i) in recentScores"
+                        :key="i"
+                        class="chart-bar bg-primary rounded-top shadow-sm"
+                        style="width: 100%; transition: height 0.3s"
+                        :style="{
+                            height:
+                                maxScore > 0
+                                    ? (s / maxScore) * 100 + '%'
+                                    : '0%',
+                        }"
+                    ></div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
+
+<style scoped>
+@keyframes floatUp {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-40px) scale(1.2);
+    }
+}
+
+@keyframes popup-animate {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -150%) scale(1.2);
+    }
+}
+
+.target {
+    /* Efeito de click visual */
+    animation: bounce-in 0.3s ease-out;
+    user-select: none;
+}
+
+.target:active {
+    transform: scale(0.85);
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.bg-card {
+    background: rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.chart-bar {
+    flex: 1;
+    margin: 0 2px;
+    border-radius: 2px;
+    background: linear-gradient(to top, #c89b3c, #f59e0b);
+    transition: height 0.3s;
+}
+
+.controls .btn {
+    border-radius: 999px;
+    font-weight: 700;
+}
+
+.game-area {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 12px;
+    min-height: 420px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.target {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: transform 0.08s, opacity 0.25s;
+    user-select: none;
+    font-weight: 700;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+}
+.target:hover {
+    transform: scale(1.05);
+}
+
+.target.square {
+    border-radius: 8px;
+}
+.target.star {
+    clip-path: polygon(
+        50% 0%,
+        61% 35%,
+        98% 35%,
+        68% 57%,
+        79% 91%,
+        50% 70%,
+        21% 91%,
+        32% 57%,
+        2% 35%,
+        39% 35%
+    );
+    border-radius: 0;
+}
+
+.game-over-modal {
+    background: rgba(0, 0, 0, 0.6);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.points-popup {
+    position: absolute;
+    font-weight: 800;
+    pointer-events: none;
+    animation: floatUp 1s forwards;
+    z-index: 50;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+</style>

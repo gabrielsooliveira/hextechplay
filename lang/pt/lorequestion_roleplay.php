@@ -18,7 +18,7 @@ return [
     'your_answer' => 'Sua resposta',
     'correct_answer' => 'Resposta correta',
     'play_again' => 'Jogar Novamente',
-    'back_to_menu' => 'Voltar para o menu',
+    'back_to_games' => 'Voltar para os jogos',
     'no_questions_found' => 'Nenhuma pergunta encontrada.',
     'try_again' => 'Tentar Novamente',
     'seconds' => 's',

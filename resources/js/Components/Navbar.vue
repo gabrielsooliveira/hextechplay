@@ -46,7 +46,6 @@ const navbarClass = computed(() => {
                 >HextechPlay</Link
             >
 
-            <!-- Menu centralizado (visível no desktop) -->
             <ul class="navbar-nav mx-auto d-none d-lg-flex flex-row gap-3">
                 <li class="nav-item">
                     <Link :href="route('home')" class="nav-link text-light">{{
@@ -54,7 +53,7 @@ const navbarClass = computed(() => {
                     }}</Link>
                 </li>
                 <li class="nav-item">
-                    <Link :href="route('menu')" class="nav-link text-light">{{
+                    <Link :href="route('games')" class="nav-link text-light">{{
                         $t("nav_games")
                     }}</Link>
                 </li>
@@ -123,7 +122,7 @@ const navbarClass = computed(() => {
                         </li>
                         <li class="nav-item">
                             <Link
-                                :href="route('menu')"
+                                :href="route('games')"
                                 class="nav-link text-light"
                                 >{{ $t("nav_games") }}</Link
                             >
