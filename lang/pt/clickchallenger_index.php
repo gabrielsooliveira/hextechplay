@@ -17,7 +17,7 @@ return [
     'mode_phrase' => 'Escolha o modo de jogo',
     'mode' => [
         'one' => 'Clasico',
-        'two' => 'Relaxante',
+        'two' => 'Zen',
         'three' => 'Sobrevivência',
     ],
     'guide' => [

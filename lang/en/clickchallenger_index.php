@@ -19,7 +19,7 @@ return [
     'mode_phrase' => 'Choose mode',
     'mode' => [
         'one' => 'Classic',
-        'two' => 'Relax',
+        'two' => 'Zen',
         'three' => 'Survival',
     ],
 

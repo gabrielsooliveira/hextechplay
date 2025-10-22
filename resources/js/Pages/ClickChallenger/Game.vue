@@ -1,6 +1,8 @@
 <script setup>
-import { usePage } from "@inertiajs/vue3";
+import { Link, usePage } from "@inertiajs/vue3";
 import { ref, reactive, computed, onUnmounted, nextTick } from "vue";
+import CoinImage from "@/assets/images/clickchallenger/coin.png";
+import MushroomImage from "@/assets/images/clickchallenger/mushroom.png";
 
 const page = usePage();
 const MODE_CONFIGS = {
@@ -15,7 +17,7 @@ const MODE_CONFIGS = {
     },
     zen: {
         time: Infinity,
-        lives: Infinity,
+        lives: 5,
         spawnRate: 1000,
         redChance: 0.15,
         scoreMultiplier: 0.8,
@@ -25,8 +27,8 @@ const MODE_CONFIGS = {
     survival: {
         time: Infinity,
         lives: 3,
-        spawnRate: 450,
-        redChance: 0.5,
+        spawnRate: 500,
+        redChance: 0.45,
         scoreMultiplier: 1.5,
         name: "Sobrevivência",
         description: "3 vidas, cuidado com os círculos vermelhos!",
@@ -39,7 +41,7 @@ const GAME_AREA_HEIGHT = 420;
 
 // Estado do Jogo (Reactive)
 const game = reactive({
-    mode: page.props.mode, // Padrão inicial
+    mode: page.props.mode,
     score: 0,
     combo: 1,
     lives: MODE_CONFIGS[page.props.mode].lives,
@@ -460,7 +462,7 @@ onUnmounted(() => {
         <!-- Área do Jogo -->
         <div
             ref="areaRef"
-            class="game-area position-relative rounded-3 bg-light shadow-lg border border-primary"
+            class="game-area position-relative rounded-3 shadow-lg border border-warning"
             :style="{
                 margin: '0 auto',
                 overflow: 'hidden',
@@ -478,25 +480,32 @@ onUnmounted(() => {
                     width: t.size + 'px',
                     height: t.size + 'px',
                     backgroundColor: t.color,
-                    transition: 'transform 0.1s',
+                    transition: 'transform 0.65s',
                     cursor: 'pointer',
                     zIndex: 10,
                     border: t.type === 'red' ? '3px solid #ff7a7a' : 'none',
                 }"
                 @click.stop="onTargetClick(t)"
             >
-                <font-awesome-icon
-                    :icon="
-                        t.type === 'normal' ? 'fas fa-circle' : 'fas fa-times'
-                    "
-                ></font-awesome-icon>
+                <img
+                    v-if="t.type === 'normal'"
+                    :src="CoinImage"
+                    alt="Gold Coin"
+                    style="width: 80%; height: 80%; object-fit: contain"
+                />
+                <img
+                    v-else
+                    :src="MushroomImage"
+                    alt="Teemo Mushroom"
+                    style="width: 90%; height: 90%; object-fit: contain"
+                />
             </div>
 
             <!-- points popups -->
             <div
                 v-for="p in popups"
                 :key="p.id"
-                class="points-popup position-absolute fw-bolder"
+                class="points-popup position-absolute fw-bolder text-white"
                 :class="[p.color]"
                 :style="{
                     left: p.x + 'px',
@@ -551,22 +560,9 @@ onUnmounted(() => {
                             class="btn btn-primary btn-lg mt-3"
                             @click="handlePlayAgain"
                         >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                fill="currentColor"
-                                class="bi bi-arrow-repeat me-2"
-                                viewBox="0 0 16 16"
-                            >
-                                <path
-                                    d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.397 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-6.191 0a.25.25 0 0 0-.192.41L5.676 9.77a.25.25 0 0 0 .397 0l1.966-2.36a.25.25 0 0 0-.192-.41H5.343z"
-                                />
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M8 3c-1.552 0-2.94.707-3.857 1.758 1.487-.828 3.328-.828 4.815 0C11.459 5.861 12 7.152 12 8.5c0 1.348-.541 2.639-1.472 3.742-.931 1.103-2.32 1.758-3.857 1.758C4.541 14 3 12.518 3 10.5h1.25c.571 0 1.05.343 1.25.834.195.485.474.908.793 1.266C6.892 13.914 7.429 14 8 14c1.233 0 2.39-.516 3.166-1.391.777-.875 1.284-2.193 1.284-3.609 0-1.416-.507-2.734-1.284-3.609C10.39 3.516 9.233 3 8 3z"
-                                />
-                            </svg>
+                            <font-awesome-icon
+                                icon="fas fa-rotate-left"
+                            ></font-awesome-icon>
                             Jogar Novamente
                         </button>
                     </div>
@@ -587,7 +583,7 @@ onUnmounted(() => {
             </button>
 
             <button
-                class="btn btn-outline-secondary text-white flex-fill shadow"
+                class="btn btn-secondary text-white flex-fill shadow"
                 :disabled="!game.gameActive || game.showGameOver"
                 @click="togglePause()"
             >
@@ -596,6 +592,21 @@ onUnmounted(() => {
                 ></font-awesome-icon>
                 <span v-if="game.gamePaused"> Continuar</span>
                 <span v-else> Pausar</span>
+            </button>
+
+            <Link
+                :href="route('clickchallenger.index')"
+                class="btn btn-outline-secondary text-white shadow"
+            >
+                Menu</Link
+            >
+
+            <button
+                v-if="game.mode === 'zen' && game.gameActive"
+                class="btn btn-danger shadow text-white"
+                @click="endGame()"
+            >
+                Encerrar Jogo
             </button>
         </div>
 
@@ -713,11 +724,6 @@ onUnmounted(() => {
     border-radius: 2px;
     background: linear-gradient(to top, #c89b3c, #f59e0b);
     transition: height 0.3s;
-}
-
-.controls .btn {
-    border-radius: 999px;
-    font-weight: 700;
 }
 
 .game-area {
