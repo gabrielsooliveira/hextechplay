@@ -24,6 +24,7 @@ return [
     // Games
     'game_lorequestion' => 'LoreQuestion',
     'game_wordlol' => 'WordLoL',
+    'game_clickchallenger' => 'ClickChallenger',
 
     // Support Links
     'support_help_center' => 'Help Center',

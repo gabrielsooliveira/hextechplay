@@ -1,50 +1,134 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { Link } from "@inertiajs/vue3";
 </script>
 
 <template>
-  <footer class="bg-glass border-glow mt-3 border-top">
-    <div class="container py-5">
-      <div class="row">
-        <div class="col-lg-8 mb-4 text-lg-start text-center">
-          <div class="d-flex align-items-center mb-3">
-            <span class="fw-bold fs-4">{{ $t('brand') }}</span>
-          </div>
-          <p class="opacity-75 mb-3">
-            {{ $t('footer_description') }}
-          </p>
-          <div class="d-flex justify-content-lg-start justify-content-center">
-            <a href="https://discord.com/" class="btn btn-outline-light btn-sm me-2 disabled" target="_blank"><font-awesome-icon icon="fab fa-discord" /></a>
-            <a href="https://x.com/" class="btn btn-outline-light btn-sm me-2 disabled" target="_blank"><font-awesome-icon icon="fab fa-twitter" /></a>
-            <a href="https://www.youtube.com/" class="btn btn-outline-light btn-sm me-2 disabled" target="_blank"><font-awesome-icon icon="fab fa-youtube" /></a>
-            <a href="https://www.facebook.com/people/HextechPlay/61581496198338/" target="_blank" class="btn btn-outline-light btn-sm"><font-awesome-icon icon="fab fa-facebook" /></a>
-          </div>
-        </div>
+    <footer class="bg-glass border-glow mt-3 border-top">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-lg-8 mb-4 text-lg-start text-center">
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="fw-bold fs-4">{{ $t("brand") }}</span>
+                    </div>
+                    <p class="opacity-75 mb-3">
+                        {{ $t("footer_description") }}
+                    </p>
+                    <div
+                        class="d-flex justify-content-lg-start justify-content-center"
+                    >
+                        <a
+                            href="https://discord.com/"
+                            class="btn btn-outline-light btn-sm me-2 disabled"
+                            target="_blank"
+                            ><font-awesome-icon icon="fab fa-discord"
+                        /></a>
+                        <a
+                            href="https://x.com/"
+                            class="btn btn-outline-light btn-sm me-2 disabled"
+                            target="_blank"
+                            ><font-awesome-icon icon="fab fa-twitter"
+                        /></a>
+                        <a
+                            href="https://www.youtube.com/"
+                            class="btn btn-outline-light btn-sm me-2 disabled"
+                            target="_blank"
+                            ><font-awesome-icon icon="fab fa-youtube"
+                        /></a>
+                        <a
+                            href="https://www.facebook.com/people/HextechPlay/61581496198338/"
+                            target="_blank"
+                            class="btn btn-outline-light btn-sm"
+                            ><font-awesome-icon icon="fab fa-facebook"
+                        /></a>
+                    </div>
+                    <div class="mt-5">
+                        <a href="https://ko-fi.com/E1E41N7UJO" target="_blank"
+                            ><img
+                                height="36"
+                                style="border: 0px; height: 36px"
+                                src="https://storage.ko-fi.com/cdn/kofi5.png?v=6"
+                                border="0"
+                                alt="Buy Me a Coffee at ko-fi.com"
+                        /></a>
+                    </div>
+                </div>
 
-        <!-- Community -->
-        <!-- <div class="col-lg-2 col-md-6 mb-4">
-          <h6 class="text-warning text-uppercase fw-semibold mb-3">Comunidade</h6>
-          <ul class="list-unstyled">
-            <li class="mb-2"><Link href="#" class="text-light text-decoration-none">Leaderboard</Link></li>
-            <li class="mb-2"><Link href="#" class="text-light text-decoration-none">Conquistas</Link></li>
-            <li class="mb-2"><Link href="#" class="text-light text-decoration-none">Torneios</Link></li>
-            <li class="mb-2"><Link href="#" class="text-light text-decoration-none">Fórum</Link></li>
-          </ul>
-        </div> -->
+                <!-- Community -->
+                <!-- <div class="col-lg-2 mb-4">
+                    <h6 class="text-warning text-uppercase fw-semibold mb-3">
+                        Comunidade
+                    </h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <Link
+                                href="#"
+                                class="text-light text-decoration-none"
+                                >Leaderboard</Link
+                            >
+                        </li>
+                        <li class="mb-2">
+                            <Link
+                                href="#"
+                                class="text-light text-decoration-none"
+                                >Conquistas</Link
+                            >
+                        </li>
+                        <li class="mb-2">
+                            <Link
+                                href="#"
+                                class="text-light text-decoration-none"
+                                >Torneios</Link
+                            >
+                        </li>
+                        <li class="mb-2">
+                            <Link
+                                href="#"
+                                class="text-light text-decoration-none"
+                                >Fórum</Link
+                            >
+                        </li>
+                    </ul>
+                </div> -->
 
-        <!-- Support -->
-        <div class="col-lg-2 col-md-6 mb-4">
-          <h6 class="text-warning text-uppercase fw-semibold mb-3">{{ $t('footer_support') }}</h6>
-          <ul class="list-unstyled">
-            <li class="mb-2"><Link :href="route('contact')" class="text-light text-decoration-none">{{ $t('support_help_center') }}</Link></li>
-            <li class="mb-2"><Link :href="route('contact')" class="text-light text-decoration-none">{{ $t('support_contact') }}</Link></li>
-            <li class="mb-2"><Link :href="route('contact')" class="text-light text-decoration-none">{{ $t('support_report_bug') }}</Link></li>
-            <li class="mb-2"><Link :href="route('contact')" class="text-light text-decoration-none">{{ $t('support_feedback') }}</Link></li>
-          </ul>
-        </div>
+                <!-- Support -->
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h6 class="text-warning text-uppercase fw-semibold mb-3">
+                        {{ $t("footer_support") }}
+                    </h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <Link
+                                :href="route('contact')"
+                                class="text-light text-decoration-none"
+                                >{{ $t("support_help_center") }}</Link
+                            >
+                        </li>
+                        <li class="mb-2">
+                            <Link
+                                :href="route('contact')"
+                                class="text-light text-decoration-none"
+                                >{{ $t("support_contact") }}</Link
+                            >
+                        </li>
+                        <li class="mb-2">
+                            <Link
+                                :href="route('contact')"
+                                class="text-light text-decoration-none"
+                                >{{ $t("support_report_bug") }}</Link
+                            >
+                        </li>
+                        <li class="mb-2">
+                            <Link
+                                :href="route('contact')"
+                                class="text-light text-decoration-none"
+                                >{{ $t("support_feedback") }}</Link
+                            >
+                        </li>
+                    </ul>
+                </div>
 
-        <!-- Newsletter -->
-        <!-- <div class="col-lg-2 col-md-6 mb-4">
+                <!-- Newsletter -->
+                <!-- <div class="col-lg-2 col-md-6 mb-4">
           <h6 class="text-warning text-uppercase fw-semibold mb-3">Newsletter</h6>
           <p class="opacity-75 small mb-3">
             Receba novidades sobre novos jogos e eventos.
@@ -55,38 +139,66 @@ import { Link } from '@inertiajs/vue3';
           </form>
         </div> -->
 
-        <!-- Quick Links -->
-        <div class="col-lg-2 col-md-6 mb-4">
-          <h6 class="text-warning text-uppercase fw-semibold mb-3">{{ $t('footer_games') }}</h6>
-          <ul class="list-unstyled">
-            <li class="mb-2"><Link :href="route('lorequestion.index')" class="text-light text-decoration-none">{{ $t('game_lorequestion') }}</Link></li>
-            <li class="mb-2"><Link :href="route('wordlol.game')" class="text-light text-decoration-none">{{ $t('game_wordlol') }}</Link></li>
-          </ul>
-        </div>
-      </div>
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h6 class="text-warning text-uppercase fw-semibold mb-3">
+                        {{ $t("footer_games") }}
+                    </h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <Link
+                                :href="route('lorequestion.index')"
+                                class="text-light text-decoration-none"
+                                >{{ $t("game_lorequestion") }}</Link
+                            >
+                        </li>
+                        <li class="mb-2">
+                            <Link
+                                :href="route('wordlol.game')"
+                                class="text-light text-decoration-none"
+                                >{{ $t("game_wordlol") }}</Link
+                            >
+                        </li>
+                        <li class="mb-2">
+                            <Link
+                                :href="route('clickchallenger.index')"
+                                class="text-light text-decoration-none"
+                                >{{ $t("game_clickchallenger") }}</Link
+                            >
+                        </li>
+                    </ul>
+                </div>
+            </div>
 
-      <hr class="border-secondary my-4">
+            <hr class="border-secondary my-4" />
 
-      <div class="row align-items-center">
-        <div class="col-md-6 text-center text-md-start">
-          <small class="opacity-75">{{ $t('copyright') }}</small>
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <small class="opacity-75">{{ $t("copyright") }}</small>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <Link
+                        :href="route('privacy.policy')"
+                        class="text-light text-decoration-none me-3 small"
+                        >{{ $t("privacy_policy") }}</Link
+                    >
+                    <Link
+                        :href="route('terms')"
+                        class="text-light text-decoration-none small"
+                        >{{ $t("terms_of_use") }}</Link
+                    >
+                </div>
+            </div>
         </div>
-        <div class="col-md-6 text-center text-md-end">
-          <Link :href="route('privacy.policy')" class="text-light text-decoration-none me-3 small">{{ $t('privacy_policy') }}</Link>
-          <Link :href="route('terms')" class="text-light text-decoration-none small">{{ $t('terms_of_use') }}</Link>
-        </div>
-      </div>
-
-    </div>
-  </footer>
+    </footer>
 </template>
 
 <style scoped>
 .bg-glass {
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 .border-glow {
-  border-color: rgba(59, 130, 246, 0.3) !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
 }
 </style>

@@ -9,7 +9,7 @@ return [
 
     'text_mode_game' => 'Escolha o modo de jogo',
     'text_lorequestion_roleplay' => 'Teste seus conhecimentos contra outros jogadores de forma divertida e casual.',
-    'text_lorequestion_competitive' => 'Compita com outros jogadores em partidas classificatórias. (Em breve)',
+    'text_lorequestion_competitive' => 'Dispute com outros jogadores em partidas classificatórias. (Em breve)',
     'play' => 'Jogar',
     'competitive' => 'Competitivo',
     'coming_soon' => 'Em breve',

@@ -1,10 +1,14 @@
 <script setup>
-import { Link, usePage } from "@inertiajs/vue3";
+import * as Tone from "tone";
+import { Head, Link, usePage } from "@inertiajs/vue3";
+import { useI18n } from "vue-i18n";
 import { ref, reactive, computed, onUnmounted, nextTick } from "vue";
 import CoinImage from "@/assets/images/clickchallenger/coin.png";
 import MushroomImage from "@/assets/images/clickchallenger/mushroom.png";
 
 const page = usePage();
+const { t } = useI18n();
+
 const MODE_CONFIGS = {
     classic: {
         time: 60,
@@ -12,8 +16,8 @@ const MODE_CONFIGS = {
         spawnRate: 600,
         redChance: 0.35,
         scoreMultiplier: 1.0,
-        name: "Clássico",
-        description: "60 segundos para pontuar o máximo.",
+        name: t("mode.classic.name"),
+        description: t("mode.classic.description"),
     },
     zen: {
         time: Infinity,
@@ -21,8 +25,8 @@ const MODE_CONFIGS = {
         spawnRate: 1000,
         redChance: 0.15,
         scoreMultiplier: 0.8,
-        name: "Zen",
-        description: "Tempo infinito, relaxe e acerte.",
+        name: t("mode.zen.name"),
+        description: t("mode.zen.description"),
     },
     survival: {
         time: Infinity,
@@ -30,8 +34,8 @@ const MODE_CONFIGS = {
         spawnRate: 500,
         redChance: 0.45,
         scoreMultiplier: 1.5,
-        name: "Sobrevivência",
-        description: "3 vidas, cuidado com os círculos vermelhos!",
+        name: t("mode.survival.name"),
+        description: t("mode.survival.description"),
     },
 };
 
@@ -86,7 +90,6 @@ const audioLoaded = ref(false);
 
 function initializeAudio() {
     if (typeof Tone === "undefined") {
-        console.warn("Tone.js não carregado. Áudio desabilitado.");
         audioLoaded.value = false;
         return;
     }
@@ -128,7 +131,7 @@ function playSound(type) {
             window.redHitSynth.triggerAttackRelease("F#3", "4n");
         }
     } catch (e) {
-        console.error("Erro ao tocar áudio:", e);
+        console.error("Error sound:", e);
     }
 }
 
@@ -284,7 +287,7 @@ function onTargetClick(target) {
                 break;
             case "survival":
                 game.lives--;
-                popUpText = "VIDA PERDIDA!";
+                popUpText = t("labels.life_lose");
                 popUpColor = "text-danger";
                 if (game.lives <= 0) {
                     endGame();
@@ -407,6 +410,15 @@ onUnmounted(() => {
 </script>
 
 <template>
+    <Head>
+        <title>{{ $t("page_title") }}</title>
+        <meta name="description" :content="$t('page_description')" />
+        <meta name="keywords" :content="$t('page_keywords')" />
+        <meta property="og:title" :content="$t('og_title')" />
+        <meta property="og:description" :content="$t('og_description')" />
+        <meta property="og:url" content="https://hextechplay.com/wordlol" />
+        <link rel="canonical" href="https://hextechplay.com/wordlol" />
+    </Head>
     <!-- O componente é envolvido em uma div que simula o container centralizado -->
     <div class="container padding-navbar">
         <!-- Título e Subtítulo -->
@@ -428,17 +440,19 @@ onUnmounted(() => {
                 </h4>
             </div>
             <div class="text-center">
-                <small class="text-muted">Pontuação</small>
+                <small class="text-muted">{{ $t("labels.final_score") }}</small>
                 <h4 class="mb-0 text-success">{{ game.score }}</h4>
             </div>
             <div class="text-end">
-                <small class="text-muted" v-if="game.mode === 'classic'"
-                    >Tempo</small
+                <small class="text-muted" v-if="game.mode === 'classic'">{{
+                    $t("labels.time")
+                }}</small>
+                <small
+                    class="text-muted"
+                    v-else-if="game.mode === 'survival'"
+                    >{{ $t("labels.lives") }}</small
                 >
-                <small class="text-muted" v-else-if="game.mode === 'survival'"
-                    >Vidas</small
-                >
-                <small class="text-muted" v-else>Tempo</small>
+                <small class="text-muted" v-else>{{ $t("labels.time") }}</small>
 
                 <h4
                     class="mb-0"
@@ -526,7 +540,7 @@ onUnmounted(() => {
                 class="position-absolute top-0 start-0 w-100 h-100 bg-black bg-opacity-75 d-flex align-items-center justify-content-center"
                 style="z-index: 50"
             >
-                <span class="text-white h3">PAUSADO</span>
+                <span class="text-white h3">{{ $t("labels.paused") }}</span>
             </div>
 
             <!-- Game Over Modal -->
@@ -540,16 +554,16 @@ onUnmounted(() => {
                 >
                     <div class="text-center">
                         <h2 class="mb-2 text-warning display-4 fw-bold">
-                            FIM DE JOGO!
+                            {{ $t("labels.game_over") }}
                         </h2>
                         <p class="lead mb-1">
-                            Pontuação Final:
+                            {{ $t("labels.final_score") }}:
                             <strong class="text-success">{{
                                 game.score
                             }}</strong>
                         </p>
                         <p class="text-muted small">
-                            Recorde no modo
+                            {{ $t("labels.record") }}
                             {{ MODE_CONFIGS[game.mode].name }}:
                             <strong class="text-info">{{
                                 currentHighScore
@@ -563,7 +577,7 @@ onUnmounted(() => {
                             <font-awesome-icon
                                 icon="fas fa-rotate-left"
                             ></font-awesome-icon>
-                            Jogar Novamente
+                            {{ $t("labels.play_again") }}
                         </button>
                     </div>
                 </div>
@@ -579,7 +593,7 @@ onUnmounted(() => {
                 :disabled="game.gameActive"
                 @click="initGame(game.mode)"
             >
-                Iniciar ({{ MODE_CONFIGS[game.mode].name }})
+                {{ $t("labels.start") }} ({{ MODE_CONFIGS[game.mode].name }})
             </button>
 
             <button
@@ -589,16 +603,17 @@ onUnmounted(() => {
             >
                 <font-awesome-icon
                     :icon="game.gamePaused ? 'fas fa-play' : 'fas fa-pause'"
+                    class="me-1"
                 ></font-awesome-icon>
-                <span v-if="game.gamePaused"> Continuar</span>
-                <span v-else> Pausar</span>
+                <span v-if="game.gamePaused"> {{ $t("labels.continue") }}</span>
+                <span v-else> {{ $t("labels.pause") }}</span>
             </button>
 
             <Link
                 :href="route('clickchallenger.index')"
                 class="btn btn-outline-secondary text-white shadow"
             >
-                Menu</Link
+                {{ $t("labels.menu") }}</Link
             >
 
             <button
@@ -606,17 +621,19 @@ onUnmounted(() => {
                 class="btn btn-danger shadow text-white"
                 @click="endGame()"
             >
-                Encerrar Jogo
+                {{ $t("labels.end_game") }}
             </button>
         </div>
 
         <!-- Painel de Estatísticas -->
         <div class="stats-panel bg-dark p-4 rounded-3 shadow-lg text-white">
-            <h5 class="mb-3 text-white fw-bold">📊 Estatísticas Detalhadas</h5>
+            <h5 class="mb-3 text-white fw-bold">{{ $t("stats.title") }}</h5>
             <div class="row g-3 text-center">
                 <div class="col-6 col-sm-3">
                     <div class="p-2 bg-primary rounded">
-                        <small class="text-muted d-block">Combo</small>
+                        <small class="text-muted d-block">{{
+                            $t("stats.combo")
+                        }}</small>
                         <div class="h5 fw-bold text-info">
                             x{{ game.combo }}
                         </div>
@@ -624,7 +641,9 @@ onUnmounted(() => {
                 </div>
                 <div class="col-6 col-sm-3">
                     <div class="p-2 bg-primary rounded">
-                        <small class="text-muted d-block">Precisão</small>
+                        <small class="text-muted d-block">{{
+                            $t("stats.accuracy")
+                        }}</small>
                         <div class="h5 fw-bold text-warning">
                             {{ accuracy }}
                         </div>
@@ -632,7 +651,9 @@ onUnmounted(() => {
                 </div>
                 <div class="col-6 col-sm-3">
                     <div class="p-2 bg-primary rounded">
-                        <small class="text-muted d-block">Tempo Reação</small>
+                        <small class="text-muted d-block">{{
+                            $t("stats.reaction_time")
+                        }}</small>
                         <div class="h5 fw-bold text-light">
                             {{ avgReaction }}ms
                         </div>
@@ -641,7 +662,9 @@ onUnmounted(() => {
                 <div class="col-6 col-sm-3">
                     <div class="p-2 bg-primary rounded">
                         <small class="text-muted d-block"
-                            >Recorde ({{ MODE_CONFIGS[game.mode].name }})</small
+                            >{{ $t("stats.highscore") }} ({{
+                                MODE_CONFIGS[game.mode].name
+                            }})</small
                         >
                         <div class="h5 fw-bold text-success">
                             {{ currentHighScore }}
@@ -652,9 +675,9 @@ onUnmounted(() => {
 
             <!-- Chart Placeholder -->
             <div class="chart-container mt-4 pt-3 border-top border-secondary">
-                <small class="text-muted d-block mb-1"
-                    >Histórico de Pontuação Recente</small
-                >
+                <small class="text-muted d-block mb-1">{{
+                    $t("stats.recent_score")
+                }}</small>
                 <div
                     class="chart-line d-flex align-items-end justify-content-between gap-1 p-1 bg-primary rounded"
                     style="height: 100px; width: 100%"

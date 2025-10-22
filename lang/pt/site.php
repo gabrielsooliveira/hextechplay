@@ -15,6 +15,7 @@ return [
     'footer_support' => 'Suporte',
     'game_lorequestion' => 'LoreQuestion',
     'game_wordlol' => 'WordLoL',
+    'game_clickchallenger' => 'ClickChallenger',
     'support_help_center' => 'Central de Ajuda',
     'support_contact' => 'Contato',
     'support_report_bug' => 'Reportar Bug',
