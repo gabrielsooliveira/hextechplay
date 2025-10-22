@@ -482,6 +482,7 @@ onMounted(() => {
             ref="areaRef"
             class="game-area position-relative rounded-3 shadow-lg border border-warning"
             :style="{
+                minHeight: '420px',
                 margin: '0 auto',
                 overflow: 'hidden',
             }"
@@ -751,7 +752,6 @@ onMounted(() => {
 .game-area {
     background: rgba(0, 0, 0, 0.12);
     border-radius: 12px;
-    height: 420px !important;
     min-height: 420px;
     overflow: hidden;
     position: relative;
