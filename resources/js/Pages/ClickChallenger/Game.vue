@@ -2,7 +2,7 @@
 import * as Tone from "tone";
 import { Head, Link, usePage } from "@inertiajs/vue3";
 import { useI18n } from "vue-i18n";
-import { ref, reactive, computed, onUnmounted, nextTick } from "vue";
+import { ref, reactive, computed, onUnmounted, nextTick, onMounted } from "vue";
 import CoinImage from "@/assets/images/clickchallenger/coin.png";
 import MushroomImage from "@/assets/images/clickchallenger/mushroom.png";
 
@@ -407,6 +407,10 @@ onUnmounted(() => {
         Tone.Transport.stop();
     }
 });
+
+onMounted(() => {
+    initGame(game.mode);
+});
 </script>
 
 <template>
@@ -505,14 +509,9 @@ onUnmounted(() => {
                     v-if="t.type === 'normal'"
                     :src="CoinImage"
                     alt="Gold Coin"
-                    style="width: 80%; height: 80%; object-fit: contain"
+                    class="img-circle"
                 />
-                <img
-                    v-else
-                    :src="MushroomImage"
-                    alt="Teemo Mushroom"
-                    style="width: 90%; height: 90%; object-fit: contain"
-                />
+                <img v-else :src="MushroomImage" alt="Teemo Mushroom" />
             </div>
 
             <!-- points popups -->
@@ -752,6 +751,7 @@ onUnmounted(() => {
 .game-area {
     background: rgba(0, 0, 0, 0.12);
     border-radius: 12px;
+    height: 420px !important;
     min-height: 420px;
     overflow: hidden;
     position: relative;
@@ -791,6 +791,15 @@ onUnmounted(() => {
         39% 35%
     );
     border-radius: 0;
+}
+.image-circle {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+    -webkit-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    pointer-events: none;
 }
 
 .game-over-modal {
