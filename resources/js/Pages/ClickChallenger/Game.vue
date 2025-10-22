@@ -510,9 +510,14 @@ onMounted(() => {
                     v-if="t.type === 'normal'"
                     :src="CoinImage"
                     alt="Gold Coin"
-                    class="img-circle"
+                    class="image-circle"
                 />
-                <img v-else :src="MushroomImage" alt="Teemo Mushroom" />
+                <img
+                    v-else
+                    :src="MushroomImage"
+                    alt="Teemo Mushroom"
+                    class="image-circle"
+                />
             </div>
 
             <!-- points popups -->
