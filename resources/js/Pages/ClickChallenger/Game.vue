@@ -510,13 +510,29 @@ onMounted(() => {
                     v-if="t.type === 'normal'"
                     :src="CoinImage"
                     alt="Gold Coin"
-                    class="image-circle"
+                    :style="{
+                        width: '80%',
+                        height: '80%',
+                        objectFit: 'contain',
+                        WebkitUserDrag: 'none',
+                        MozUserDrag: 'none',
+                        OUserDrag: 'none',
+                        pointerEvents: 'none',
+                    }"
                 />
                 <img
                     v-else
                     :src="MushroomImage"
                     alt="Teemo Mushroom"
-                    class="image-circle"
+                    :style="{
+                        width: '80%',
+                        height: '80%',
+                        objectFit: 'contain',
+                        WebkitUserDrag: 'none',
+                        MozUserDrag: 'none',
+                        OUserDrag: 'none',
+                        pointerEvents: 'none',
+                    }"
                 />
             </div>
 
@@ -796,15 +812,6 @@ onMounted(() => {
         39% 35%
     );
     border-radius: 0;
-}
-.image-circle {
-    width: 80%;
-    height: 80%;
-    object-fit: contain;
-    -webkit-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
-    pointer-events: none;
 }
 
 .game-over-modal {
