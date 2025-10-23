@@ -47,7 +47,8 @@ const partners = [
                     <div class="card-body">
                         <img
                             :src="
-                                partner.avatar || '/images/default-avatar.png'
+                                partner.avatar ||
+                                'https://dummyimage.com/600x400/000/fff'
                             "
                             alt="Avatar"
                             class="rounded-circle mb-3 object-fit-cover"

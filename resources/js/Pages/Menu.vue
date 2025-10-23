@@ -42,30 +42,28 @@ const activeForm = computed(() => {
 
     <div class="min-vh-100 d-flex align-items-center justify-content-center">
         <div class="container text-center">
-            <h1 class="display-3 fw-bold mb-3 fade-in">
+            <h1 class="display-3 fw-bold mb-3">
                 {{ $t("page_title") }}
             </h1>
-            <p class="lead text-light opacity-75 fade-in delay-200">
+            <p class="lead text-light opacity-75">
                 {{ $t("text_mode_game") }}
             </p>
 
             <div class="row g-4 mt-3 justify-content-center">
                 <div class="col-md-4">
-                    <div
-                        class="game-card card text-bg-light h-100 shadow-lg border-0 animate__animated animate__fadeInUp"
-                    >
+                    <div class="card text-bg-light h-100 shadow-lg border-0">
                         <div
-                            class="card-body d-flex flex-column justify-content-between bg-gradient text-dark"
+                            class="card-body d-flex flex-column justify-content-between text-dark"
                         >
                             <div>
-                                <h4 class="card-title fw-bold">Roleplay</h4>
+                                <h4 class="card-title fw-bold">Normal</h4>
                                 <p class="card-text small">
                                     {{ $t("text_lorequestion_roleplay") }}
                                 </p>
                             </div>
                             <button
                                 @click="openModal"
-                                class="btn btn-warning text-white mt-3 text-capitalize play-btn"
+                                class="btn btn-accent text-white mt-3 text-capitalize"
                             >
                                 {{ $t("play") }}
                             </button>
@@ -74,9 +72,7 @@ const activeForm = computed(() => {
                 </div>
 
                 <div class="col-md-4">
-                    <div
-                        class="game-card card text-bg-light h-100 shadow-lg border-0 animate__animated animate__fadeInUp"
-                    >
+                    <div class="card text-bg-light h-100 shadow-lg border-0">
                         <div
                             class="card-body d-flex flex-column justify-content-between bg-gradient text-dark"
                         >
@@ -88,7 +84,7 @@ const activeForm = computed(() => {
                                     {{ $t("text_lorequestion_competitive") }}
                                 </p>
                             </div>
-                            <button class="btn btn-warning mt-3" disabled>
+                            <button class="btn btn-accent mt-3" disabled>
                                 {{ $t("coming_soon") }}
                             </button>
                         </div>
@@ -97,7 +93,7 @@ const activeForm = computed(() => {
             </div>
 
             <button
-                class="btn btn-sm btn-warning mt-5"
+                class="btn btn-sm btn-accent mt-5"
                 @click="showGuide = true"
             >
                 <font-awesome-icon icon="fas fa-question"></font-awesome-icon>
@@ -124,68 +120,7 @@ const activeForm = computed(() => {
         @close="closeModal"
         :title="$t('config_text')"
     >
-        <!-- Renderiza dinamicamente -->
         <ClickChallengerForm v-if="activeForm === 'clickchallenger'" />
         <LoreQuestionForm v-else />
     </ModalDialog>
 </template>
-
-<style scoped>
-/* Fundo animado com gradiente */
-.animated-bg {
-    background: linear-gradient(-45deg, #0d1b2a, #1b263b, #415a77, #778da9);
-    background-size: 400% 400%;
-    animation: gradientShift 10s ease infinite;
-    z-index: 1;
-}
-@keyframes gradientShift {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
-/* Cards com efeito de hover e entrada */
-.game-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    animation-delay: var(--delay, 0s);
-}
-.game-card:hover {
-    transform: translateY(-10px) scale(1.03);
-    box-shadow: 0 0 30px rgba(255, 193, 7, 0.4);
-}
-
-/* Botão Play com brilho */
-.play-btn {
-    position: relative;
-    overflow: hidden;
-}
-.play-btn::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        120deg,
-        transparent,
-        rgba(255, 255, 255, 0.4),
-        transparent
-    );
-    transition: left 0.75s;
-}
-.play-btn:hover::after {
-    left: 100%;
-}
-
-/* Animações */
-.animate__animated {
-    animation-duration: 0.8s;
-}
-</style>

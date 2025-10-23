@@ -74,11 +74,11 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks: {
-                    vendor: ['vue', 'axios'], // separa bibliotecas grandes
+                    vendor: ['vue', 'axios'],
                 },
             },
         },
-        cssCodeSplit: true, // divide css por página quando possível
+        cssCodeSplit: true,
     },
     css: {
         preprocessorOptions: {

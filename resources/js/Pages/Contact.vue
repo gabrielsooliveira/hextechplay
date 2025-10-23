@@ -85,7 +85,7 @@ function submitForm() {
                             ></textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-warning w-100">
+                        <button type="submit" class="btn btn-accent w-100">
                             {{ $t("form_submit") }}
                         </button>
                     </form>

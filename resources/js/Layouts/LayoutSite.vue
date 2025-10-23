@@ -17,9 +17,9 @@ onMounted(() => {
 <template>
     <LoadingScreen v-if="isLoading" />
 
-    <div v-else class="position-relative overflow-hidden bg-dark text-light">
+    <div v-else>
         <Navbar />
-        <main class="position-relative min-vh-100">
+        <main class="min-vh-100">
             <slot></slot>
         </main>
         <Toast />
@@ -28,9 +28,3 @@ onMounted(() => {
         <ScrollTopButton />
     </div>
 </template>
-
-<style>
-.padding-navbar {
-    padding-top: 10vh;
-}
-</style>

@@ -346,7 +346,7 @@ onMounted(() => {
                                 class="mt-4 d-flex flex-column flex-md-row justify-content-center align-items-center gap-2"
                             >
                                 <Link
-                                    class="btn btn-warning btn-lg w-100"
+                                    class="btn btn-accent btn-lg w-100"
                                     :href="route('lorequestion.roleplay')"
                                 >
                                     {{ $t("play_again") }}

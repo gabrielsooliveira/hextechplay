@@ -8,11 +8,11 @@ return [
     'og_description' => 'Teste seu conhecimento e divirta-se com jogos rápidos inspirados em Runeterra!',
 
     'play_phrase' => 'Jogue e divirta-se na HextechPlay!',
-    'play_phrase_sub' => 'Mini-games divertidos para desafiar seus amigos e explorar Runete rra.',
+    'play_phrase_sub' => 'Mini-games divertidos para desafiar seus amigos e explorar Runeterra.',
     'play_button' => 'Jogar agora',
     'featured_games_title' => 'Jogos em Destaque',
     'featured_games_subtitle' => 'Explore os mini-games mais populares da plataforma',
-    'play_game_button' => 'Jogar',
+    'play' => 'Jogar',
     'players' => 'jogadores',
     'community_title' => 'Nossa Comunidade',
     'community_subtitle' => 'Números que mostram o crescimento da nossa plataforma',

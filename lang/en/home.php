@@ -12,7 +12,7 @@ return [
     'play_button' => 'Play now',
     'featured_games_title' => 'Featured Games',
     'featured_games_subtitle' => 'Explore the most popular mini-games on the platform',
-    'play_game_button' => 'Play',
+    'play' => 'Play',
     'players' => 'Players',
     'community_title' => 'Our Community',
     'community_subtitle' => 'Numbers showing the growth of our platform',

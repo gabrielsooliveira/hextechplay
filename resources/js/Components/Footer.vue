@@ -3,7 +3,7 @@ import { Link } from "@inertiajs/vue3";
 </script>
 
 <template>
-    <footer class="bg-glass border-glow mt-3 border-top">
+    <footer class="mt-3 border-top border-primary">
         <div class="container py-5">
             <div class="row">
                 <div class="col-lg-8 mb-4 text-lg-start text-center">
@@ -135,7 +135,7 @@ import { Link } from "@inertiajs/vue3";
           </p>
           <form class="d-flex">
             <input type="email" class="form-control form-control-sm me-2 bg-dark text-light border border-primary" placeholder="Seu e-mail">
-            <button class="btn btn-warning btn-sm"><font-awesome-icon icon="fas fa-paper-plane" /></button>
+            <button class="btn btn-accent btn-sm"><font-awesome-icon icon="fas fa-paper-plane" /></button>
           </form>
         </div> -->
 
@@ -192,13 +192,3 @@ import { Link } from "@inertiajs/vue3";
         </div>
     </footer>
 </template>
-
-<style scoped>
-.bg-glass {
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-.border-glow {
-    border-color: rgba(59, 130, 246, 0.3) !important;
-}
-</style>

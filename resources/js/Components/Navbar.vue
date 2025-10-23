@@ -25,11 +25,10 @@ onUnmounted(() => {
 });
 
 const navbarClass = computed(() => {
-    const baseClasses =
-        "navbar navbar-expand-lg fixed-top navbar-dark transition-navbar px-2";
+    const baseClasses = "navbar navbar-expand-lg fixed-top navbar-dark px-2";
     const bgClass =
         !isMdUp.value || isScrolled.value
-            ? "bg-primary shadow-glow"
+            ? "bg-dark border-bottom border-primary"
             : "bg-transparent";
 
     return `${baseClasses} ${bgClass}`;
@@ -79,7 +78,7 @@ const navbarClass = computed(() => {
 
             <!-- Botão mobile -->
             <button
-                class="btn btn-primary d-lg-none border-0 text-light"
+                class="btn d-lg-none border-0 text-light"
                 type="button"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#navbarPrincipal"

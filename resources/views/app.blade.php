@@ -28,14 +28,8 @@
     @routes
 </head>
 
-<body class="overflow-y-auto overflow-x-hidden min-vh-100">
+<body class="overflow-y-auto overflow-x-hidden">
     @inertia
 </body>
 
 </html>
-
-<style>
-    body.modal-open {
-        padding-right: 0 !important;
-    }
-</style>

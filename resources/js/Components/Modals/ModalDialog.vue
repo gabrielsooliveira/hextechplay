@@ -21,23 +21,26 @@ let modalInstance = null;
 
 const closeModal = () => {
     if (modalInstance) modalInstance.hide();
-    emit("close");
+    document.activeElement?.blur();
 };
 
 onMounted(() => {
-    if (modalRef.value) {
-        modalInstance = new Modal(modalRef.value, {
-            backdrop: "static",
-            keyboard: false,
-        });
+    if (!modalRef.value) return;
 
-        if (props.isVisible) {
-            nextTick(() => modalInstance.show());
-        }
+    modalInstance = new Modal(modalRef.value, {
+        backdrop: "static",
+        keyboard: false,
+    });
 
-        // Fechar quando o modal Bootstrap emitir o evento "hidden.bs.modal"
-        modalRef.value.addEventListener("hidden.bs.modal", () => emit("close"));
+    if (props.isVisible) {
+        nextTick(() => modalInstance.show());
     }
+
+    modalRef.value.addEventListener("hidden.bs.modal", () => {
+        document.activeElement?.blur();
+        document.body.focus();
+        emit("close");
+    });
 });
 
 watch(
@@ -57,7 +60,13 @@ const sizeClass = computed(() => (props.size ? `modal-${props.size}` : ""));
 </script>
 
 <template>
-    <div ref="modalRef" class="modal fade" tabindex="-1">
+    <div
+        ref="modalRef"
+        class="modal fade"
+        tabindex="-1"
+        role="dialog"
+        aria-modal="true"
+    >
         <div class="modal-dialog" :class="sizeClass">
             <div class="modal-content rounded-4 bg-light shadow">
                 <div
@@ -69,6 +78,7 @@ const sizeClass = computed(() => (props.size ? `modal-${props.size}` : ""));
                     <button
                         type="button"
                         class="btn btn-outline-light btn-sm border-0"
+                        aria-label="Close"
                         @click="closeModal"
                     >
                         <font-awesome-icon

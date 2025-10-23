@@ -88,7 +88,7 @@ const saveSettings = () => {
         <div class="d-grid">
             <button
                 type="submit"
-                class="btn btn-warning text-white flex-grow-1 fw-bold rounded-3 shadow text-capitalize"
+                class="btn btn-accent text-white flex-grow-1 fw-bold rounded-3 shadow text-capitalize"
             >
                 {{ $t("button_start") }}
             </button>

@@ -1,0 +1,14 @@
+.hero-background-base {
+    background-image:
+        linear-gradient(
+            rgba(17, 24, 39, 0.8),
+            rgba(15, 23, 42, 0.9)
+        ),
+
+        var(--hero-bg-url);
+
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding-top: env(safe-area-inset-top);
+}
