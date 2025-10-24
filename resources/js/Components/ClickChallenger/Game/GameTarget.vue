@@ -28,6 +28,7 @@ const props = defineProps({
         <img
             v-if="target.type === 'normal'"
             :src="CoinImage"
+            class="imagem-not-selectable"
             alt="Gold Coin"
             :style="{
                 width: '80%',
@@ -42,6 +43,7 @@ const props = defineProps({
         <img
             v-else
             :src="MushroomImage"
+            class="imagem-not-selectable"
             alt="Teemo Mushroom"
             :style="{
                 width: '80%',

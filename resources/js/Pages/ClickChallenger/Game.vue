@@ -464,7 +464,11 @@ onMounted(() => {
             </p>
         </div>
 
-        <GameInfoPanel :game="game" :MODE_CONFIGS="MODE_CONFIGS" />
+        <GameInfoPanel
+            :game="game"
+            :time="timeDisplay"
+            :MODE_CONFIGS="MODE_CONFIGS"
+        />
 
         <GameArea
             :game="game"

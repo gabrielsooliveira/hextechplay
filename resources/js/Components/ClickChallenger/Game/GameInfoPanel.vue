@@ -6,6 +6,10 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    time: {
+        type: [String, Number],
+        required: true,
+    },
     MODE_CONFIGS: {
         type: Object,
         required: true,
@@ -13,7 +17,11 @@ const props = defineProps({
 });
 
 const timeDisplay = computed(() => {
-    return props.game.time ? props.game.time.toFixed(0) : "0";
+    if (typeof props.time === "string" || isNaN(props.time)) {
+        return props.time;
+    }
+
+    return Number(props.time).toFixed(0);
 });
 </script>
 
