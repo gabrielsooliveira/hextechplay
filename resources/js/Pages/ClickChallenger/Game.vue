@@ -3,8 +3,10 @@ import * as Tone from "tone";
 import { Head, Link, usePage } from "@inertiajs/vue3";
 import { useI18n } from "vue-i18n";
 import { ref, reactive, computed, onUnmounted, nextTick, onMounted } from "vue";
-import CoinImage from "@/assets/images/clickchallenger/coin.png";
-import MushroomImage from "@/assets/images/clickchallenger/mushroom.png";
+import GameInfoPanel from "@/js/Components/ClickChallenger/Game/GameInfoPanel.vue";
+import GameArea from "@/js/Components/ClickChallenger/Game/GameArea.vue";
+import GameControls from "@/js/Components/ClickChallenger/Game/GameControls.vue";
+import GameStatsPanel from "@/js/Components/ClickChallenger/Game/GameStatsPanel.vue";
 
 const page = usePage();
 const { t } = useI18n();
@@ -40,10 +42,39 @@ const MODE_CONFIGS = {
 };
 
 const MAX_COMBO = 5;
-const GAME_AREA_WIDTH = 1200;
-const GAME_AREA_HEIGHT = 420;
+const GAME_AREA_WIDTH = ref(1200);
+const GAME_AREA_HEIGHT = ref(420);
+const previousWidth = ref(1200);
+const previousHeight = ref(420);
 
-// Estado do Jogo (Reactive)
+function handleDimensionsUpdate(dimensions) {
+    const newWidth = dimensions.width;
+    const newHeight = dimensions.height;
+
+    GAME_AREA_WIDTH.value = newWidth;
+    GAME_AREA_HEIGHT.value = newHeight;
+
+    const sizeChanged =
+        newWidth !== previousWidth.value || newHeight !== previousHeight.value;
+
+    if (game.gameActive && sizeChanged) {
+        targets.forEach((target) => {
+            const targetSize = parseInt(target.size);
+            let newX_px = (newWidth * target.x_percent) / 100;
+            let newY_px = (newHeight * target.y_percent) / 100;
+            const maxX = Math.max(0, newWidth - targetSize);
+            const maxY = Math.max(0, newHeight - targetSize);
+
+            newX_px = Math.min(newX_px, maxX);
+            newY_px = Math.min(newY_px, maxY);
+            target.x = Math.round(newX_px) + "px";
+            target.y = Math.round(newY_px) + "px";
+        });
+    }
+
+    previousWidth.value = newWidth;
+    previousHeight.value = newHeight;
+}
 const game = reactive({
     mode: page.props.mode,
     score: 0,
@@ -77,16 +108,12 @@ const game = reactive({
     },
 });
 
-// Alvos e Popups
-const areaRef = ref(null);
 let nextTargetId = 1;
 const targets = reactive([]);
 const popups = reactive([]);
 let spawnIntervalId = null;
 let timerInterval = null;
 const audioLoaded = ref(false);
-
-// --- Lógica de Áudio (Tone.js) ---
 
 function initializeAudio() {
     if (typeof Tone === "undefined") {
@@ -179,19 +206,26 @@ function stopTimer() {
 // --- LÓGICA DE SPAWN E ALVOS ---
 
 function createTarget() {
-    if (!game.gameActive || game.gamePaused) return;
+    const currentWidth = GAME_AREA_WIDTH.value;
+    const currentHeight = GAME_AREA_HEIGHT.value;
+
+    if (
+        !game.gameActive ||
+        game.gamePaused ||
+        currentWidth <= 0 ||
+        currentHeight <= 0
+    )
+        return;
 
     const { redChance } = MODE_CONFIGS[game.mode];
     const isRed = Math.random() < redChance;
-
-    // Tamanhos e Pontos
-    const size = Math.floor(Math.random() * 20) + 40; // 40px a 60px
+    const size = Math.floor(Math.random() * 20) + 40;
     const points = isRed ? 0 : size > 50 ? 25 : 10;
     const comboInc = isRed ? 0 : 0.5;
-
-    // Posição
-    const x = Math.floor(Math.random() * (GAME_AREA_WIDTH - size));
-    const y = Math.floor(Math.random() * (GAME_AREA_HEIGHT - size));
+    const x = Math.floor(Math.random() * (currentWidth - size));
+    const y = Math.floor(Math.random() * (currentHeight - size));
+    const x_percent = (x / currentWidth) * 100;
+    const y_percent = (y / currentHeight) * 100;
 
     const color = isRed ? "#dc3545" : "#198754";
 
@@ -199,6 +233,8 @@ function createTarget() {
         id: nextTargetId++,
         x,
         y,
+        x_percent: x_percent,
+        y_percent: y_percent,
         size,
         color,
         points,
@@ -275,7 +311,6 @@ function onTargetClick(target) {
     let popUpColor = "";
 
     if (target.type === "red") {
-        // CÍRCULO VERMELHO (PENALIDADE)
         game.combo = 1;
         playSound("red");
 
@@ -294,7 +329,6 @@ function onTargetClick(target) {
                 }
                 break;
             case "zen":
-                // Penalidade mínima no Zen (embora o alvo vermelho dificilmente apareça)
                 game.score = Math.max(0, game.score - 5);
                 popUpText = "-5 Pts";
                 popUpColor = "text-danger";
@@ -348,7 +382,6 @@ function endGame() {
 // --- INICIALIZAÇÃO E REINÍCIO ---
 
 function initGame(selectedMode) {
-    // Inicializa o áudio na primeira interação
     if (typeof Tone !== "undefined" && !audioLoaded.value) {
         Tone.start().then(initializeAudio);
     }
@@ -402,7 +435,6 @@ function handlePlayAgain() {
 onUnmounted(() => {
     stopSpawning();
     stopTimer();
-    // Limpeza do Tone.js se necessário
     if (typeof Tone !== "undefined" && audioLoaded.value) {
         Tone.Transport.stop();
     }
@@ -423,9 +455,8 @@ onMounted(() => {
         <meta property="og:url" content="https://hextechplay.com/wordlol" />
         <link rel="canonical" href="https://hextechplay.com/wordlol" />
     </Head>
-    <!-- O componente é envolvido em uma div que simula o container centralizado -->
+
     <div class="container padding-navbar">
-        <!-- Título e Subtítulo -->
         <div class="text-center text-white mb-4">
             <h1 class="display-3 fw-bold text-white">Click Challenger</h1>
             <p class="lead text-secondary">
@@ -433,401 +464,36 @@ onMounted(() => {
             </p>
         </div>
 
-        <!-- Modo Ativo / Status do Jogo -->
-        <div
-            class="d-flex justify-content-between p-3 mb-3 bg-dark text-white rounded shadow-sm"
-        >
-            <div class="text-start">
-                <small class="text-muted">Modo</small>
-                <h4 class="mb-0 text-warning">
-                    {{ MODE_CONFIGS[game.mode].name }}
-                </h4>
-            </div>
-            <div class="text-center">
-                <small class="text-muted">{{ $t("labels.final_score") }}</small>
-                <h4 class="mb-0 text-success">{{ game.score }}</h4>
-            </div>
-            <div class="text-end">
-                <small class="text-muted" v-if="game.mode === 'classic'">{{
-                    $t("labels.time")
-                }}</small>
-                <small
-                    class="text-muted"
-                    v-else-if="game.mode === 'survival'"
-                    >{{ $t("labels.lives") }}</small
-                >
-                <small class="text-muted" v-else>{{ $t("labels.time") }}</small>
+        <GameInfoPanel :game="game" :MODE_CONFIGS="MODE_CONFIGS" />
 
-                <h4
-                    class="mb-0"
-                    :class="{
-                        'text-danger':
-                            game.mode === 'survival' && game.lives <= 1,
-                        'text-info': game.mode !== 'survival',
-                    }"
-                >
-                    <span v-if="game.mode === 'classic'"
-                        >{{ timeDisplay }}s</span
-                    >
-                    <span v-else-if="game.mode === 'survival'">{{
-                        game.lives
-                    }}</span>
-                    <span v-else>∞</span>
-                </h4>
-            </div>
-        </div>
+        <GameArea
+            :game="game"
+            :targets="targets"
+            :popups="popups"
+            :MODE_CONFIGS="MODE_CONFIGS"
+            :currentHighScore="currentHighScore"
+            @target-click="onTargetClick"
+            @miss-click="handleMiss"
+            @play-again="handlePlayAgain"
+            @update:dimensions="handleDimensionsUpdate"
+        />
 
-        <!-- Área do Jogo -->
-        <div
-            ref="areaRef"
-            class="game-area position-relative rounded-3 shadow-lg border border-warning"
-            :style="{
-                minHeight: '420px',
-                margin: '0 auto',
-                overflow: 'hidden',
-            }"
-            @click="handleMiss"
-        >
-            <!-- targets are rendered dynamically as absolutely positioned divs -->
-            <div
-                v-for="t in targets"
-                :key="t.id"
-                class="target position-absolute rounded-circle shadow-sm d-flex align-items-center justify-content-center fw-bold text-white cursor-pointer"
-                :style="{
-                    left: t.x + 'px',
-                    top: t.y + 'px',
-                    width: t.size + 'px',
-                    height: t.size + 'px',
-                    backgroundColor: t.color,
-                    transition: 'transform 0.65s',
-                    cursor: 'pointer',
-                    zIndex: 10,
-                    border: t.type === 'red' ? '3px solid #ff7a7a' : 'none',
-                }"
-                @click.stop="onTargetClick(t)"
-            >
-                <img
-                    v-if="t.type === 'normal'"
-                    :src="CoinImage"
-                    alt="Gold Coin"
-                    :style="{
-                        width: '80%',
-                        height: '80%',
-                        objectFit: 'contain',
-                        WebkitUserDrag: 'none',
-                        MozUserDrag: 'none',
-                        OUserDrag: 'none',
-                        pointerEvents: 'none',
-                    }"
-                />
-                <img
-                    v-else
-                    :src="MushroomImage"
-                    alt="Teemo Mushroom"
-                    :style="{
-                        width: '80%',
-                        height: '80%',
-                        objectFit: 'contain',
-                        WebkitUserDrag: 'none',
-                        MozUserDrag: 'none',
-                        OUserDrag: 'none',
-                        pointerEvents: 'none',
-                    }"
-                />
-            </div>
+        <GameControls
+            :game="game"
+            :MODE_CONFIGS="MODE_CONFIGS"
+            @start-game="initGame"
+            @toggle-pause="togglePause"
+            @end-game="endGame"
+        />
 
-            <!-- points popups -->
-            <div
-                v-for="p in popups"
-                :key="p.id"
-                class="points-popup position-absolute fw-bolder text-white"
-                :class="[p.color]"
-                :style="{
-                    left: p.x + 'px',
-                    top: p.y + 'px',
-                    transform: 'translate(-50%, -50%)',
-                    fontSize: '1.2rem',
-                    animation: 'popup-animate 0.8s ease-out forwards',
-                    pointerEvents: 'none',
-                    zIndex: 20,
-                }"
-            >
-                {{ p.text }}
-            </div>
-
-            <!-- Game Paused Overlay -->
-            <div
-                v-if="game.gamePaused"
-                class="position-absolute top-0 start-0 w-100 h-100 bg-black bg-opacity-75 d-flex align-items-center justify-content-center"
-                style="z-index: 50"
-            >
-                <span class="text-white h3">{{ $t("labels.paused") }}</span>
-            </div>
-
-            <!-- Game Over Modal -->
-            <div
-                v-if="game.showGameOver"
-                class="position-absolute top-0 start-0 w-100 h-100 bg-black bg-opacity-90 d-flex align-items-center justify-content-center"
-                style="z-index: 100"
-            >
-                <div
-                    class="modal-content bg-dark text-white py-3 w-75 rounded-3 shadow-lg border border-warning"
-                >
-                    <div class="text-center">
-                        <h2 class="mb-2 text-warning display-4 fw-bold">
-                            {{ $t("labels.game_over") }}
-                        </h2>
-                        <p class="lead mb-1">
-                            {{ $t("labels.final_score") }}:
-                            <strong class="text-success">{{
-                                game.score
-                            }}</strong>
-                        </p>
-                        <p class="text-muted small">
-                            {{ $t("labels.record") }}
-                            {{ MODE_CONFIGS[game.mode].name }}:
-                            <strong class="text-info">{{
-                                currentHighScore
-                            }}</strong>
-                        </p>
-
-                        <button
-                            class="btn btn-primary btn-lg mt-3"
-                            @click="handlePlayAgain"
-                        >
-                            <font-awesome-icon
-                                icon="fas fa-rotate-left"
-                            ></font-awesome-icon>
-                            {{ $t("labels.play_again") }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Controles e Seleção de Modo -->
-        <div
-            class="d-flex flex-column flex-sm-row gap-2 justify-content-center mt-3 mb-4"
-        >
-            <button
-                class="btn btn-success flex-fill fw-bold shadow text-white"
-                :disabled="game.gameActive"
-                @click="initGame(game.mode)"
-            >
-                {{ $t("labels.start") }} ({{ MODE_CONFIGS[game.mode].name }})
-            </button>
-
-            <button
-                class="btn btn-secondary text-white flex-fill shadow"
-                :disabled="!game.gameActive || game.showGameOver"
-                @click="togglePause()"
-            >
-                <font-awesome-icon
-                    :icon="game.gamePaused ? 'fas fa-play' : 'fas fa-pause'"
-                    class="me-1"
-                ></font-awesome-icon>
-                <span v-if="game.gamePaused"> {{ $t("labels.continue") }}</span>
-                <span v-else> {{ $t("labels.pause") }}</span>
-            </button>
-
-            <Link
-                :href="route('clickchallenger.index')"
-                class="btn btn-outline-secondary text-white shadow"
-            >
-                {{ $t("labels.menu") }}</Link
-            >
-
-            <button
-                v-if="game.mode === 'zen' && game.gameActive"
-                class="btn btn-danger shadow text-white"
-                @click="endGame()"
-            >
-                {{ $t("labels.end_game") }}
-            </button>
-        </div>
-
-        <!-- Painel de Estatísticas -->
-        <div class="stats-panel bg-dark p-4 rounded-3 shadow-lg text-white">
-            <h5 class="mb-3 text-white fw-bold">{{ $t("stats.title") }}</h5>
-            <div class="row g-3 text-center">
-                <div class="col-6 col-sm-3">
-                    <div class="p-2 bg-primary rounded">
-                        <small class="text-muted d-block">{{
-                            $t("stats.combo")
-                        }}</small>
-                        <div class="h5 fw-bold text-info">
-                            x{{ game.combo }}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-sm-3">
-                    <div class="p-2 bg-primary rounded">
-                        <small class="text-muted d-block">{{
-                            $t("stats.accuracy")
-                        }}</small>
-                        <div class="h5 fw-bold text-warning">
-                            {{ accuracy }}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-sm-3">
-                    <div class="p-2 bg-primary rounded">
-                        <small class="text-muted d-block">{{
-                            $t("stats.reaction_time")
-                        }}</small>
-                        <div class="h5 fw-bold text-light">
-                            {{ avgReaction }}ms
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-sm-3">
-                    <div class="p-2 bg-primary rounded">
-                        <small class="text-muted d-block"
-                            >{{ $t("stats.highscore") }} ({{
-                                MODE_CONFIGS[game.mode].name
-                            }})</small
-                        >
-                        <div class="h5 fw-bold text-success">
-                            {{ currentHighScore }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chart Placeholder -->
-            <div class="chart-container mt-4 pt-3 border-top border-secondary">
-                <small class="text-muted d-block mb-1">{{
-                    $t("stats.recent_score")
-                }}</small>
-                <div
-                    class="chart-line d-flex align-items-end justify-content-between gap-1 p-1 bg-primary rounded"
-                    style="height: 100px; width: 100%"
-                >
-                    <div
-                        v-for="(s, i) in recentScores"
-                        :key="i"
-                        class="chart-bar bg-primary rounded-top shadow-sm"
-                        style="width: 100%; transition: height 0.3s"
-                        :style="{
-                            height:
-                                maxScore > 0
-                                    ? (s / maxScore) * 100 + '%'
-                                    : '0%',
-                        }"
-                    ></div>
-                </div>
-            </div>
-        </div>
+        <GameStatsPanel
+            :game="game"
+            :MODE_CONFIGS="MODE_CONFIGS"
+            :accuracy="accuracy"
+            :avg-reaction="avgReaction"
+            :current-high-score="currentHighScore"
+            :recent-scores="recentScores"
+            :max-score="maxScore"
+        />
     </div>
 </template>
-
-<style scoped>
-@keyframes floatUp {
-    from {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-    to {
-        opacity: 0;
-        transform: translateY(-40px) scale(1.2);
-    }
-}
-
-@keyframes popup-animate {
-    0% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-    }
-    100% {
-        opacity: 0;
-        transform: translate(-50%, -150%) scale(1.2);
-    }
-}
-
-.target {
-    /* Efeito de click visual */
-    animation: bounce-in 0.3s ease-out;
-    user-select: none;
-}
-
-.target:active {
-    transform: scale(0.85);
-}
-
-.cursor-pointer {
-    cursor: pointer;
-}
-
-.bg-card {
-    background: rgba(0, 0, 0, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-}
-.chart-bar {
-    flex: 1;
-    margin: 0 2px;
-    border-radius: 2px;
-    background: linear-gradient(to top, #c89b3c, #f59e0b);
-    transition: height 0.3s;
-}
-
-.game-area {
-    background: rgba(0, 0, 0, 0.12);
-    border-radius: 12px;
-    min-height: 420px;
-    overflow: hidden;
-    position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.target {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    border-radius: 50%;
-    transition: transform 0.08s, opacity 0.25s;
-    user-select: none;
-    font-weight: 700;
-    border: 2px solid rgba(255, 255, 255, 0.25);
-}
-.target:hover {
-    transform: scale(1.05);
-}
-
-.target.square {
-    border-radius: 8px;
-}
-.target.star {
-    clip-path: polygon(
-        50% 0%,
-        61% 35%,
-        98% 35%,
-        68% 57%,
-        79% 91%,
-        50% 70%,
-        21% 91%,
-        32% 57%,
-        2% 35%,
-        39% 35%
-    );
-    border-radius: 0;
-}
-
-.game-over-modal {
-    background: rgba(0, 0, 0, 0.6);
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.points-popup {
-    position: absolute;
-    font-weight: 800;
-    pointer-events: none;
-    animation: floatUp 1s forwards;
-    z-index: 50;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-}
-</style>
