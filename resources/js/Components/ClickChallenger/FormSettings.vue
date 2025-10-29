@@ -6,7 +6,7 @@ const form = useForm({
 });
 
 const saveSettings = () => {
-    form.get(route("clickchallenger.roleplay"));
+    form.post(route("clickchallenger.roleplay"));
 };
 </script>
 

@@ -6,7 +6,7 @@ const form = useForm({
     questionQuant: 1,
 });
 const saveSettings = () => {
-    form.get(route("lorequestion.roleplay"));
+    form.post(route("lorequestion.roleplay"));
 };
 </script>
 

@@ -20,6 +20,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="author" content="HextechPlay Team" />
+    <meta name="robots" content="index, follow">
     <meta property="og:type" content="website" />
     <meta property="og:image" content="{{ Vite::asset('resources/assets/images/icon.png') }}" />
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])

@@ -5,8 +5,8 @@ import path from 'path';
 import purgeCss from 'vite-plugin-purgecss';
 import viteImagemin from 'vite-plugin-imagemin';
 
-export default defineConfig({
-    base: '/build/',
+export default defineConfig(({ command }) => ({
+    base: command === 'build' ? '/build/' : '',
     plugins: [
         laravel({
             input: ['resources/scss/app.scss', 'resources/js/app.js'],
@@ -87,4 +87,4 @@ export default defineConfig({
             }
         }
     }
-});
+}));
