@@ -1,6 +1,6 @@
 <script setup>
 import { Head, Link } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import CardGame from "@/js/Components/Cards/CardGame.vue";
@@ -10,7 +10,7 @@ import ClickChallengerBackground from "@/assets/images/clickchallenger.png";
 
 const { t } = useI18n();
 
-const games = ref([
+const games = computed(() => [
     {
         id: 1,
         title: t("lorequestion_title"),
@@ -39,6 +39,7 @@ const games = ref([
         rating: 4.6,
     },
 ]);
+
 </script>
 
 <template>

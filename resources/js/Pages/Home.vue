@@ -1,6 +1,6 @@
 <script setup>
 import { Head, Link } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import CardInfo from "@/js/Components/Cards/CardInfo.vue";
@@ -13,7 +13,7 @@ import WordLoLBackground from "@/assets/images/wordlol.png";
 
 const { t } = useI18n();
 
-const stats = ref([
+const stats = computed(() => [
     {
         value: "250",
         label: t("stats.active_players"),
@@ -37,7 +37,7 @@ const stats = ref([
     },
 ]);
 
-const featuredGames = ref([
+const featuredGames = computed(() => [
     {
         id: 1,
         title: t("featured_games.lorequestion.title"),
@@ -58,7 +58,7 @@ const featuredGames = ref([
     },
 ]);
 
-const recentAchievements = ref([
+const recentAchievements = computed(() => [
     {
         id: 1,
         title: t("achievements.master_lore.title"),
@@ -85,7 +85,7 @@ const recentAchievements = ref([
     },
 ]);
 
-const features = ref([
+const features = computed(() => [
     {
         icon: "gamepad",
         text: t("home_feature_free_games"),
@@ -103,6 +103,7 @@ const features = ref([
         text: t("home_feature_updates"),
     },
 ]);
+
 </script>
 
 <template>
