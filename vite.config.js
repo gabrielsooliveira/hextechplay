@@ -61,14 +61,14 @@ export default defineConfig(({ command }) => ({
         },
     },
     server: {
-        host: 'hextechplay.com',
+        host: 'hextechplay.test',
         port: 5173,
-        strictPort: true,
-        hmr: {
-            host: 'hextechplay.com',
-            protocol: 'wss',
-            port: 5173,
-        },
+        // strictPort: true,
+        // hmr: {
+        //     host: 'hextechplay.com',
+        //     protocol: 'wss',
+        //     port: 5173,
+        // },
     },
     build: {
         rollupOptions: {
