@@ -37,7 +37,6 @@ const closeMenu = () => {
     isMenuOpen.value = false;
 };
 
-// Use our new composable for click outside
 useClickOutside(menuRef, closeMenu, [togglerRef]);
 
 onMounted(() => {
@@ -82,7 +81,7 @@ const navbarClass = computed(() => {
                         <Link
                             class="nav-link"
                             :href="route(link.route)"
-                            :class="{ 'link-accent': link.active }"
+                            :class="{ 'link-light' : !link.active, 'link-accent' : link.active }"
                         >
                             {{ link.name }}
                         </Link>
@@ -111,7 +110,7 @@ const navbarClass = computed(() => {
                     <Link
                         class="nav-link"
                         :href="route(link.route)"
-                        :class="{ 'link-accent': link.active }"
+                        :class="{ 'link-light' : !link.active, 'link-accent' : link.active }"
                         @click="closeMenu"
                     >
                         {{ link.name }}
