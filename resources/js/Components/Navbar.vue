@@ -23,6 +23,7 @@ const navLinks = computed(() => [
     { name: t("nav_games"), route: "games", active: route().current("games.*") },
     { name: t("nav_partners"), route: "partners", active: route().current("partners.*") },
     { name: t("nav_contact"), route: "contact", active: route().current("contact.*") },
+    { name: t("nav_match"), route: "match", active: route().current("match.*") },
 ]);
 
 const handleScroll = () => {

@@ -8,6 +8,7 @@ return [
     'nav_games' => 'Games',
     'nav_partners' => 'Partners',
     'nav_contact' => 'Contact',
+    'nav_match' => 'X5 Builder',
 
     // Loading
     'loading_head' => 'Loading',

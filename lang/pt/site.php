@@ -6,6 +6,7 @@ return [
     'nav_games' => 'Jogos',
     'nav_partners' => 'Parceiros',
     'nav_contact' => 'Contato',
+    'nav_match' => 'Criador de X5',
 
     'loading_head' => 'Carregando',
     'loading_title' => 'HextechPlay',
