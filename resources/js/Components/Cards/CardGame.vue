@@ -38,11 +38,11 @@ defineProps({
             <div class="d-flex justify-content-between align-items-center">
                 <small class="text-warning">
                     <font-awesome-icon icon="fas fa-users" class="me-1" />
-                    {{ players.toLocaleString() }} {{ $t("players") }}
+                    {{ players.toLocaleString() }} Jogadores
                 </small>
                 <Link :href="route" class="btn btn-sm btn-accent">
                     <font-awesome-icon icon="fas fa-play" />
-                    {{ $t("play") }}
+                    Jogar
                 </Link>
             </div>
         </div>

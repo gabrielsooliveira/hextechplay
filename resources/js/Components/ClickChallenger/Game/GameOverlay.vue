@@ -1,9 +1,6 @@
 <script setup>
-import { useI18n } from "vue-i18n";
 // Assumindo que você tem o FontAwesome instalado e globalmente acessível
 // import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-
-const { t } = useI18n();
 
 const props = defineProps({
     game: { type: Object, required: true },
@@ -24,7 +21,7 @@ function handlePlayAgain() {
         class="position-absolute top-0 start-0 w-100 h-100 bg-black bg-opacity-75 d-flex align-items-center justify-content-center"
         style="z-index: 50"
     >
-        <span class="text-white h3">{{ t("labels.paused") }}</span>
+        <span class="text-white h3">Pausado</span>
     </div>
 
     <div
@@ -37,14 +34,14 @@ function handlePlayAgain() {
         >
             <div class="text-center">
                 <h2 class="mb-2 text-warning display-4 fw-bold">
-                    {{ t("labels.game_over") }}
+                    Fim de Jogo
                 </h2>
                 <p class="lead mb-1">
-                    {{ t("labels.final_score") }}:
+                    Pontuação Final:
                     <strong class="text-success">{{ game.score }}</strong>
                 </p>
                 <p class="text-muted small">
-                    {{ t("labels.record") }}
+                    Recorde
                     {{ MODE_CONFIGS[game.mode].name }}:
                     <strong class="text-info">{{ currentHighScore }}</strong>
                 </p>
@@ -54,7 +51,7 @@ function handlePlayAgain() {
                     @click="handlePlayAgain"
                 >
                     <i class="fas fa-rotate-left me-2"></i>
-                    {{ t("labels.play_again") }}
+                    Jogar Novamente
                 </button>
             </div>
         </div>

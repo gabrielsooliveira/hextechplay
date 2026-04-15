@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { Head, router } from "@inertiajs/vue3";
-import { useI18n } from "vue-i18n";
 import ModalDialog from "@/js/Components/Modals/ModalDialog.vue";
 
 const props = defineProps({
@@ -20,7 +19,6 @@ const props = defineProps({
 const userInput = ref("");
 const loading = ref(false);
 const inputError = ref("");
-const { t } = useI18n();
 const isModalVisible = ref(false);
 const showGuide = ref(false);
 
@@ -46,12 +44,12 @@ const makeGuess = async () => {
     const input = userInput.value.trim().toUpperCase();
 
     if (input.length === 1 && !/^[A-Z]$/.test(input)) {
-        inputError.value = t("input.error_invalid");
+        inputError.value = "Letra inválida!";
         return;
     }
 
     if (input.length === 1 && props.guessed.includes(input)) {
-        inputError.value = t("input.error_repeat");
+        inputError.value = "A letra já foi escolhida!";
         return;
     }
 
@@ -92,7 +90,7 @@ const makeGuess = async () => {
             });
         }
     } catch (error) {
-        inputError.value = t("input.error_generic");
+        inputError.value = "Ocorreu um erro. Tente novamente.";
         console.error("Erro:", error);
     } finally {
         loading.value = false;
@@ -146,34 +144,30 @@ const closeModal = () => {
 
 const shareOnTwitter = () => {
     const messagesWin = [
-        t("result.win.item1"),
-        t("result.win.item2"),
-        t("result.win.item3"),
+        "Uau! Você desvendou a palavra secreta!",
+        "GG! Adivinhou a palavra como um verdadeiro mestre!",
+        "Incrível! Sua dedução foi impecável dessa vez!",
     ];
 
     const messagesLose = [
-        t("result.lost.item1"),
-        t("result.lost.item2"),
-        t("result.lost.item3"),
+        "Foi quase! Na próxima a palavra não escapa.",
+        "A palavra venceu dessa vez... Tente de novo!",
+        "Não desanime! Toda grande lenda já perdeu uma batalha.",
     ];
 
     const message = props.won
         ? messagesWin[Math.floor(Math.random() * messagesWin.length)]
         : messagesLose[Math.floor(Math.random() * messagesLose.length)];
 
-    const attemptsInfo = props.attempts + t("attempts_info");
-    const errorsInfo = t("error") + props.wrong + props.maxAttempts;
+    const attemptsInfo = props.attempts + " tentativas.";
+    const errorsInfo = "Erros: " + props.wrong + "/" + props.maxAttempts;
     const gameUrl = window.location.origin;
 
     let text = "";
     if (props.won) {
-        text = `${message}\n${attemptsInfo}\n${errorsInfo}\n${t(
-            "invite_text"
-        )} ${gameUrl} #HextechPlay #WordLoL #LoL`;
+        text = `${message}\n${attemptsInfo}\n${errorsInfo}\nAdivinhe a palavra de hoje e teste seus conhecimentos em: ${gameUrl} #HextechPlay #WordLoL #LoL`;
     } else {
-        text = `${message}\n${t(
-            "invite_text"
-        )} ${gameUrl} #HextechPlay #WordLoL #LoL`;
+        text = `${message}\nAdivinhe a palavra de hoje e teste seus conhecimentos em: ${gameUrl} #HextechPlay #WordLoL #LoL`;
     }
 
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
@@ -185,11 +179,11 @@ const shareOnTwitter = () => {
 
 <template>
     <Head>
-        <title>{{ $t("page_title") }}</title>
-        <meta name="description" :content="$t('page_description')" />
-        <meta name="keywords" :content="$t('page_keywords')" />
-        <meta property="og:title" :content="$t('og_title')" />
-        <meta property="og:description" :content="$t('og_description')" />
+        <title>WordLoL - Adivinhe a palavra de League of Legends!</title>
+        <meta name="description" content="Jogue WordLoL, um divertido jogo de adivinhar palavras baseado no universo de League of Legends. Tente adivinhar a palavra secreta com dicas e um número limitado de tentativas!" />
+        <meta name="keywords" content="HextechPlay, mini games LoL, jogos online, quiz League of Legends, runeterra, diversão, jogos rápidos" />
+        <meta property="og:title" content="HextechPlay – Mini Games e Quizzes de League of Legends" />
+        <meta property="og:description" content="Teste seu conhecimento e divirta-se com jogos rápidos inspirados em Runeterra!" />
         <meta property="og:url" content="https://hextechplay.com/wordlol" />
         <link rel="canonical" href="https://hextechplay.com/wordlol" />
     </Head>
@@ -205,7 +199,7 @@ const shareOnTwitter = () => {
                             icon="fa-solid fa-gamepad"
                             class="text-warning"
                         />
-                        {{ $t("title") }}
+                        WordLoL
                     </h2>
 
                     <div
@@ -225,9 +219,7 @@ const shareOnTwitter = () => {
                     <div class="row g-3 mb-4">
                         <div class="col-6">
                             <div class="bg-dark rounded p-3 h-100">
-                                <small class="text-white d-block">{{
-                                    $t("remaining")
-                                }}</small>
+                                <small class="text-white d-block">CHANCES RESTANTES</small>
 
                                 <div class="fs-4 fw-bold text-warning">
                                     {{ wrong }} / {{ maxAttempts }}
@@ -237,9 +229,7 @@ const shareOnTwitter = () => {
 
                         <div class="col-6">
                             <div class="bg-dark rounded p-3 h-100">
-                                <small class="text-white d-block">{{
-                                    $t("attempts")
-                                }}</small>
+                                <small class="text-white d-block">TENTATIVAS</small>
                                 <div class="fs-4 fw-bold text-warning">
                                     {{ attempts }}
                                 </div>
@@ -253,7 +243,7 @@ const shareOnTwitter = () => {
                             v-model="userInput"
                             class="form-control text-center text-uppercase text-warning fw-bold placeholder-text"
                             :class="{ 'is-invalid': inputError }"
-                            :placeholder="$t('input.placeholder')"
+                            placeholder="Digite letra ou palavra"
                             :disabled="lost || won"
                             :maxlength="props.displayWord.split(' ').length"
                             @keyup.enter="makeGuess"
@@ -265,10 +255,8 @@ const shareOnTwitter = () => {
                             @click="makeGuess"
                             :disabled="lost || won || !userInput.trim()"
                         >
-                            <span v-if="!loading">{{
-                                $t("input.button_try")
-                            }}</span>
-                            <span v-else>{{ $t("input.button_loading") }}</span>
+                            <span v-if="!loading">✅ Tentar</span>
+                            <span v-else>⏳</span>
                         </button>
                     </div>
 
@@ -278,7 +266,7 @@ const shareOnTwitter = () => {
 
                     <div class="mt-4 text-start">
                         <h6 class="text-danger mb-2 fw-bold">
-                            {{ $t("wrong_letters.title") }}
+                            ❌ Letras Erradas
                         </h6>
 
                         <div class="bg-dark rounded p-3 min-height-60">
@@ -295,9 +283,7 @@ const shareOnTwitter = () => {
                                 </span>
                             </div>
 
-                            <small v-else class="text-warning">{{
-                                $t("wrong_letters.none")
-                            }}</small>
+                            <small v-else class="text-warning">Nenhuma ainda</small>
                         </div>
                     </div>
 
@@ -316,13 +302,13 @@ const shareOnTwitter = () => {
 
     <ModalDialog :isVisible="showGuide" @close="showGuide = false">
         <div class="text-primary">
-            <h3>{{ $t("guide.title") }}</h3>
+            <h3>Como Jogar WordLoL</h3>
             <ul>
-                <li>{{ $t("guide.item1") }}</li>
-                <li>{{ $t("guide.item2") }}</li>
-                <li>{{ $t("guide.item3") }}</li>
-                <li>{{ $t("guide.item4") }}</li>
-                <li>{{ $t("guide.item5") }}</li>
+                <li>Tente adivinhar a palavra antes de atingir o número máximo de erros.</li>
+                <li>Digite uma letra por vez ou tente adivinhar a palavra inteira.</li>
+                <li>Palavras já tentadas não podem ser repetidas.</li>
+                <li>Compartilhe seus resultados no Twitter ao finalizar.</li>
+                <li>Você tem um tempo limitado para cada palavra, fique atento!</li>
             </ul>
         </div>
     </ModalDialog>
@@ -331,16 +317,16 @@ const shareOnTwitter = () => {
         <template #default>
             <div class="text-center py-1">
                 <template v-if="props.won">
-                    <h3 class="text-success">{{ $t("result.win.title") }}</h3>
+                    <h3 class="text-success">🎉 Parabéns! Você Venceu!</h3>
                     <p class="text-dark">
-                        {{ $t("result.word") }} {{ props.word }}
+                        A palavra era: {{ props.word }}
                     </p>
                 </template>
 
                 <template v-else-if="props.lost">
-                    <h3 class="text-danger">{{ $t("result.lost.title") }}</h3>
+                    <h3 class="text-danger">😢 Não foi dessa vez...</h3>
                     <p class="text-dark">
-                        {{ $t("result.word") }} {{ props.word }}
+                        A palavra era: {{ props.word }}
                     </p>
                 </template>
 
@@ -348,7 +334,7 @@ const shareOnTwitter = () => {
 
                 <div class="text-center">
                     <p class="mb-2 text-primary fw-bold">
-                        {{ $t("next_question") }}
+                        Próxima pergunta em
                     </p>
                     <h4 class="text-warning">{{ formattedTime }}</h4>
                 </div>
@@ -357,7 +343,7 @@ const shareOnTwitter = () => {
 
                 <div class="text-center">
                     <p class="text-primary fw-bold mb-2">
-                        {{ $t("share_result") }}
+                        Compartilhe seu resultado
                     </p>
                     <button
                         @click="shareOnTwitter"
@@ -367,7 +353,7 @@ const shareOnTwitter = () => {
                             icon="fa-brands fa-x-twitter"
                             class="me-2"
                         />
-                        {{ $t("share_button.twitter") }}
+                        Compartilhar no X
                     </button>
                 </div>
             </div>

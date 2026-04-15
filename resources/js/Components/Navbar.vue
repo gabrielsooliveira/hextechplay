@@ -1,12 +1,9 @@
 <script setup>
 import { Link, usePage } from "@inertiajs/vue3";
 import { ref, onUnmounted, onMounted, computed } from "vue";
-import { useI18n } from "vue-i18n";
 import { useWindowSize } from "@/js/Composables/useWindowSize";
 import { useClickOutside } from "@/js/Composables/useClickOutside";
-import LocaleSwitcher from "@/js/Components/LocaleSwitcher.vue";
 
-const { t } = useI18n();
 const { isDesktop, isMobile } = useWindowSize();
 
 const page = usePage();
@@ -19,10 +16,10 @@ const menuRef = ref(null);
 const togglerRef = ref(null);
 
 const navLinks = computed(() => [
-    { name: t("nav_home"), route: "home", active: page.url === "/" },
-    { name: t("nav_games"), route: "games", active: route().current("games.*") },
-    { name: t("nav_partners"), route: "partners", active: route().current("partners.*") },
-    { name: t("nav_contact"), route: "contact", active: route().current("contact.*") },
+    { name: "Início", route: "home", active: page.url === "/" },
+    { name: "Jogos", route: "games", active: route().current("games.*") },
+    { name: "Parceiros", route: "partners", active: route().current("partners.*") },
+    { name: "Contato", route: "contact", active: route().current("contact.*") },
 ]);
 
 const handleScroll = () => {
@@ -87,7 +84,6 @@ const navbarClass = computed(() => {
                         </Link>
                     </li>
                 </ul>
-                <LocaleSwitcher />
             </div>
         </div>
     </nav>

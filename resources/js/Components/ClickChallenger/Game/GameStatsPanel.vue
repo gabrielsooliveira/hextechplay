@@ -33,23 +33,19 @@ const props = defineProps({
 
 <template>
     <div class="stats-panel bg-dark p-4 rounded-3 shadow-lg text-white">
-        <h5 class="mb-3 text-white fw-bold">{{ $t("stats.title") }}</h5>
+        <h5 class="mb-3 text-white fw-bold">📊 Estatísticas Detalhadas</h5>
 
         <div class="row g-3 text-center">
             <div class="col-6 col-sm-3">
                 <div class="p-2 bg-primary rounded">
-                    <small class="text-muted d-block">{{
-                        $t("stats.combo")
-                    }}</small>
+                    <small class="text-muted d-block">Combo</small>
                     <div class="h5 fw-bold text-info">x{{ game.combo }}</div>
                 </div>
             </div>
 
             <div class="col-6 col-sm-3">
                 <div class="p-2 bg-primary rounded">
-                    <small class="text-muted d-block">{{
-                        $t("stats.accuracy")
-                    }}</small>
+                    <small class="text-muted d-block">Precisão</small>
                     <div class="h5 fw-bold text-warning">
                         {{ accuracy }}
                     </div>
@@ -58,9 +54,7 @@ const props = defineProps({
 
             <div class="col-6 col-sm-3">
                 <div class="p-2 bg-primary rounded">
-                    <small class="text-muted d-block">{{
-                        $t("stats.reaction_time")
-                    }}</small>
+                    <small class="text-muted d-block">Tempo de Reação</small>
                     <div class="h5 fw-bold text-light">{{ avgReaction }}ms</div>
                 </div>
             </div>
@@ -68,7 +62,7 @@ const props = defineProps({
             <div class="col-6 col-sm-3">
                 <div class="p-2 bg-primary rounded">
                     <small class="text-muted d-block"
-                        >{{ $t("stats.highscore") }} ({{
+                        >Recorde ({{
                             MODE_CONFIGS[game.mode].name
                         }})</small
                     >
@@ -80,9 +74,7 @@ const props = defineProps({
         </div>
 
         <div class="chart-container mt-4 pt-3 border-top border-secondary">
-            <small class="text-muted d-block mb-1">{{
-                $t("stats.recent_score")
-            }}</small>
+            <small class="text-muted d-block mb-1">Histórico de Pontuação Recente</small>
             <div
                 class="chart-line d-flex align-items-end justify-content-between gap-1 p-1 bg-primary rounded w-100"
                 style="height: 100px"

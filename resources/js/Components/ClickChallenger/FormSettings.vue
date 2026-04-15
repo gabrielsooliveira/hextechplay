@@ -13,9 +13,7 @@ const saveSettings = () => {
 <template>
     <form @submit.prevent="saveSettings" class="container">
         <div class="mb-3 text-primary">
-            <label class="form-label fw-semibold d-block text-capitalize">{{
-                $t("mode_phrase")
-            }}</label>
+            <label class="form-label fw-semibold d-block text-capitalize">Escolha o modo de jogo</label>
 
             <div class="form-check mb-2">
                 <input
@@ -26,7 +24,7 @@ const saveSettings = () => {
                     v-model="form.mode"
                 />
                 <label class="form-check-label" for="mode-classic">
-                    {{ $t("mode.one") }}
+                    Clasico
                 </label>
             </div>
 
@@ -39,7 +37,7 @@ const saveSettings = () => {
                     v-model="form.mode"
                 />
                 <label class="form-check-label" for="mode-zen">
-                    {{ $t("mode.two") }}
+                    Zen
                 </label>
             </div>
 
@@ -52,7 +50,7 @@ const saveSettings = () => {
                     v-model="form.mode"
                 />
                 <label class="form-check-label" for="mode-survival">
-                    {{ $t("mode.three") }}
+                    Sobrevivência
                 </label>
             </div>
         </div>
@@ -61,7 +59,7 @@ const saveSettings = () => {
                 type="submit"
                 class="btn btn-accent text-white flex-grow-1 fw-bold rounded-3 shadow text-capitalize"
             >
-                {{ $t("button_start") }}
+                Iniciar jogo
             </button>
         </div>
     </form>

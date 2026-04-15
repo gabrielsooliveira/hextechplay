@@ -36,7 +36,7 @@ function handleEndGame() {
             :disabled="game.gameActive"
             @click="handleStartGame"
         >
-            {{ $t("labels.start") }} ({{ MODE_CONFIGS[game.mode].name }})
+            Iniciar ({{ MODE_CONFIGS[game.mode].name }})
         </button>
 
         <button
@@ -50,15 +50,15 @@ function handleEndGame() {
                     'me-1',
                 ]"
             ></font-awesome-icon>
-            <span v-if="game.gamePaused"> {{ $t("labels.continue") }}</span>
-            <span v-else> {{ $t("labels.pause") }}</span>
+            <span v-if="game.gamePaused"> Continuar</span>
+            <span v-else> Pausar</span>
         </button>
 
         <Link
             :href="route('clickchallenger.index')"
             class="btn btn-outline-secondary text-white shadow"
         >
-            {{ $t("labels.menu") }}
+            Menu
         </Link>
 
         <button
@@ -66,7 +66,7 @@ function handleEndGame() {
             class="btn btn-danger shadow text-white"
             @click="handleEndGame"
         >
-            {{ $t("labels.end_game") }}
+            Encerrar Jogo
         </button>
     </div>
 </template>

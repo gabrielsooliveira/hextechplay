@@ -28,11 +28,11 @@ const activeForm = computed(() => {
 
 <template>
     <Head>
-        <title>{{ $t("page_title") }}</title>
-        <meta name="description" :content="$t('page_description')" />
-        <meta name="keywords" :content="$t('page_keywords')" />
-        <meta property="og:title" :content="$t('og_title')" />
-        <meta property="og:description" :content="$t('og_description')" />
+        <title>ClickChallenger</title>
+        <meta name="description" content="ClickChallenger é um jogo da plataforma HextechPlay que testa seus reflexos e suas habilidades." />
+        <meta name="keywords" content="HextechPlay, mini games LoL, jogos online, quiz League of Legends, runeterra, diversão, jogos rápidos" />
+        <meta property="og:title" content="HextechPlay – Mini Games e Quizzes de League of Legends" />
+        <meta property="og:description" content="Teste seus reflexos e precisão no ClickChallenger." />
         <meta
             property="og:url"
             content="https://hextechplay.com/lorequestion"
@@ -43,10 +43,10 @@ const activeForm = computed(() => {
     <div class="min-vh-100 d-flex align-items-center justify-content-center">
         <div class="container text-center">
             <h1 class="display-3 fw-bold mb-3">
-                {{ $t("page_title") }}
+                ClickChallenger
             </h1>
             <p class="lead text-light opacity-75">
-                {{ $t("text_mode_game") }}
+                Escolha o modo de jogo
             </p>
 
             <div class="row g-4 mt-3 justify-content-center">
@@ -58,14 +58,14 @@ const activeForm = computed(() => {
                             <div>
                                 <h4 class="card-title fw-bold">Normal</h4>
                                 <p class="card-text small">
-                                    {{ $t("text_lorequestion_roleplay") }}
+                                    Teste seus reflexos de forma divertida e casual.
                                 </p>
                             </div>
                             <button
                                 @click="openModal"
                                 class="btn btn-accent text-white mt-3 text-capitalize"
                             >
-                                {{ $t("play") }}
+                                Jogar
                             </button>
                         </div>
                     </div>
@@ -78,14 +78,14 @@ const activeForm = computed(() => {
                         >
                             <div>
                                 <h4 class="card-title fw-bold">
-                                    {{ $t("competitive") }}
+                                    Competitivo
                                 </h4>
                                 <p class="card-text small">
-                                    {{ $t("text_lorequestion_competitive") }}
+                                    Dispute com outros jogadores em partidas classificatórias. (Em breve)
                                 </p>
                             </div>
                             <button class="btn btn-accent mt-3" disabled>
-                                {{ $t("coming_soon") }}
+                                Em breve
                             </button>
                         </div>
                     </div>
@@ -103,14 +103,14 @@ const activeForm = computed(() => {
 
     <ModalDialog :isVisible="showGuide" @close="showGuide = false">
         <div class="text-primary p-3">
-            <h3>{{ $t("guide.title") }}</h3>
+            <h3>Como Jogar</h3>
             <ul>
-                <li>{{ $t("guide.item1") }}</li>
-                <li>{{ $t("guide.item2") }}</li>
-                <li>{{ $t("guide.item3") }}</li>
-                <li>{{ $t("guide.item4") }}</li>
-                <li>{{ $t("guide.item5") }}</li>
-                <li>{{ $t("guide.item6") }}</li>
+                <li>O objetivo é clicar o mais rápido possível no botão que aparecer na tela, quanto mais rápido, maior sua pontuação!</li>
+                <li>Você terá 15 segundos para reagir a cada rodada. Clique assim que o botão surgir, sem errar o alvo.</li>
+                <li>Se clicar antes da hora, perderá pontos! Espere o momento certo para agir.</li>
+                <li>A velocidade da aparição dos botões aumenta conforme o jogo avança, então mantenha o foco.</li>
+                <li>No final, você verá seu tempo médio de reação e poderá comparar com suas tentativas anteriores.</li>
+                <li>Dica: mantenha o dedo próximo do botão e evite distrações — a precisão e o tempo de reação são o segredo para ser o campeão do Click Challenger!</li>
             </ul>
         </div>
     </ModalDialog>
@@ -118,7 +118,7 @@ const activeForm = computed(() => {
     <ModalDialog
         :isVisible="isModalVisible"
         @close="closeModal"
-        :title="$t('config_text')"
+        title="Configurações do jogo"
     >
         <ClickChallengerForm v-if="activeForm === 'clickchallenger'" />
         <LoreQuestionForm v-else />

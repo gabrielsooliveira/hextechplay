@@ -20,11 +20,11 @@ function submitForm() {
 
 <template>
     <Head>
-        <title>{{ $t("page_title") }}</title>
-        <meta name="description" :content="$t('page_description')" />
-        <meta name="keywords" :content="$t('page_keywords')" />
-        <meta property="og:title" :content="$t('og_title')" />
-        <meta property="og:description" :content="$t('og_description')" />
+        <title>Contato</title>
+        <meta name="description" content="Entre em contato com a equipe HextechPlay para sugestões, dúvidas ou parcerias." />
+        <meta name="keywords" content="contato, HextechPlay, suporte, sugestões, parcerias" />
+        <meta property="og:title" content="Contato HextechPlay" />
+        <meta property="og:description" content="Envie sua mensagem para o HextechPlay e fale com nossa equipe!" />
         <meta property="og:url" content="https://hextechplay.com/contact" />
         <link rel="canonical" href="https://hextechplay.com/contact" />
     </Head>
@@ -34,9 +34,9 @@ function submitForm() {
             <div class="row justify-content-center">
                 <div class="col-lg-8 text-center">
                     <h1 class="display-3 fw-bold mb-3 fade-in">
-                        {{ $t("page_title") }}
+                        Contato
                     </h1>
-                    <p class="mb-5">{{ $t("page_description") }}</p>
+                    <p class="mb-5">Entre em contato com a equipe HextechPlay para sugestões, dúvidas ou parcerias.</p>
                 </div>
             </div>
 
@@ -47,9 +47,7 @@ function submitForm() {
                         class="shadow-lg p-4 rounded bg-primary"
                     >
                         <div class="mb-3">
-                            <label for="name" class="form-label">{{
-                                $t("form_name")
-                            }}</label>
+                            <label for="name" class="form-label">Nome</label>
                             <input
                                 type="text"
                                 v-model="form.name"
@@ -60,9 +58,7 @@ function submitForm() {
                         </div>
 
                         <div class="mb-3">
-                            <label for="email" class="form-label">{{
-                                $t("form_email")
-                            }}</label>
+                            <label for="email" class="form-label">Email</label>
                             <input
                                 type="email"
                                 v-model="form.email"
@@ -73,9 +69,7 @@ function submitForm() {
                         </div>
 
                         <div class="mb-3">
-                            <label for="message" class="form-label">{{
-                                $t("form_message")
-                            }}</label>
+                            <label for="message" class="form-label">Mensagem</label>
                             <textarea
                                 v-model="form.message"
                                 id="message"
@@ -86,7 +80,7 @@ function submitForm() {
                         </div>
 
                         <button type="submit" class="btn btn-accent w-100">
-                            {{ $t("form_submit") }}
+                            Enviar Mensagem
                         </button>
                     </form>
 

@@ -96,11 +96,11 @@ onMounted(() => {
 
 <template>
     <Head>
-        <title>{{ $t("page_title") }}</title>
-        <meta name="description" :content="$t('page_description')" />
-        <meta name="keywords" :content="$t('page_keywords')" />
-        <meta property="og:title" :content="$t('og_title')" />
-        <meta property="og:description" :content="$t('og_description')" />
+        <title>ClickChallenger</title>
+        <meta name="description" content="ClickChallenger é um jogo da plataforma HextechPlay que testa seus reflexos e suas habilidades." />
+        <meta name="keywords" content="HextechPlay, mini games LoL, jogos online, quiz League of Legends, runeterra, diversão, jogos rápidos" />
+        <meta property="og:title" content="HextechPlay – Mini Games e Quizzes de League of Legends" />
+        <meta property="og:description" content="Teste seus reflexos e precisão no ClickChallenger." />
         <meta
             property="og:url"
             content="https://hextechplay.com/lorequestion/roleplay"
@@ -122,7 +122,7 @@ onMounted(() => {
                         class="text-center text-secondary text-light animate-fade"
                     >
                         <div class="spinner-border mb-3" role="status"></div>
-                        <p>{{ $t("loading_questions") }}</p>
+                        <p>Carregando perguntas...</p>
                     </div>
 
                     <div
@@ -130,16 +130,16 @@ onMounted(() => {
                         class="card shadow-lg p-4 animate-fade"
                     >
                         <h2 class="card-title text-center fw-bold mb-4">
-                            {{ $t("game_finished") }}
+                            Fim do Jogo!
                         </h2>
                         <div class="card-body row">
                             <div class="col-lg-3">
-                                <h5 class="mb-3">{{ $t("results") }}</h5>
+                                <h5 class="mb-3">Resultados:</h5>
                                 <ul class="list-group list-group-flush mb-4">
                                     <li
                                         class="list-group-item d-flex justify-content-between"
                                     >
-                                        <span>{{ $t("total_questions") }}</span>
+                                        <span>Total de perguntas:</span>
                                         <strong>{{
                                             gameResults.total_questions
                                         }}</strong>
@@ -151,7 +151,7 @@ onMounted(() => {
                                         tabindex="0"
                                         @click="selectedCarousel = 'correct'"
                                     >
-                                        <span>{{ $t("correct_answers") }}</span>
+                                        <span>Acertos:</span>
                                         <strong>{{
                                             gameResults.correct_answers.length
                                         }}</strong>
@@ -166,7 +166,7 @@ onMounted(() => {
                                         "
                                         @click="selectedCarousel = 'wrong'"
                                     >
-                                        <span>{{ $t("wrong_answers") }}</span>
+                                        <span>Erros:</span>
                                         <strong>{{
                                             gameResults.wrong_answers.length
                                         }}</strong>
@@ -217,11 +217,7 @@ onMounted(() => {
                                                     </p>
                                                     <p class="text-success">
                                                         <strong
-                                                            >{{
-                                                                $t(
-                                                                    "your_answer"
-                                                                )
-                                                            }}:</strong
+                                                            >Sua resposta:</strong
                                                         >
                                                         {{ answer.user_answer }}
                                                     </p>
@@ -280,31 +276,21 @@ onMounted(() => {
                                                 >
                                                     <p>
                                                         <strong
-                                                            >{{
-                                                                $t(
-                                                                    "your_answer"
-                                                                )
-                                                            }}:</strong
+                                                            >Sua resposta:</strong
                                                         >
                                                         <span
                                                             class="text-decoration-line-through"
                                                             >{{
                                                                 error.user_answer ===
                                                                 "timeout"
-                                                                    ? $t(
-                                                                          "timeout"
-                                                                      )
+                                                                    ? "Tempo esgotado"
                                                                     : error.user_answer
                                                             }}</span
                                                         >
                                                     </p>
                                                     <p>
                                                         <strong
-                                                            >{{
-                                                                $t(
-                                                                    "correct_answer"
-                                                                )
-                                                            }}:</strong
+                                                            >Resposta correta:</strong
                                                         >
                                                         <span
                                                             class="text-success"
@@ -349,13 +335,13 @@ onMounted(() => {
                                     class="btn btn-accent btn-lg w-100"
                                     :href="route('lorequestion.roleplay')"
                                 >
-                                    {{ $t("play_again") }}
+                                    Jogar Novamente
                                 </Link>
                                 <Link
                                     class="btn btn-dark btn-lg w-100"
                                     :href="route('lorequestion.index')"
                                 >
-                                    {{ $t("back_to_games") }}
+                                    Voltar para os jogos
                                 </Link>
                             </div>
                         </div>
@@ -366,10 +352,10 @@ onMounted(() => {
                         class="card shadow-lg p-4 animate-fade text-center"
                     >
                         <p class="text-danger mb-3">
-                            {{ $t("no_questions_found") }}
+                            Nenhuma pergunta encontrada.
                         </p>
                         <button class="btn btn-primary" @click="fetchQuestions">
-                            {{ $t("try_again") }}
+                            Tentar Novamente
                         </button>
                     </div>
 
@@ -382,7 +368,7 @@ onMounted(() => {
                                 <div
                                     class="d-inline-block py-2 rounded-1 bg-warning text-white fs-4 shadow col-3 col-lg-1"
                                 >
-                                    {{ timer }}{{ $t("seconds") }}
+                                    {{ timer }}s
                                 </div>
 
                                 <div

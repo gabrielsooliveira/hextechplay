@@ -8,10 +8,10 @@ import { Link } from "@inertiajs/vue3";
             <div class="row">
                 <div class="col-lg-8 mb-4 text-lg-start text-center">
                     <div class="d-flex align-items-center mb-3">
-                        <span class="fw-bold fs-4">{{ $t("brand") }}</span>
+                        <span class="fw-bold fs-4">HextechPlay</span>
                     </div>
                     <p class="opacity-75 mb-3">
-                        {{ $t("footer_description") }}
+                        A plataforma definitiva de mini-games inspirada no universo de League of Legends. Teste suas habilidades e conhecimento sobre Runeterra.
                     </p>
                     <div
                         class="d-flex justify-content-lg-start justify-content-center"
@@ -93,35 +93,35 @@ import { Link } from "@inertiajs/vue3";
                 <!-- Support -->
                 <div class="col-lg-2 col-md-4 mb-4">
                     <h6 class="text-warning text-uppercase fw-semibold mb-3">
-                        {{ $t("footer_support") }}
+                        Suporte
                     </h6>
                     <ul class="list-unstyled">
                         <li class="mb-2">
                             <Link
                                 :href="route('contact')"
                                 class="text-light text-decoration-none"
-                                >{{ $t("support_help_center") }}</Link
+                                >Central de Ajuda</Link
                             >
                         </li>
                         <li class="mb-2">
                             <Link
                                 :href="route('contact')"
                                 class="text-light text-decoration-none"
-                                >{{ $t("support_contact") }}</Link
+                                >Contato</Link
                             >
                         </li>
                         <li class="mb-2">
                             <Link
                                 :href="route('contact')"
                                 class="text-light text-decoration-none"
-                                >{{ $t("support_report_bug") }}</Link
+                                >Reportar Bug</Link
                             >
                         </li>
                         <li class="mb-2">
                             <Link
                                 :href="route('contact')"
                                 class="text-light text-decoration-none"
-                                >{{ $t("support_feedback") }}</Link
+                                >Feedback</Link
                             >
                         </li>
                     </ul>
@@ -142,28 +142,28 @@ import { Link } from "@inertiajs/vue3";
                 <!-- Quick Links -->
                 <div class="col-lg-2 col-md-4 mb-4">
                     <h6 class="text-warning text-uppercase fw-semibold mb-3">
-                        {{ $t("footer_games") }}
+                        Jogos
                     </h6>
                     <ul class="list-unstyled">
                         <li class="mb-2">
                             <Link
                                 :href="route('lorequestion.index')"
                                 class="text-light text-decoration-none"
-                                >{{ $t("game_lorequestion") }}</Link
+                                >LoreQuestion</Link
                             >
                         </li>
                         <li class="mb-2">
                             <Link
                                 :href="route('wordlol.game')"
                                 class="text-light text-decoration-none"
-                                >{{ $t("game_wordlol") }}</Link
+                                >WordLoL</Link
                             >
                         </li>
                         <li class="mb-2">
                             <Link
                                 :href="route('clickchallenger.index')"
                                 class="text-light text-decoration-none"
-                                >{{ $t("game_clickchallenger") }}</Link
+                                >ClickChallenger</Link
                             >
                         </li>
                     </ul>
@@ -174,18 +174,18 @@ import { Link } from "@inertiajs/vue3";
 
             <div class="row align-items-center">
                 <div class="col-md-6 text-center text-md-start">
-                    <small class="opacity-75">{{ $t("copyright") }}</small>
+                    <small class="opacity-75">© 2025 HextechPlay</small>
                 </div>
                 <div class="col-md-6 text-center text-md-end">
                     <Link
                         :href="route('privacy.policy')"
                         class="text-light text-decoration-none me-3 small"
-                        >{{ $t("privacy_policy") }}</Link
+                        >Política de Privacidade</Link
                     >
                     <Link
                         :href="route('terms')"
                         class="text-light text-decoration-none small"
-                        >{{ $t("terms_of_use") }}</Link
+                        >Termos de Uso</Link
                     >
                 </div>
             </div>

@@ -52,12 +52,5 @@ class PageController extends Controller
         return redirect()->back()->with('success', __('site.message_sent'));
     }
 
-    public function translate($locale)
-    {
-        $available = ['en', 'pt'];
-        if (in_array($locale, $available)) {
-            session(['locale' => $locale]);
-        }
-        return back();
-    }
+
 }

@@ -1,20 +1,16 @@
 <script setup>
 import { Head, Link } from "@inertiajs/vue3";
 import { computed } from "vue";
-import { useI18n } from "vue-i18n";
 
 import CardGame from "@/js/Components/Cards/CardGame.vue";
 import LolQuestionBackground from "@/assets/images/lorequestion.png";
 import WordLoLBackground from "@/assets/images/wordlol.png";
 import ClickChallengerBackground from "@/assets/images/clickchallenger.png";
-
-const { t } = useI18n();
-
 const games = computed(() => [
     {
         id: 1,
-        title: t("lorequestion_title"),
-        description: t("lorequestion_desc"),
+        title: "Perguntas de Lore",
+        description: "Teste seus conhecimentos sobre a rica história e o vasto universo de League of Legends com o nosso Lore Quiz oficial. Desafie-se em nível mundial para ser o maior pesquisador de Runeterra.",
         image: LolQuestionBackground,
         route: "lorequestion.index",
         players: 2500,
@@ -22,8 +18,8 @@ const games = computed(() => [
     },
     {
         id: 2,
-        title: t("wordlol_title"),
-        description: t("wordlol_desc"),
+        title: "WordLoL",
+        description: "Adivinhe nomes de locais, feitiços ou campeões de League of Legends antes que as chances de acertar ou tempo acabe.",
         image: WordLoLBackground,
         route: "wordlol.game",
         players: 1800,
@@ -31,8 +27,8 @@ const games = computed(() => [
     },
     {
         id: 3,
-        title: t("clickchallenger_title"),
-        description: t("clickchallenger_desc"),
+        title: "Click Challenger",
+        description: "Jogue o click challenger e teste sua velocidade perante uma horda de minions na sua lane ou no deserto de shurima.",
         image: ClickChallengerBackground,
         route: "clickchallenger.index",
         players: 5800,
@@ -44,21 +40,21 @@ const games = computed(() => [
 
 <template>
     <Head>
-        <title>{{ $t("page_title") }}</title>
-        <meta name="description" :content="$t('page_description')" />
-        <meta name="keywords" :content="$t('page_keywords')" />
-        <meta property="og:title" :content="$t('og_title')" />
-        <meta property="og:description" :content="$t('og_description')" />
+        <title>Jogos</title>
+        <meta name="description" content="HextechPlay - plataforma de mini-games inspirada no universo de League of Legends – jogue, divirta-se e desafie seus amigos!" />
+        <meta name="keywords" content="HextechPlay, mini games LoL, jogos online, quiz League of Legends, runeterra, diversão, jogos rápidos" />
+        <meta property="og:title" content="HextechPlay – Mini Games e Quizzes de League of Legends" />
+        <meta property="og:description" content="Teste seus conhecimentos e divirta-se com jogos rápidos inspirados em Runeterra!" />
         <meta property="og:url" content="https://hextechplay.com/games" />
         <link rel="canonical" href="https://hextechplay.com/games" />
     </Head>
 
     <section class="padding-navbar text-center container">
         <h1 class="display-3 fw-bold mb-3">
-            {{ t("choose_game") }}
+            Escolha seu Jogo
         </h1>
         <p class="lead text-light opacity-75">
-            {{ t("choose_game_subtitle") }}
+            Diversão rápida e desafiadora te espera. Jogue agora e divirta-se com os clássicos!
         </p>
 
         <div class="d-flex justify-content-center flex-wrap mt-4">
@@ -67,7 +63,7 @@ const games = computed(() => [
                     icon="fas fa-gamepad"
                     class="text-accent me-1"
                 ></font-awesome-icon>
-                {{ games.length }} {{ t("games") }}
+                {{ games.length }} Jogos
             </div>
             <div class="stat-badge me-2 mb-2">
                 <font-awesome-icon
@@ -79,7 +75,7 @@ const games = computed(() => [
                         .reduce((sum, g) => sum + g.players, 0)
                         .toLocaleString()
                 }}
-                {{ t("players") }}
+                Jogadores Diários
             </div>
             <div class="stat-badge me-2 mb-2">
                 <font-awesome-icon
@@ -92,7 +88,7 @@ const games = computed(() => [
                         games.length
                     ).toFixed(1)
                 }}
-                {{ t("rating") }}
+                Média de Avaliação
             </div>
         </div>
     </section>
@@ -101,7 +97,7 @@ const games = computed(() => [
         <div class="row mb-4 align-items-center">
             <div class="col-6">
                 <h3 class="text-light mb-0">
-                    {{ $t("all_games") }}
+                    Todos os jogos
                 </h3>
             </div>
         </div>

@@ -30,25 +30,21 @@ const timeDisplay = computed(() => {
         class="d-flex justify-content-between p-3 mb-3 bg-dark text-white rounded shadow-sm"
     >
         <div class="text-start">
-            <small class="text-muted">{{ $t("labels.mode") }}</small>
+            <small class="text-muted">Modo</small>
             <h4 class="mb-0 text-warning">
                 {{ MODE_CONFIGS[game.mode].name }}
             </h4>
         </div>
 
         <div class="text-center">
-            <small class="text-muted">{{ $t("labels.final_score") }}</small>
+            <small class="text-muted">Pontuação Final</small>
             <h4 class="mb-0 text-success">{{ game.score }}</h4>
         </div>
 
         <div class="text-end">
-            <small class="text-muted" v-if="game.mode === 'classic'">{{
-                $t("labels.time")
-            }}</small>
-            <small class="text-muted" v-else-if="game.mode === 'survival'">{{
-                $t("labels.lives")
-            }}</small>
-            <small class="text-muted" v-else>{{ $t("labels.time") }}</small>
+            <small class="text-muted" v-if="game.mode === 'classic'">Tempo</small>
+            <small class="text-muted" v-else-if="game.mode === 'survival'">Vidas</small>
+            <small class="text-muted" v-else>Tempo</small>
 
             <h4
                 class="mb-0"

@@ -10,6 +10,5 @@ Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::get('/partners', [PageController::class, 'partners'])->name('partners');
 Route::get('/privacy-policy', [PageController::class, 'privatePolicy'])->name('privacy.policy');
 Route::get('/terms', [PageController::class, 'terms'])->name('terms');
-Route::post('/locale/{locale}', [PageController::class, 'translate'])->name('locale.change');
 Route::post('/contact/send', [PageController::class, 'send']);
-Route::post('/terms/accept', [TermsController::class, 'accept'])->middleware('auth')->name('terms.accept');
+Route::post('/terms/accept', [TermsController::class, 'accept'])->name('terms.accept');

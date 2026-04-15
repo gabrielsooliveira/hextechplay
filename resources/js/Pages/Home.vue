@@ -1,7 +1,6 @@
 <script setup>
 import { Head, Link } from "@inertiajs/vue3";
 import { computed } from "vue";
-import { useI18n } from "vue-i18n";
 
 import CardInfo from "@/js/Components/Cards/CardInfo.vue";
 import CardGame from "@/js/Components/Cards/CardGame.vue";
@@ -11,27 +10,25 @@ import Logo from "@/assets/images/icon.png";
 import LolQuestionBackground from "@/assets/images/lorequestion.png";
 import WordLoLBackground from "@/assets/images/wordlol.png";
 
-const { t } = useI18n();
-
 const stats = computed(() => [
     {
         value: "250",
-        label: t("stats.active_players"),
+        label: "Jogadores Ativos",
         icon: "users",
     },
     {
         value: "3",
-        label: t("stats.mini_games"),
+        label: "Mini Games",
         icon: "gamepad",
     },
     {
         value: "850",
-        label: t("stats.matches_played"),
+        label: "Partidas Jogadas",
         icon: "trophy",
     },
     {
         value: "90",
-        label: t("stats.satisfaction"),
+        label: "Índice de Satisfação",
         icon: "star",
         suffix: "%",
     },
@@ -40,8 +37,8 @@ const stats = computed(() => [
 const featuredGames = computed(() => [
     {
         id: 1,
-        title: t("featured_games.lorequestion.title"),
-        description: t("featured_games.lorequestion.description"),
+        title: "Perguntas de Runeterra",
+        description: "Teste seus conhecimentos sobre o vasto universo de League of Legends com o nosso quiz sobre a Lore oficial.",
         image: LolQuestionBackground,
         route: "lorequestion.index",
         players: 2500,
@@ -49,8 +46,8 @@ const featuredGames = computed(() => [
     },
     {
         id: 2,
-        title: t("featured_games.wordlol.title"),
-        description: t("featured_games.wordlol.description"),
+        title: "WordLoL",
+        description: "Adivinhe nomes de locais, feitiços ou campeões de League of Legends com limite de tempo e dicas dinâmicas.",
         image: WordLoLBackground,
         route: "wordlol.game",
         players: 1800,
@@ -61,24 +58,24 @@ const featuredGames = computed(() => [
 const recentAchievements = computed(() => [
     {
         id: 1,
-        title: t("achievements.master_lore.title"),
-        description: t("achievements.master_lore.description"),
+        title: "Lendas de Runeterra",
+        description: "Você dominou as questões da história do continente de Shurima",
         icon: "crown",
         rarity: "legendary",
         rarityColor: "gradient-legendary",
     },
     {
         id: 2,
-        title: t("achievements.speedster.title"),
-        description: t("achievements.speedster.description"),
+        title: "Mais Rápido Que Ahri",
+        description: "Você adivinhou a palavra misteriosa em menos de 10 segundos",
         icon: "bolt",
         rarity: "epic",
         rarityColor: "gradient-epic",
     },
     {
         id: 3,
-        title: t("achievements.explorer.title"),
-        description: t("achievements.explorer.description"),
+        title: "Explorador Novato",
+        description: "Você obteve sua primeira pontuação nas rankeadas",
         icon: "map",
         rarity: "rare",
         rarityColor: "gradient-rare",
@@ -88,19 +85,19 @@ const recentAchievements = computed(() => [
 const features = computed(() => [
     {
         icon: "gamepad",
-        text: t("home_feature_free_games"),
+        text: "Jogos 100% Gratuitos",
     },
     {
         icon: "globe",
-        text: t("home_feature_lol_universe"),
+        text: "Universo Oficial do LoL",
     },
     {
         icon: "mobile-alt",
-        text: t("home_feature_multiplatform"),
+        text: "Suporte Multiplataforma",
     },
     {
         icon: "bolt",
-        text: t("home_feature_updates"),
+        text: "Atualizações Regulares",
     },
 ]);
 
@@ -108,11 +105,11 @@ const features = computed(() => [
 
 <template>
     <Head>
-        <title>{{ $t("page_title") }}</title>
-        <meta name="description" :content="$t('page_description')" />
-        <meta name="keywords" :content="$t('page_keywords')" />
-        <meta property="og:title" :content="$t('og_title')" />
-        <meta property="og:description" :content="$t('og_description')" />
+        <title>Inicio</title>
+        <meta name="description" content="HextechPlay - Jogue mini games rápidos e divertidos inspirados em League of Legends! Teste seus conhecimentos e desafie seus amigos no HextechPlay." />
+        <meta name="keywords" content="HextechPlay, mini games LoL, jogos online, quiz League of Legends, runeterra, diversão, jogos rápidos" />
+        <meta property="og:title" content="HextechPlay – Mini Games e Quizzes de League of Legends" />
+        <meta property="og:description" content="Teste seu conhecimento e divirta-se com jogos rápidos inspirados em Runeterra!" />
         <meta property="og:url" content="https://hextechplay.com" />
         <link rel="canonical" href="https://hextechplay.com" />
     </Head>
@@ -130,18 +127,18 @@ const features = computed(() => [
             />
 
             <h1 class="display-1 fw-bold mb-4">
-                {{ $t("play_phrase") }}
+                Jogue e divirta-se na HextechPlay!
             </h1>
 
             <p class="hero-subtitle lead mb-5">
-                {{ $t("play_phrase_sub") }}
+                Mini-games divertidos para desafiar seus amigos e explorar Runeterra.
             </p>
 
             <Link
                 :href="route('games')"
                 class="btn btn-accent btn-lg fw-semibold"
             >
-                {{ $t("play_button") }}
+                Jogar agora
             </Link>
         </div>
     </section>
@@ -149,10 +146,10 @@ const features = computed(() => [
     <section class="container py-5">
         <div class="text-center mb-5">
             <h2 class="display-4 fw-bold mb-3">
-                {{ $t("featured_games_title") }}
+                Jogos em Destaque
             </h2>
             <p class="text-light opacity-75 lead">
-                {{ $t("featured_games_subtitle") }}
+                Explore os mini-games mais populares da plataforma
             </p>
         </div>
         <div class="row justify-content-center">
@@ -177,10 +174,10 @@ const features = computed(() => [
     <section class="container py-5">
         <div class="text-center mb-5">
             <h2 class="display-4 fw-bold mb-3">
-                {{ $t("community_title") }}
+                Nossa Comunidade
             </h2>
             <p class="text-light opacity-75 lead">
-                {{ $t("community_subtitle") }}
+                Números que mostram o crescimento da nossa plataforma
             </p>
         </div>
         <div class="row">
@@ -206,16 +203,16 @@ const features = computed(() => [
                 <img
                     :src="Ezreal"
                     class="img-fluid hover-zoom"
-                    :alt="$t('home_about_image_alt')"
+                    alt="Imagem ilustrativa de Ezreal"
                     loading="lazy"
                 />
             </div>
             <div class="col-lg-6 order-lg-1">
                 <h3 class="display-5 fw-semibold mb-4">
-                    {{ $t("home_about_title") }}
+                    O que é a HextechPlay?
                 </h3>
                 <p class="text-light opacity-75 lead mb-4">
-                    {{ $t("home_about_description") }}
+                    HextechPlay é uma plataforma de mini-games rápida e divertida, inspirada no universo de LoL. Aqui você pode testar seu conhecimento, desafiar seus amigos e se diverte.
                 </p>
                 <div class="features-list">
                     <div
@@ -237,7 +234,7 @@ const features = computed(() => [
                         icon="fas fa-rocket"
                         class="me-2"
                     ></font-awesome-icon>
-                    {{ $t("get_started_button") }}
+                    Começar Agora
                 </Link>
             </div>
         </div>
@@ -246,10 +243,10 @@ const features = computed(() => [
     <section class="container py-5">
         <div class="row text-center mb-5">
             <h2 class="section-title display-4 fw-bold text-gradient mb-3">
-                {{ $t("achievements_title") }}
+                Conquistas Recentes
             </h2>
             <p class="section-subtitle text-light opacity-75 lead">
-                {{ $t("achievements_subtitle") }}
+                Desbloqueie conquistas e mostre suas habilidades
             </p>
         </div>
         <div class="row">
@@ -266,10 +263,10 @@ const features = computed(() => [
                     :bagdeColor="achievement.rarityColor"
                     :bagdeText="
                         achievement.rarity === 'legendary'
-                            ? $t('rarity_legendary')
+                            ? 'Lendária'
                             : achievement.rarity === 'epic'
-                            ? $t('rarity_epic')
-                            : $t('rarity_rare')
+                            ? 'Épica'
+                            : 'Rara'
                     "
                 />
             </div>

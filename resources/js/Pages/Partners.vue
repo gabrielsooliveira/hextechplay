@@ -20,21 +20,21 @@ const partners = [
 
 <template>
     <Head>
-        <title>{{ $t("page_title") }}</title>
-        <meta name="description" :content="$t('page_description')" />
-        <meta name="keywords" :content="$t('page_keywords')" />
-        <meta property="og:title" :content="$t('og_title')" />
-        <meta property="og:description" :content="$t('og_description')" />
+        <title>Parceiros</title>
+        <meta name="description" content="Nossos parceiros que ajudam o HextechPlay a crescer, promovendo nossos jogos e conectando mais jogadores à nossa comunidade. Agradecemos a todos que compartilham sua paixão e nos incentivam a continuar evoluindo!" />
+        <meta name="keywords" content="HextechPlay, LoL mini games, online games, League of Legends quiz, runeterra, fun, quick games" />
+        <meta property="og:title" content="HextechPlay – Mini Games and League of Legends Quizzes" />
+        <meta property="og:description" content="Test your knowledge and have fun with fast-paced games inspired by Runeterra!" />
         <meta property="og:url" content="https://hextechplay.com" />
         <link rel="canonical" href="https://hextechplay.com" />
     </Head>
 
     <div class="container padding-navbar text-center">
         <h1 class="display-3 fw-bold mb-3 fade-in">
-            {{ $t("page_title") }}
+            Parceiros
         </h1>
         <p class="lead text-light opacity-75 fade-in delay-200">
-            {{ $t("page_description") }}
+            Nossos parceiros que ajudam o HextechPlay a crescer, promovendo nossos jogos e conectando mais jogadores à nossa comunidade. Agradecemos a todos que compartilham sua paixão e nos incentivam a continuar evoluindo!
         </p>
 
         <div class="row g-4">

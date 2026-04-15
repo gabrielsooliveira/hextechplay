@@ -1,7 +1,6 @@
 <script setup>
 import * as Tone from "tone";
 import { Head, Link, usePage } from "@inertiajs/vue3";
-import { useI18n } from "vue-i18n";
 import { ref, reactive, computed, onUnmounted, nextTick, onMounted } from "vue";
 import GameInfoPanel from "@/js/Components/ClickChallenger/Game/GameInfoPanel.vue";
 import GameArea from "@/js/Components/ClickChallenger/Game/GameArea.vue";
@@ -9,7 +8,6 @@ import GameControls from "@/js/Components/ClickChallenger/Game/GameControls.vue"
 import GameStatsPanel from "@/js/Components/ClickChallenger/Game/GameStatsPanel.vue";
 
 const page = usePage();
-const { t } = useI18n();
 
 const MODE_CONFIGS = {
     classic: {
@@ -18,8 +16,8 @@ const MODE_CONFIGS = {
         spawnRate: 600,
         redChance: 0.35,
         scoreMultiplier: 1.0,
-        name: t("mode.classic.name"),
-        description: t("mode.classic.description"),
+        name: "Clássico",
+        description: "O limite de tempo está correndo. Você tem 60 segundos para pontuar!",
     },
     zen: {
         time: Infinity,
@@ -27,8 +25,8 @@ const MODE_CONFIGS = {
         spawnRate: 1000,
         redChance: 0.15,
         scoreMultiplier: 0.8,
-        name: t("mode.zen.name"),
-        description: t("mode.zen.description"),
+        name: "Treino",
+        description: "Modo infinito. Treine sem pressão.",
     },
     survival: {
         time: Infinity,
@@ -36,8 +34,8 @@ const MODE_CONFIGS = {
         spawnRate: 500,
         redChance: 0.45,
         scoreMultiplier: 1.5,
-        name: t("mode.survival.name"),
-        description: t("mode.survival.description"),
+        name: "Sobrevivência",
+        description: "Não deixe nenhum alvo normal sumir. Você tem 3 vidas.",
     },
 };
 
@@ -322,7 +320,7 @@ function onTargetClick(target) {
                 break;
             case "survival":
                 game.lives--;
-                popUpText = t("labels.life_lose");
+                popUpText = "Vida Perdida";
                 popUpColor = "text-danger";
                 if (game.lives <= 0) {
                     endGame();
@@ -447,11 +445,11 @@ onMounted(() => {
 
 <template>
     <Head>
-        <title>{{ $t("page_title") }}</title>
-        <meta name="description" :content="$t('page_description')" />
-        <meta name="keywords" :content="$t('page_keywords')" />
-        <meta property="og:title" :content="$t('og_title')" />
-        <meta property="og:description" :content="$t('og_description')" />
+        <title>ClickChallenger</title>
+        <meta name="description" content="ClickChallenger é um jogo da plataforma HextechPlay que testa seus reflexos e suas habilidades." />
+        <meta name="keywords" content="HextechPlay, mini games LoL, jogos online, quiz League of Legends, runeterra, diversão, jogos rápidos" />
+        <meta property="og:title" content="HextechPlay – Mini Games e Quizzes de League of Legends" />
+        <meta property="og:description" content="Teste seus reflexos e precisão no ClickChallenger." />
         <meta property="og:url" content="https://hextechplay.com/wordlol" />
         <link rel="canonical" href="https://hextechplay.com/wordlol" />
     </Head>

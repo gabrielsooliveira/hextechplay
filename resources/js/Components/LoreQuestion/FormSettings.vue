@@ -13,9 +13,7 @@ const saveSettings = () => {
 <template>
     <form @submit.prevent="saveSettings" class="container">
         <div class="mb-3 text-primary">
-            <label class="form-label fw-semibold d-block text-capitalize">{{
-                $t("mode_phrase")
-            }}</label>
+            <label class="form-label fw-semibold d-block text-capitalize">Escolha o modo de jogo</label>
 
             <div class="form-check form-check-inline">
                 <input
@@ -29,7 +27,7 @@ const saveSettings = () => {
                 <label
                     class="form-check-label text-capitalize"
                     for="difficultyEasy"
-                    >{{ $t("mode.one") }}</label
+                    >Clasico</label
                 >
             </div>
 
@@ -45,7 +43,7 @@ const saveSettings = () => {
                 <label
                     class="form-check-label text-capitalize"
                     for="difficultyMedium"
-                    >{{ $t("mode.two") }}</label
+                    >Zen</label
                 >
             </div>
 
@@ -61,15 +59,13 @@ const saveSettings = () => {
                 <label
                     class="form-check-label text-capitalize"
                     for="difficultyHard"
-                    >{{ $t("mode.three") }}</label
+                    >Sobrevivência</label
                 >
             </div>
         </div>
 
         <div class="mb-3 text-primary">
-            <label for="questionQuant" class="form-label fw-semibold">{{
-                $t("quantity_phrase")
-            }}</label>
+            <label for="questionQuant" class="form-label fw-semibold">Quantidade de perguntas</label>
             <input
                 type="range"
                 class="form-range"
@@ -90,7 +86,7 @@ const saveSettings = () => {
                 type="submit"
                 class="btn btn-accent text-white flex-grow-1 fw-bold rounded-3 shadow text-capitalize"
             >
-                {{ $t("button_start") }}
+                Iniciar jogo
             </button>
         </div>
     </form>

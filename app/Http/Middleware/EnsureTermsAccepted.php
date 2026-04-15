@@ -11,7 +11,7 @@ class EnsureTermsAccepted
     public function handle(Request $request, Closure $next)
     {
         if (Auth::check() && is_null(Auth::user()->accepted_at)) {
-            return redirect()->route('terms.show');
+            return redirect()->route('terms');
         }
 
         return $next($request);
