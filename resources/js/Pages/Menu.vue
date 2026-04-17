@@ -5,6 +5,9 @@ import ModalDialog from "@/js/Components/Modals/ModalDialog.vue";
 import LoreQuestionForm from "@/js/Components/LoreQuestion/FormSettings.vue";
 import ClickChallengerForm from "@/js/Components/ClickChallenger/FormSettings.vue";
 
+import LoreBackground from "@/assets/images/lorequestion.png";
+import ClickBackground from "@/assets/images/clickchallenger.png";
+
 const isModalVisible = ref(false);
 const showGuide = ref(false);
 const page = usePage();
@@ -17,100 +20,116 @@ const closeModal = () => {
     isModalVisible.value = false;
 };
 
-const activeForm = computed(() => {
+const gameMetadata = computed(() => {
     const currentRoute = page.props.currentRoute;
-    if (currentRoute === "clickchallenger.index") {
-        return "clickchallenger";
+    if (currentRoute?.includes("clickchallenger")) {
+        return {
+            id: "clickchallenger",
+            title: "Click Challenger",
+            description: "Teste sua velocidade e reflexos perante ondas de minions ou no deserto de Shurima.",
+            bg: ClickBackground,
+            icon: "fas fa-mouse-pointer",
+            guide: [
+                "O objetivo é clicar o mais rápido possível no alvo que aparecer.",
+                "Cada rodada dura 15 segundos de pura intensidade.",
+                "Não clique antes da hora ou perderá precisão!",
+                "A velocidade aumenta progressivamente.",
+                "Compare seu tempo médio de reação no final."
+            ]
+        };
     }
-    return "lorequestion";
+    return {
+        id: "lorequestion",
+        title: "Perguntas de Lore",
+        description: "Você conhece realmente a história de Runeterra? Prove seus conhecimentos.",
+        bg: LoreBackground,
+        icon: "fas fa-book-open",
+        guide: [
+            "Responda as perguntas sobre o universo de LoL antes que o tempo acabe.",
+            "Cada pergunta tem um tempo limite de 15 segundos.",
+            "Acumule acertos para subir no ranking de historiadores.",
+            "No final, veja o detalhamento de cada resposta."
+        ]
+    };
 });
 </script>
 
 <template>
     <Head>
-        <title>ClickChallenger</title>
-        <meta name="description" content="ClickChallenger é um jogo da plataforma HextechPlay que testa seus reflexos e suas habilidades." />
-        <meta name="keywords" content="HextechPlay, mini games LoL, jogos online, quiz League of Legends, runeterra, diversão, jogos rápidos" />
-        <meta property="og:title" content="HextechPlay – Mini Games e Quizzes de League of Legends" />
-        <meta property="og:description" content="Teste seus reflexos e precisão no ClickChallenger." />
-        <meta
-            property="og:url"
-            content="https://hextechplay.com/lorequestion"
-        />
-        <link rel="canonical" href="https://hextechplay.com/lorequestion" />
+        <title>{{ gameMetadata.title }}</title>
+        <meta name="description" :content="gameMetadata.description" />
     </Head>
 
-    <div class="min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="game-background-overlay" :style="{ backgroundImage: `url(${gameMetadata.bg})` }"></div>
+
+    <div class="min-vh-100 d-flex align-items-center justify-content-center py-5">
         <div class="container text-center">
-            <h1 class="display-3 fw-bold mb-3">
-                ClickChallenger
+            <h1 class="display-3 fw-bold mb-3 game-title animate-pop-in">
+                {{ gameMetadata.title }}
             </h1>
-            <p class="lead text-light opacity-75">
-                Escolha o modo de jogo
+            <p class="lead text-light opacity-75 mb-5">
+                {{ gameMetadata.description }}
             </p>
 
-            <div class="row g-4 mt-3 justify-content-center">
-                <div class="col-md-4">
-                    <div class="card text-bg-light h-100 shadow-lg border-0">
-                        <div
-                            class="card-body d-flex flex-column justify-content-between text-dark"
-                        >
-                            <div>
-                                <h4 class="card-title fw-bold">Normal</h4>
-                                <p class="card-text small">
-                                    Teste seus reflexos de forma divertida e casual.
-                                </p>
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-5 col-lg-4">
+                    <div class="glass-panel h-100 p-4 d-flex flex-column align-items-center animate-pop-in" style="animation-delay: 0.1s">
+                        <div class="mb-4">
+                            <div class="stat-badge py-3 px-4">
+                                <font-awesome-icon :icon="gameMetadata.icon" class="fa-2x text-warning" />
                             </div>
-                            <button
-                                @click="openModal"
-                                class="btn btn-accent text-white mt-3 text-capitalize"
-                            >
-                                Jogar
-                            </button>
                         </div>
+                        <h3 class="fw-bold mb-3">Modo Normal</h3>
+                        <p class="opacity-75 small mb-4">
+                            A experiência clássica para testar suas habilidades de forma casual e divertida.
+                        </p>
+                        <button
+                            @click="openModal"
+                            class="btn game-btn w-100 py-3 mt-auto"
+                        >
+                            <font-awesome-icon icon="fas fa-play" class="me-2" /> Jogar Agora
+                        </button>
                     </div>
                 </div>
 
-                <div class="col-md-4">
-                    <div class="card text-bg-light h-100 shadow-lg border-0">
-                        <div
-                            class="card-body d-flex flex-column justify-content-between bg-gradient text-dark"
-                        >
-                            <div>
-                                <h4 class="card-title fw-bold">
-                                    Competitivo
-                                </h4>
-                                <p class="card-text small">
-                                    Dispute com outros jogadores em partidas classificatórias. (Em breve)
-                                </p>
+                <div class="col-md-5 col-lg-4 opacity-75">
+                    <div class="glass-panel h-100 p-4 d-flex flex-column align-items-center animate-pop-in" style="animation-delay: 0.2s">
+                        <div class="mb-4">
+                            <div class="stat-badge py-3 px-4">
+                                <font-awesome-icon icon="fas fa-trophy" class="fa-2x text-secondary" />
                             </div>
-                            <button class="btn btn-accent mt-3" disabled>
-                                Em breve
-                            </button>
                         </div>
+                        <h3 class="fw-bold mb-3">Competitivo</h3>
+                        <p class="opacity-75 small mb-4">
+                            Dispute contra as lendas de Runeterra em partidas ranqueadas.
+                        </p>
+                        <button class="btn btn-secondary w-100 py-3 mt-auto rounded-pill border-0 disabled" style="background: rgba(255,255,255,0.1)">
+                            Em Breve
+                        </button>
                     </div>
                 </div>
             </div>
 
             <button
-                class="btn btn-sm btn-accent mt-5"
+                class="btn game-btn-primary mt-5 rounded-circle shadow-lg"
+                style="width: 60px; height: 60px"
                 @click="showGuide = true"
             >
-                <font-awesome-icon icon="fas fa-question"></font-awesome-icon>
+                <font-awesome-icon icon="fas fa-question" size="lg"></font-awesome-icon>
             </button>
         </div>
     </div>
 
-    <ModalDialog :isVisible="showGuide" @close="showGuide = false">
-        <div class="text-primary p-3">
-            <h3>Como Jogar</h3>
-            <ul>
-                <li>O objetivo é clicar o mais rápido possível no botão que aparecer na tela, quanto mais rápido, maior sua pontuação!</li>
-                <li>Você terá 15 segundos para reagir a cada rodada. Clique assim que o botão surgir, sem errar o alvo.</li>
-                <li>Se clicar antes da hora, perderá pontos! Espere o momento certo para agir.</li>
-                <li>A velocidade da aparição dos botões aumenta conforme o jogo avança, então mantenha o foco.</li>
-                <li>No final, você verá seu tempo médio de reação e poderá comparar com suas tentativas anteriores.</li>
-                <li>Dica: mantenha o dedo próximo do botão e evite distrações — a precisão e o tempo de reação são o segredo para ser o campeão do Click Challenger!</li>
+    <ModalDialog :isVisible="showGuide" @close="showGuide = false" title="Guia do Jogador">
+        <div class="text-white p-2">
+            <h4 class="text-warning mb-4 fw-bold border-bottom border-warning border-opacity-25 pb-2">
+                Como Jogar
+            </h4>
+            <ul class="list-unstyled">
+                <li v-for="(step, i) in gameMetadata.guide" :key="i" class="mb-3 d-flex align-items-start">
+                    <font-awesome-icon icon="fas fa-chevron-right" class="text-warning mt-1 me-3 small" />
+                    <span class="opacity-75">{{ step }}</span>
+                </li>
             </ul>
         </div>
     </ModalDialog>
@@ -118,9 +137,9 @@ const activeForm = computed(() => {
     <ModalDialog
         :isVisible="isModalVisible"
         @close="closeModal"
-        title="Configurações do jogo"
+        title="Configurações de Partida"
     >
-        <ClickChallengerForm v-if="activeForm === 'clickchallenger'" />
+        <ClickChallengerForm v-if="gameMetadata.id === 'clickchallenger'" />
         <LoreQuestionForm v-else />
     </ModalDialog>
 </template>

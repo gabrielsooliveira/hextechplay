@@ -32,7 +32,7 @@ function handleEndGame() {
         class="d-flex flex-column flex-sm-row gap-2 justify-content-center mt-3 mb-4"
     >
         <button
-            class="btn btn-success flex-fill fw-bold shadow text-white"
+            class="btn game-btn-success flex-fill fw-bold shadow text-white"
             :disabled="game.gameActive"
             @click="handleStartGame"
         >
@@ -40,7 +40,7 @@ function handleEndGame() {
         </button>
 
         <button
-            class="btn btn-secondary text-white flex-fill shadow"
+            class="btn game-btn-primary text-white flex-fill shadow border-0"
             :disabled="!game.gameActive || game.showGameOver"
             @click="handleTogglePause"
         >
@@ -56,14 +56,14 @@ function handleEndGame() {
 
         <Link
             :href="route('clickchallenger.index')"
-            class="btn btn-outline-secondary text-white shadow"
+            class="btn game-btn text-white shadow border-0"
         >
             Menu
         </Link>
 
         <button
             v-if="game.mode === 'zen' && game.gameActive"
-            class="btn btn-danger shadow text-white"
+            class="btn game-btn-danger shadow text-white border-0"
             @click="handleEndGame"
         >
             Encerrar Jogo

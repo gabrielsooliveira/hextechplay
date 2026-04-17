@@ -8,58 +8,45 @@ const form = useForm({
 const saveSettings = () => {
     form.post(route("clickchallenger.roleplay"));
 };
+
+const modes = [
+    { id: "classic", label: "Clássico", desc: "A experiência original de reflexo." },
+    { id: "zen", label: "Zen", desc: "Foque na precisão, sem pressão." },
+    { id: "survival", label: "Sobrevivência", desc: "Até onde você consegue chegar?" },
+];
 </script>
 
 <template>
-    <form @submit.prevent="saveSettings" class="container">
-        <div class="mb-3 text-primary">
-            <label class="form-label fw-semibold d-block text-capitalize">Escolha o modo de jogo</label>
+    <form @submit.prevent="saveSettings" class="container-fluid py-2">
+        <label class="form-label fw-bold text-warning text-uppercase small mb-3">Escolha o Modo de Jogo</label>
 
-            <div class="form-check mb-2">
-                <input
-                    class="form-check-input"
-                    type="radio"
-                    id="mode-classic"
-                    value="classic"
-                    v-model="form.mode"
-                />
-                <label class="form-check-label" for="mode-classic">
-                    Clasico
-                </label>
-            </div>
-
-            <div class="form-check mb-2">
-                <input
-                    class="form-check-input"
-                    type="radio"
-                    id="mode-zen"
-                    value="zen"
-                    v-model="form.mode"
-                />
-                <label class="form-check-label" for="mode-zen">
-                    Zen
-                </label>
-            </div>
-
-            <div class="form-check mb-3">
-                <input
-                    class="form-check-input"
-                    type="radio"
-                    id="mode-survival"
-                    value="survival"
-                    v-model="form.mode"
-                />
-                <label class="form-check-label" for="mode-survival">
-                    Sobrevivência
-                </label>
+        <div class="row g-3 mb-4">
+            <div v-for="mode in modes" :key="mode.id" class="col-12">
+                <div 
+                    class="option-card d-flex align-items-center justify-content-between" 
+                    :class="{ 'active': form.mode === mode.id }"
+                    @click="form.mode = mode.id"
+                >
+                    <div class="text-start">
+                        <div class="fw-bold">{{ mode.label }}</div>
+                        <div class="small opacity-50">{{ mode.desc }}</div>
+                    </div>
+                    <font-awesome-icon 
+                        v-if="form.mode === mode.id" 
+                        icon="fas fa-check-circle" 
+                        class="text-warning fs-4" 
+                    />
+                </div>
             </div>
         </div>
-        <div class="d-grid">
+
+        <div class="d-grid mt-4">
             <button
                 type="submit"
-                class="btn btn-accent text-white flex-grow-1 fw-bold rounded-3 shadow text-capitalize"
+                class="btn game-btn py-3 fs-5"
+                :disabled="form.processing"
             >
-                Iniciar jogo
+                <font-awesome-icon icon="fas fa-bolt" class="me-2" /> Iniciar Desafio
             </button>
         </div>
     </form>

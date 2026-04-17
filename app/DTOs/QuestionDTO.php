@@ -22,7 +22,7 @@ class QuestionDTO
         return new self(
             $question->uuid,
             $translation->text,
-            $translation->options, true ?? []
+            $translation->options
         );
     }
 

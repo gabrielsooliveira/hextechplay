@@ -1,0 +1,211 @@
+// resources/scss/classes/_games.scss
+// ----------------------------------------------------
+// Estilos globais e reutilizáveis focados nos Minigames
+// ----------------------------------------------------
+
+.glass-panel {
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+    color: #fff;
+    border-radius: 1.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+    }
+}
+
+.game-background-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.9) 100%);
+    }
+}
+
+.neon-glow {
+    position: relative;
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.2), 
+                inset 0 0 10px rgba(6, 182, 212, 0.1);
+    border: 1px solid rgba(6, 182, 212, 0.4) !important;
+    animation: neonPulse 3s infinite alternate cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+@keyframes neonPulse {
+    0% {
+        box-shadow: 0 0 10px rgba(6, 182, 212, 0.2), inset 0 0 5px rgba(6, 182, 212, 0.1);
+        border-color: rgba(6, 182, 212, 0.3);
+    }
+    100% {
+        box-shadow: 0 0 25px rgba(6, 182, 212, 0.5), inset 0 0 15px rgba(6, 182, 212, 0.3);
+        border-color: rgba(6, 182, 212, 0.6);
+    }
+}
+
+.game-btn {
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+    background: linear-gradient(135deg, #c89b3c 0%, #a07823 100%);
+    border: 1px solid rgba(200, 155, 60, 0.5);
+    font-weight: 700;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+        color: #fff;
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 8px 25px rgba(200, 155, 60, 0.4);
+        background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+    }
+
+    &:active {
+        transform: translateY(0) scale(0.98);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.game-btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    border-color: rgba(59, 130, 246, 0.5);
+
+    &:hover {
+        background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+    }
+}
+
+.game-btn-success {
+    background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+    border-color: rgba(16, 185, 129, 0.5);
+
+    &:hover {
+        background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+    }
+}
+
+.game-btn-danger {
+    background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+    border-color: rgba(239, 68, 68, 0.5);
+
+    &:hover {
+        background: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+        box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+    }
+}
+
+.game-title {
+    background: linear-gradient(to right, #fbbd23, #f59e0b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.5));
+}
+
+.letter-box {
+    background: rgba(15, 23, 42, 0.6) !important;
+    border: 2px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    &.filled {
+        transform: scale(1.1);
+        border-color: #fbbd23 !important;
+        box-shadow: 0 0 15px rgba(251, 189, 35, 0.4);
+    }
+}
+
+.animate-pop-in {
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.option-card {
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+
+    &:hover {
+        background: rgba(15, 23, 42, 0.6);
+        border-color: rgba(200, 155, 60, 0.4);
+        transform: translateY(-3px);
+    }
+
+    &.active {
+        background: rgba(200, 155, 60, 0.1);
+        border-color: #c89b3c;
+        box-shadow: 0 0 20px rgba(200, 155, 60, 0.2);
+
+        &::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 40px 40px 0;
+            border-color: transparent #c89b3c transparent transparent;
+        }
+    }
+}
+
+.custom-range {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    outline: none;
+    -webkit-appearance: none;
+
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        background: #fbbd23;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(251, 189, 35, 0.5);
+        transition: all 0.2s ease;
+
+        &:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 15px rgba(251, 189, 35, 0.8);
+        }
+    }
+}

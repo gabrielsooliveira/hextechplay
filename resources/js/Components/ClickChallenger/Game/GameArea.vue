@@ -61,7 +61,7 @@ onUnmounted(() => {
 <template>
     <div
         ref="areaRef"
-        class="w-100 position-relative rounded-3 shadow-lg border border-warning overflow-hidden my-0 mx-auto"
+        class="w-100 position-relative rounded-4 shadow-lg neon-glow overflow-hidden my-0 mx-auto glass-panel"
         :style="{
             minHeight: '420px',
         }"

@@ -2,6 +2,7 @@
 import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { Head, router } from "@inertiajs/vue3";
 import ModalDialog from "@/js/Components/Modals/ModalDialog.vue";
+import WordBackground from "@/assets/images/wordlol.png";
 
 const props = defineProps({
     displayWord: String,
@@ -188,13 +189,15 @@ const shareOnTwitter = () => {
         <link rel="canonical" href="https://hextechplay.com/wordlol" />
     </Head>
 
+    <div class="game-background-overlay" :style="{ backgroundImage: `url(${WordBackground})` }"></div>
+
     <div
         class="min-vh-100 d-flex align-items-center justify-content-center py-4"
     >
         <div class="container">
-            <div class="card shadow-lg text-white rounded-4 border-0">
+            <div class="glass-panel w-100 mx-auto" style="max-width: 800px;">
                 <div class="card-body text-center p-4">
-                    <h2 class="fw-bold mb-4">
+                    <h2 class="fw-bold mb-4 game-title">
                         <font-awesome-icon
                             icon="fa-solid fa-gamepad"
                             class="text-warning"
@@ -208,9 +211,9 @@ const shareOnTwitter = () => {
                         <div
                             v-for="(char, index) in displayWord.split(' ')"
                             :key="`char-${index}`"
-                            class="border border-light rounded text-uppercase fw-bold d-flex align-items-center justify-content-center fs-2"
-                            :class="getLetterBoxClass(char, index)"
-                            style="width: 3rem; height: 4rem"
+                            class="letter-box border border-light rounded text-uppercase fw-bold d-flex align-items-center justify-content-center fs-2"
+                            :class="[getLetterBoxClass(char, index), char !== '_' ? 'filled' : '']"
+                            style="width: 3.5rem; height: 4.5rem; margin: 0 4px;"
                         >
                             {{ char !== "_" ? char : "" }}
                         </div>
@@ -219,7 +222,7 @@ const shareOnTwitter = () => {
                     <div class="row g-3 mb-4">
                         <div class="col-6">
                             <div class="bg-dark rounded p-3 h-100">
-                                <small class="text-white d-block">CHANCES RESTANTES</small>
+                                <small class="text-white d-block opacity-75">CHANCES RESTANTES</small>
 
                                 <div class="fs-4 fw-bold text-warning">
                                     {{ wrong }} / {{ maxAttempts }}
@@ -229,7 +232,7 @@ const shareOnTwitter = () => {
 
                         <div class="col-6">
                             <div class="bg-dark rounded p-3 h-100">
-                                <small class="text-white d-block">TENTATIVAS</small>
+                                <small class="text-white d-block opacity-75">TENTATIVAS</small>
                                 <div class="fs-4 fw-bold text-warning">
                                     {{ attempts }}
                                 </div>
@@ -251,12 +254,16 @@ const shareOnTwitter = () => {
                         />
 
                         <button
-                            class="btn btn-accent px-4"
+                            class="btn game-btn px-4"
                             @click="makeGuess"
                             :disabled="lost || won || !userInput.trim()"
                         >
-                            <span v-if="!loading">✅ Tentar</span>
-                            <span v-else>⏳</span>
+                            <span v-if="!loading">
+                                <font-awesome-icon icon="fas fa-check" class="me-1" /> Tentar
+                            </span>
+                            <span v-else>
+                                <div class="spinner-border spinner-border-sm" role="status"></div>
+                            </span>
                         </button>
                     </div>
 
@@ -288,7 +295,7 @@ const shareOnTwitter = () => {
                     </div>
 
                     <button
-                        class="btn btn-sm btn-accent mt-5"
+                        class="btn btn-sm game-btn-primary mt-5 px-3 py-2 rounded-circle"
                         @click="showGuide = true"
                     >
                         <font-awesome-icon

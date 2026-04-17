@@ -19,7 +19,8 @@ class LoreQuestionController extends Controller
         protected FinishGameUseCase $finishGameUseCase,
         protected StartRoleplayGameUseCase $startRoleplayGame,
         protected StartGameUseCase $startGame
-    ) {}
+    ) {
+    }
 
     public function index()
     {
@@ -38,7 +39,7 @@ class LoreQuestionController extends Controller
 
     public function startGame(): JsonResponse
     {
-        $locale = app()->getLocale();
+        $locale = str_starts_with(app()->getLocale(), 'pt') ? 'pt' : app()->getLocale();
         $questions = $this->startGame->execute($locale);
 
         return response()->json([
@@ -48,7 +49,7 @@ class LoreQuestionController extends Controller
 
     public function finishGame(AwserRequest $request, FinishGameUseCase $useCase)
     {
-        $locale = app()->getLocale();
+        $locale = str_starts_with(app()->getLocale(), 'pt') ? 'pt' : app()->getLocale();
 
         $answers = collect($request->validated('answers'))
             ->map(fn($resp) => AnswerDTO::fromArray($resp))

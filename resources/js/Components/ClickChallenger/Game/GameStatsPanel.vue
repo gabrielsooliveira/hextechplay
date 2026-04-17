@@ -32,7 +32,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="stats-panel bg-dark p-4 rounded-3 shadow-lg text-white">
+    <div class="stats-panel glass-panel p-4 shadow-lg text-white">
         <h5 class="mb-3 text-white fw-bold">📊 Estatísticas Detalhadas</h5>
 
         <div class="row g-3 text-center">

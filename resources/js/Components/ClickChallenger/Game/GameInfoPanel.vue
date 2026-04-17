@@ -27,7 +27,7 @@ const timeDisplay = computed(() => {
 
 <template>
     <div
-        class="d-flex justify-content-between p-3 mb-3 bg-dark text-white rounded shadow-sm"
+        class="d-flex justify-content-between p-3 mb-3 glass-panel text-white shadow-lg border-0"
     >
         <div class="text-start">
             <small class="text-muted">Modo</small>

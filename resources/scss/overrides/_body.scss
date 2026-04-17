@@ -1,2 +1,12 @@
 $body-bg: $background;
 $body-color: $light;
+
+html, body {
+    scrollbar-gutter: stable !important;
+}
+
+// Previne que o Bootstrap adicione padding lateral extra ao abrir modais,
+// já que o scrollbar-gutter já reserva esse espaço.
+.modal-open {
+    padding-right: 0 !important;
+}

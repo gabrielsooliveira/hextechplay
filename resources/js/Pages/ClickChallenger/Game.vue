@@ -6,6 +6,7 @@ import GameInfoPanel from "@/js/Components/ClickChallenger/Game/GameInfoPanel.vu
 import GameArea from "@/js/Components/ClickChallenger/Game/GameArea.vue";
 import GameControls from "@/js/Components/ClickChallenger/Game/GameControls.vue";
 import GameStatsPanel from "@/js/Components/ClickChallenger/Game/GameStatsPanel.vue";
+import ClickBackground from "@/assets/images/clickchallenger.png";
 
 const page = usePage();
 
@@ -448,15 +449,17 @@ onMounted(() => {
         <title>ClickChallenger</title>
         <meta name="description" content="ClickChallenger é um jogo da plataforma HextechPlay que testa seus reflexos e suas habilidades." />
         <meta name="keywords" content="HextechPlay, mini games LoL, jogos online, quiz League of Legends, runeterra, diversão, jogos rápidos" />
-        <meta property="og:title" content="HextechPlay – Mini Games e Quizzes de League of Legends" />
+        <meta property="og:title" content="HextechPlay – ClickChallenger" />
         <meta property="og:description" content="Teste seus reflexos e precisão no ClickChallenger." />
         <meta property="og:url" content="https://hextechplay.com/wordlol" />
         <link rel="canonical" href="https://hextechplay.com/wordlol" />
     </Head>
 
+    <div class="game-background-overlay" :style="{ backgroundImage: `url(${ClickBackground})` }"></div>
+
     <div class="container padding-navbar">
         <div class="text-center text-white mb-4">
-            <h1 class="display-3 fw-bold text-white">Click Challenger</h1>
+            <h1 class="display-3 fw-bold text-white game-title">Click Challenger</h1>
             <p class="lead text-secondary">
                 {{ MODE_CONFIGS[game.mode].description }}
             </p>
