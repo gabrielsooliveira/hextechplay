@@ -29,7 +29,7 @@
     @routes
 </head>
 
-<body class="overflow-y-auto overflow-x-hidden">
+<body class="overflow-y-auto overflow-x-hidden p-0">
     @inertia
 </body>
 

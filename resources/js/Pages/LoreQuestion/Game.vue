@@ -97,7 +97,7 @@ onMounted(() => {
 
 <template>
     <Head>
-        <title>Perguntas de Lore</title>
+        <title>LoreQuestions</title>
         <meta name="description" content="Teste seus conhecimentos sobre o universo de League of Legends no Quiz de Lore da HextechPlay." />
         <meta name="keywords" content="HextechPlay, lore lol, quiz league of legends, runeterra, historia lol" />
         <meta property="og:title" content="HextechPlay – Quiz de Lore" />
@@ -238,12 +238,12 @@ onMounted(() => {
                                 <p class="fw-bold fs-3 mb-4 text-white animate-pop-in">
                                     {{ currentQuestion.text }}
                                 </p>
-                                <div class="d-inline-block py-2 px-4 rounded-pill bg-warning text-dark fw-bold fs-4 shadow-lg mb-4" style="border: 2px solid rgba(255,255,255,0.2)">
+                                <div class="d-inline-block py-2 px-4 rounded-pill bg-warning text-dark fw-bold fs-4 shadow-lg mb-4">
                                     {{ timer }}s
                                 </div>
 
                                 <div class="row g-3 justify-content-center mt-3">
-                                    <div v-for="(option, index) in currentQuestion.options" :key="index" class="col-12 col-sm-10 col-md-6">
+                                    <div v-for="(option, index) in currentQuestion.options" :key="index" class="col-12">
                                         <button type="button" class="btn w-100 py-3 fs-5 rounded-3 shadow text-wrap" :class="{'game-btn': !selectedAnswer, 'game-btn-success': isSubmitting && selectedAnswer === option, 'btn-secondary': selectedAnswer && !isSubmitting}" :disabled="isSubmitting" @click="submitAnswer(option)">
                                             {{ option }}
                                         </button>

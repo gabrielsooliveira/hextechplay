@@ -18,8 +18,6 @@ const modes = [
 
 <template>
     <form @submit.prevent="saveSettings" class="container-fluid py-2">
-        <label class="form-label fw-bold text-warning text-uppercase small mb-3">Escolha o Modo de Jogo</label>
-
         <div class="row g-3 mb-4">
             <div v-for="mode in modes" :key="mode.id" class="col-12">
                 <div 

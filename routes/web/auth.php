@@ -15,4 +15,8 @@ Route::middleware(['guest'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [LogoutController::class, 'store'])->name('logout');
+
+    Route::get('/dashboard', [\App\Http\Controllers\User\DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/profile/update', [\App\Http\Controllers\User\DashboardController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/password', [\App\Http\Controllers\User\DashboardController::class, 'updatePassword'])->name('profile.password');
 });

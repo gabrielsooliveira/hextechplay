@@ -57,6 +57,15 @@ class LoreQuestionController extends Controller
 
         $result = $useCase->execute($answers, $locale);
 
+        if (auth()->check() && count($result->correctAnswers) > 0) {
+            $achievementService = app(\App\Services\AchievementService::class);
+            $unlockedBadges = $achievementService->incrementStatAndCheck(auth()->user(), 'LoreQuestion', 'correct_answers', count($result->correctAnswers));
+            // Since this is an API call, we could return it in the json
+            $resultArray = $result->toArray();
+            $resultArray['new_badges'] = $unlockedBadges;
+            return response()->json($resultArray);
+        }
+
         return response()->json($result->toArray());
     }
 }

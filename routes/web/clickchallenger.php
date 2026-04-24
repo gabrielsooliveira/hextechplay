@@ -9,4 +9,5 @@ Route::middleware(['auth'])->prefix('clickchallenger')->group(function () {
     Route::get('/roleplay', function () {
         return redirect()->route('clickchallenger.index');
     });
+    Route::post('/score', [ClickChallengerController::class, 'submitScore'])->name('clickchallenger.score');
 });

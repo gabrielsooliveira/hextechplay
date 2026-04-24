@@ -21,4 +21,18 @@ class ClickChallengerController extends Controller
             'mode' => $request->mode
         ]);
     }
+
+    public function submitScore(Request $request, \App\Services\AchievementService $achievementService)
+    {
+        $validated = $request->validate([
+            'score' => 'required|integer|min:0',
+        ]);
+
+        if (auth()->check()) {
+            $unlockedBadges = $achievementService->updateHighScoreAndCheck(auth()->user(), 'ClickChallenger', 'score', $validated['score']);
+            return response()->json(['success' => true, 'new_badges' => $unlockedBadges]);
+        }
+
+        return response()->json(['success' => true]);
+    }
 }

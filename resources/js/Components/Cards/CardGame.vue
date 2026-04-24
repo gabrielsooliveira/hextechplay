@@ -24,22 +24,11 @@ defineProps({
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span>{{ title }}</span>
-                <div class="rating">
-                    <font-awesome-icon
-                        icon="fas fa-star"
-                        class="text-warning me-1"
-                    ></font-awesome-icon
-                    >{{ rating }}
-                </div>
             </div>
             <p class="card-text text-light text-truncate opacity-75 mb-3">
                 {{ description }}
             </p>
             <div class="d-flex justify-content-between align-items-center">
-                <small class="text-warning">
-                    <font-awesome-icon icon="fas fa-users" class="me-1" />
-                    {{ players.toLocaleString() }} Jogadores
-                </small>
                 <Link :href="route" class="btn btn-sm btn-accent">
                     <font-awesome-icon icon="fas fa-play" />
                     Jogar

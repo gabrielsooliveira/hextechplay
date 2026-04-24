@@ -11,9 +11,9 @@ const saveSettings = () => {
 };
 
 const difficulties = [
-    { id: "easy", label: "Clássico", desc: "Aproveite a história no seu ritmo." },
-    { id: "medium", label: "Zen", desc: "Perguntas mais desafiadoras." },
-    { id: "hard", label: "Sobrevivência", desc: "Um erro e você está fora!" },
+    { id: "easy", label: "Fácil", desc: "Perguntas mais simples" },
+    { id: "medium", label: "Médio", desc: "Perguntas moderadas" },
+    { id: "hard", label: "Difícil", desc: "Perguntas difíceis" },
 ];
 </script>
 

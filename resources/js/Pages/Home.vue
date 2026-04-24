@@ -85,19 +85,15 @@ const recentAchievements = computed(() => [
 const features = computed(() => [
     {
         icon: "gamepad",
-        text: "Jogos 100% Gratuitos",
+        text: "Mini games 100% Gratuitos",
     },
     {
         icon: "globe",
-        text: "Universo Oficial do LoL",
-    },
-    {
-        icon: "mobile-alt",
-        text: "Suporte Multiplataforma",
+        text: "Baseados no Universo do Lolzinho",
     },
     {
         icon: "bolt",
-        text: "Atualizações Regulares",
+        text: "Atualizações Constantes",
     },
 ]);
 
@@ -140,60 +136,6 @@ const features = computed(() => [
             >
                 Jogar agora
             </Link>
-        </div>
-    </section>
-
-    <section class="container py-5">
-        <div class="text-center mb-5">
-            <h2 class="display-4 fw-bold mb-3">
-                Jogos em Destaque
-            </h2>
-            <p class="text-light opacity-75 lead">
-                Explore os mini-games mais populares da plataforma
-            </p>
-        </div>
-        <div class="row justify-content-center">
-            <div
-                class="col-lg-4 col-md-6 mb-4"
-                v-for="game in featuredGames"
-                :key="game.id"
-            >
-                <CardGame
-                    :key="game.id"
-                    :title="game.title"
-                    :description="game.description"
-                    :image="game.image"
-                    :route="route(game.route)"
-                    :players="game.players"
-                    :rating="game.rating"
-                />
-            </div>
-        </div>
-    </section>
-
-    <section class="container py-5">
-        <div class="text-center mb-5">
-            <h2 class="display-4 fw-bold mb-3">
-                Nossa Comunidade
-            </h2>
-            <p class="text-light opacity-75 lead">
-                Números que mostram o crescimento da nossa plataforma
-            </p>
-        </div>
-        <div class="row">
-            <div
-                class="col-lg-3 col-md-6 mb-4"
-                v-for="stat in stats"
-                :key="stat.label"
-            >
-                <CardInfo
-                    :key="stat.label"
-                    :icon="stat.icon"
-                    :value="stat.value"
-                    :label="stat.label"
-                    :suffix="stat.suffix"
-                />
-            </div>
         </div>
     </section>
 
@@ -241,33 +183,28 @@ const features = computed(() => [
     </section>
 
     <section class="container py-5">
-        <div class="row text-center mb-5">
-            <h2 class="section-title display-4 fw-bold text-gradient mb-3">
-                Conquistas Recentes
+        <div class="text-center mb-5">
+            <h2 class="display-4 fw-bold mb-3">
+                Jogos em Destaque
             </h2>
-            <p class="section-subtitle text-light opacity-75 lead">
-                Desbloqueie conquistas e mostre suas habilidades
+            <p class="text-light opacity-75 lead">
+                Explore os mini-games mais populares da plataforma
             </p>
         </div>
-        <div class="row">
+        <div class="row justify-content-center">
             <div
                 class="col-lg-4 col-md-6 mb-4"
-                v-for="achievement in recentAchievements"
-                :key="achievement.id"
+                v-for="game in featuredGames"
+                :key="game.id"
             >
-                <CardInfo
-                    :key="achievement.id"
-                    :icon="achievement.icon"
-                    :value="achievement.title"
-                    :label="achievement.description"
-                    :bagdeColor="achievement.rarityColor"
-                    :bagdeText="
-                        achievement.rarity === 'legendary'
-                            ? 'Lendária'
-                            : achievement.rarity === 'epic'
-                            ? 'Épica'
-                            : 'Rara'
-                    "
+                <CardGame
+                    :key="game.id"
+                    :title="game.title"
+                    :description="game.description"
+                    :image="game.image"
+                    :route="route(game.route)"
+                    :players="game.players"
+                    :rating="game.rating"
                 />
             </div>
         </div>

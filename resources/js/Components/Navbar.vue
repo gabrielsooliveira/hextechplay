@@ -7,7 +7,7 @@ import { useClickOutside } from "@/js/Composables/useClickOutside";
 const { isDesktop, isMobile } = useWindowSize();
 
 const page = usePage();
-const user = computed(() => page.props.user);
+const user = computed(() => page.props.auth?.user || page.props.user);
 
 const isMenuOpen = ref(false);
 const isScrolled = ref(false);
@@ -15,12 +15,17 @@ const isScrolled = ref(false);
 const menuRef = ref(null);
 const togglerRef = ref(null);
 
-const navLinks = computed(() => [
-    { name: "Início", route: "home", active: page.url === "/" },
-    { name: "Jogos", route: "games", active: route().current("games.*") },
-    { name: "Parceiros", route: "partners", active: route().current("partners.*") },
-    { name: "Contato", route: "contact", active: route().current("contact.*") },
-]);
+const navLinks = computed(() => {
+    // Access page.url to ensure the computed property is reactive to navigation
+    const currentUrl = page.url;
+
+    return [
+        { name: "Início", route: "home", active: route().current("home") },
+        { name: "Jogos", route: "games", active: route().current("games") || currentUrl.startsWith("/clickchallenger") || currentUrl.startsWith("/lorequestion") || currentUrl.startsWith("/wordlol") },
+        { name: "Parceiros", route: "partners", active: route().current("partners") },
+        { name: "Contato", route: "contact", active: route().current("contact") },
+    ];
+});
 
 const handleScroll = () => {
     isScrolled.value = window.scrollY > 5;
@@ -49,7 +54,7 @@ const navbarClass = computed(() => {
     const bgClass =
         !isDesktop.value || isScrolled.value
             ? "bg-dark border-bottom border-primary"
-            : "bg-transparent";
+            : "bg-transparent mt-1";
 
     return `${baseClasses} ${bgClass}`;
 });
@@ -71,9 +76,9 @@ const navbarClass = computed(() => {
             </button>
 
             <div
-                class="collapse navbar-collapse d-none d-lg-block flex-wrap align-items-center justify-content-between"
+                class="collapse navbar-collapse d-none d-lg-flex flex-wrap align-items-center"
             >
-                <ul class="nav justify-content-center fw-semibold">
+                <ul class="nav justify-content-center fw-semibold mx-auto">
                     <li v-for="link in navLinks" :key="link.route" class="nav-item">
                         <Link
                             class="nav-link"
@@ -84,6 +89,25 @@ const navbarClass = computed(() => {
                         </Link>
                     </li>
                 </ul>
+
+                <div class="d-flex gap-3 align-items-center">
+                    <template v-if="user">
+                        <Link :href="route('dashboard')" class="text-decoration-none text-warning small fw-bold d-flex align-items-center transition hover-opacity-75">
+                            <font-awesome-icon icon="fas fa-user-circle" class="me-2 fs-5" /> {{ user.name }}
+                        </Link>
+                        <Link :href="route('logout')" method="post" as="button" class="btn btn-outline-danger btn-sm py-1 px-3 fw-bold rounded-pill">
+                            Sair
+                        </Link>
+                    </template>
+                    <template v-else>
+                        <Link :href="route('login')" class="text-decoration-none text-light fw-semibold small transition">
+                            Entrar
+                        </Link>
+                        <Link :href="route('register')" class="btn game-btn rounded-pill small">
+                            Registrar
+                        </Link>
+                    </template>
+                </div>
             </div>
         </div>
     </nav>
@@ -101,7 +125,7 @@ const navbarClass = computed(() => {
                 </button>
             </div>
 
-            <ul class="nav flex-column fw-semibold">
+            <ul class="nav flex-column fw-semibold mb-4">
                 <li v-for="link in navLinks" :key="link.route" class="nav-item">
                     <Link
                         class="nav-link"
@@ -112,8 +136,33 @@ const navbarClass = computed(() => {
                         {{ link.name }}
                     </Link>
                 </li>
-                <li><hr /></li>
             </ul>
+
+            <div class="mt-auto">
+                <hr class="border-secondary opacity-50 mb-4" />
+                <div class="d-flex flex-column gap-3">
+                    <template v-if="user">
+                        <Link :href="route('dashboard')" class="d-flex align-items-center gap-2 mb-3 text-decoration-none bg-dark bg-opacity-50 p-2 rounded-3 border border-secondary border-opacity-25" @click="closeMenu">
+                            <font-awesome-icon icon="fas fa-user-circle" class="text-warning fs-1" />
+                            <div>
+                                <div class="text-white fw-bold lh-1 mb-1">{{ user.name }}</div>
+                                <div class="small text-warning fw-bold"><font-awesome-icon icon="fas fa-id-card" class="me-1" /> Acessar Painel</div>
+                            </div>
+                        </Link>
+                        <Link :href="route('logout')" method="post" as="button" class="btn btn-outline-danger w-100 fw-bold py-2 rounded-3" @click="closeMenu">
+                            Sair
+                        </Link>
+                    </template>
+                    <template v-else>
+                        <Link :href="route('login')" class="btn btn-outline-light w-100 fw-bold py-2 rounded-3" @click="closeMenu">
+                            Entrar
+                        </Link>
+                        <Link :href="route('register')" class="btn game-btn w-100 py-2 rounded-3" @click="closeMenu">
+                            Registrar
+                        </Link>
+                    </template>
+                </div>
+            </div>
         </div>
     </transition>
 </template>

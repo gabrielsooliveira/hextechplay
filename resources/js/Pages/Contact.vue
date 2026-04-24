@@ -33,10 +33,10 @@ function submitForm() {
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8 text-center">
-                    <h1 class="display-3 fw-bold mb-3 fade-in">
+                    <h1 class="display-3 fw-bold mb-3 fade-in game-title">
                         Contato
                     </h1>
-                    <p class="mb-5">Entre em contato com a equipe HextechPlay para sugestões, dúvidas ou parcerias.</p>
+                    <p class="mb-5 text-light opacity-75">Entre em contato com a equipe HextechPlay para sugestões, dúvidas ou parcerias.</p>
                 </div>
             </div>
 
@@ -44,42 +44,45 @@ function submitForm() {
                 <div class="col-md-8 col-lg-6">
                     <form
                         @submit.prevent="submitForm"
-                        class="shadow-lg p-4 rounded bg-primary"
+                        class="glass-panel p-4 p-md-5"
                     >
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Nome</label>
+                        <div class="mb-4">
+                            <label for="name" class="form-label fw-bold text-warning text-uppercase small mb-2">Nome</label>
                             <input
                                 type="text"
                                 v-model="form.name"
                                 id="name"
-                                class="form-control"
+                                class="form-control bg-dark border-secondary text-white py-2"
+                                placeholder="Seu nome completo"
                                 required
                             />
                         </div>
 
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
+                        <div class="mb-4">
+                            <label for="email" class="form-label fw-bold text-warning text-uppercase small mb-2">Email</label>
                             <input
                                 type="email"
                                 v-model="form.email"
                                 id="email"
-                                class="form-control"
+                                class="form-control bg-dark border-secondary text-white py-2"
+                                placeholder="seu@email.com"
                                 required
                             />
                         </div>
 
-                        <div class="mb-3">
-                            <label for="message" class="form-label">Mensagem</label>
+                        <div class="mb-4">
+                            <label for="message" class="form-label fw-bold text-warning text-uppercase small mb-2">Mensagem</label>
                             <textarea
                                 v-model="form.message"
                                 id="message"
-                                class="form-control"
+                                class="form-control bg-dark border-secondary text-white py-2"
                                 rows="5"
+                                placeholder="Como podemos ajudar?"
                                 required
                             ></textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-accent w-100">
+                        <button type="submit" class="btn game-btn w-100 py-3 rounded-3 mt-2">
                             Enviar Mensagem
                         </button>
                     </form>

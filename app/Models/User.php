@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'accepted_at',
         'accepted_terms_version',
+        'game_stats',
     ];
 
     /**
@@ -45,6 +46,12 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'game_stats' => 'array',
         ];
+    }
+
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class, 'user_badges')->withPivot('unlocked_at');
     }
 }

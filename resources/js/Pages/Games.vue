@@ -1,15 +1,15 @@
 <script setup>
 import { Head, Link } from "@inertiajs/vue3";
 import { computed } from "vue";
-
 import CardGame from "@/js/Components/Cards/CardGame.vue";
 import LolQuestionBackground from "@/assets/images/lorequestion.png";
 import WordLoLBackground from "@/assets/images/wordlol.png";
 import ClickChallengerBackground from "@/assets/images/clickchallenger.png";
+
 const games = computed(() => [
     {
         id: 1,
-        title: "Perguntas de Lore",
+        title: "LoreQuestions",
         description: "Teste seus conhecimentos sobre a rica história e o vasto universo de League of Legends com o nosso Lore Quiz oficial. Desafie-se em nível mundial para ser o maior pesquisador de Runeterra.",
         image: LolQuestionBackground,
         route: "lorequestion.index",
@@ -66,56 +66,22 @@ const games = computed(() => [
                 {{ games.length }} Jogos
             </div>
             <div class="stat-badge me-2 mb-2">
-                <font-awesome-icon
-                    icon="fas fa-users"
-                    class="text-accent me-1"
-                ></font-awesome-icon>
-                {{
-                    games
-                        .reduce((sum, g) => sum + g.players, 0)
-                        .toLocaleString()
-                }}
+                <font-awesome-icon icon="fas fa-users" class="text-accent me-1"></font-awesome-icon>
+                {{ games.reduce((sum, g) => sum + g.players, 0).toLocaleString() }}
                 Jogadores Diários
             </div>
             <div class="stat-badge me-2 mb-2">
-                <font-awesome-icon
-                    icon="fas fa-star"
-                    class="text-accent me-1"
-                ></font-awesome-icon>
-                {{
-                    (
-                        games.reduce((sum, g) => sum + g.rating, 0) /
-                        games.length
-                    ).toFixed(1)
-                }}
+                <font-awesome-icon icon="fas fa-star" class="text-accent me-1"></font-awesome-icon>
+                {{ (games.reduce((sum, g) => sum + g.rating, 0) / games.length).toFixed(1) }}
                 Média de Avaliação
             </div>
         </div>
     </section>
 
     <section class="container py-5">
-        <div class="row mb-4 align-items-center">
-            <div class="col-6">
-                <h3 class="text-light mb-0">
-                    Todos os jogos
-                </h3>
-            </div>
-        </div>
         <div class="row">
-            <div
-                class="col-lg-4 col-md-6 mb-4"
-                v-for="game in games"
-                :key="game.id"
-            >
-                <CardGame
-                    :key="game.id"
-                    :title="game.title"
-                    :description="game.description"
-                    :image="game.image"
-                    :route="route(game.route)"
-                    :players="game.players"
-                    :rating="game.rating"
-                />
+            <div class="col-lg-4 col-md-6 mb-4" v-for="game in games" :key="game.id">
+                <CardGame :key="game.id" :title="game.title" :description="game.description" :image="game.image" :route="route(game.route)" :players="game.players" :rating="game.rating" />
             </div>
         </div>
     </section>

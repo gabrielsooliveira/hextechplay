@@ -6,8 +6,17 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\DailyWord;
 use Carbon\Carbon;
+use App\Services\AchievementService;
+
 class WordLoLController extends Controller
 {
+    protected AchievementService $achievementService;
+
+    public function __construct(AchievementService $achievementService)
+    {
+        $this->achievementService = $achievementService;
+    }
+
     public function index(Request $request)
     {
         $session = $request->session();
@@ -111,6 +120,13 @@ class WordLoLController extends Controller
 
         if ($state['lost'] || $state['won']) {
             $state['finished'] = true;
+
+            if ($state['won'] && auth()->check()) {
+                $unlockedBadges = $this->achievementService->incrementStatAndCheck(auth()->user(), 'WordLoL', 'wins');
+                if (!empty($unlockedBadges)) {
+                    $session->flash('new_badges', $unlockedBadges);
+                }
+            }
         }
 
         $session->put('wordlol', $state);

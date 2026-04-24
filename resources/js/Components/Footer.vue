@@ -3,7 +3,7 @@ import { Link } from "@inertiajs/vue3";
 </script>
 
 <template>
-    <footer class="mt-3 border-top border-primary">
+    <footer class="mt-3 border-top bg-dark border-primary">
         <div class="container py-5">
             <div class="row">
                 <div class="col-lg-8 mb-4 text-lg-start text-center">

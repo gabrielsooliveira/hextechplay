@@ -26,7 +26,7 @@ const gameMetadata = computed(() => {
         return {
             id: "clickchallenger",
             title: "Click Challenger",
-            description: "Teste sua velocidade e reflexos perante ondas de minions ou no deserto de Shurima.",
+            description: "Teste sua velocidade e reflexos perante as moedas em campo e cuidado com os cogumelos do Teemo!",
             bg: ClickBackground,
             icon: "fas fa-mouse-pointer",
             guide: [
@@ -40,7 +40,7 @@ const gameMetadata = computed(() => {
     }
     return {
         id: "lorequestion",
-        title: "Perguntas de Lore",
+        title: "LoreQuestions",
         description: "Você conhece realmente a história de Runeterra? Prove seus conhecimentos.",
         bg: LoreBackground,
         icon: "fas fa-book-open",
@@ -73,7 +73,7 @@ const gameMetadata = computed(() => {
 
             <div class="row g-4 justify-content-center">
                 <div class="col-md-5 col-lg-4">
-                    <div class="glass-panel h-100 p-4 d-flex flex-column align-items-center animate-pop-in" style="animation-delay: 0.1s">
+                    <div class="glass-panel h-100 p-4 d-flex flex-column align-items-center animate-pop-in">
                         <div class="mb-4">
                             <div class="stat-badge py-3 px-4">
                                 <font-awesome-icon :icon="gameMetadata.icon" class="fa-2x text-warning" />
@@ -93,7 +93,7 @@ const gameMetadata = computed(() => {
                 </div>
 
                 <div class="col-md-5 col-lg-4 opacity-75">
-                    <div class="glass-panel h-100 p-4 d-flex flex-column align-items-center animate-pop-in" style="animation-delay: 0.2s">
+                    <div class="glass-panel h-100 p-4 d-flex flex-column align-items-center animate-pop-in">
                         <div class="mb-4">
                             <div class="stat-badge py-3 px-4">
                                 <font-awesome-icon icon="fas fa-trophy" class="fa-2x text-secondary" />
@@ -103,7 +103,7 @@ const gameMetadata = computed(() => {
                         <p class="opacity-75 small mb-4">
                             Dispute contra as lendas de Runeterra em partidas ranqueadas.
                         </p>
-                        <button class="btn btn-secondary w-100 py-3 mt-auto rounded-pill border-0 disabled" style="background: rgba(255,255,255,0.1)">
+                        <button class="btn btn-secondary w-100 py-3 mt-auto rounded-pill border-0 disabled">
                             Em Breve
                         </button>
                     </div>
@@ -121,12 +121,9 @@ const gameMetadata = computed(() => {
     </div>
 
     <ModalDialog :isVisible="showGuide" @close="showGuide = false" title="Guia do Jogador">
-        <div class="text-white p-2">
-            <h4 class="text-warning mb-4 fw-bold border-bottom border-warning border-opacity-25 pb-2">
-                Como Jogar
-            </h4>
+        <div class="p-2">
             <ul class="list-unstyled">
-                <li v-for="(step, i) in gameMetadata.guide" :key="i" class="mb-3 d-flex align-items-start">
+                <li v-for="(step, i) in gameMetadata.guide" :key="i" class="mb-3 d-flex align-items-start text-dark">
                     <font-awesome-icon icon="fas fa-chevron-right" class="text-warning mt-1 me-3 small" />
                     <span class="opacity-75">{{ step }}</span>
                 </li>
