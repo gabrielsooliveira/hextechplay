@@ -25,6 +25,7 @@ class AwserRequest extends FormRequest
             'answers' => 'required|array',
             'answers.*.question_id' => 'required|string|uuid',
             'answers.*.answer' => 'required|string',
+            'mode' => 'nullable|string',
         ];
     }
 }

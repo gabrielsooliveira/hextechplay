@@ -24,6 +24,7 @@ class SettingsRequest extends FormRequest
         return [
             'difficulty' => 'required|string|in:easy,medium,hard',
             'questionQuant' => 'required|integer|min:1|max:10',
+            'mode' => 'nullable|string',
         ];
     }
 }

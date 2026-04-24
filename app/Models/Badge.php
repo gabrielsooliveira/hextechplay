@@ -12,6 +12,7 @@ class Badge extends Model
         'icon',
         'tier',
         'game',
+        'mode',
         'requirement_type',
         'requirement_value',
     ];

@@ -74,6 +74,7 @@ function handleDimensionsUpdate(dimensions) {
     previousWidth.value = newWidth;
     previousHeight.value = newHeight;
 }
+
 const game = reactive({
     mode: page.props.mode,
     score: 0,
@@ -376,6 +377,16 @@ function endGame() {
         game.highScores[modeKey] = game.score;
         localStorage.setItem(`clickRushHighScore_${modeKey}`, game.score);
     }
+
+    axios.post(route('clickchallenger.submitScore'), { score: game.score, mode: game.mode })
+        .then(response => {
+            if (response.data.new_badges && response.data.new_badges.length > 0) {
+                showNewBadges(response.data.new_badges);
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        });
 }
 
 // --- INICIALIZAÇÃO E REINÍCIO ---

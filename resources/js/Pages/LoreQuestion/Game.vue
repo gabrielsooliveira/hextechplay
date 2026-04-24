@@ -1,8 +1,10 @@
 <script setup>
 import axios from "axios";
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, Link, usePage } from "@inertiajs/vue3";
 import { ref, onMounted } from "vue";
 import LoreBackground from "@/assets/images/lorequestion.png";
+
+const page = usePage();
 
 const selectedCarousel = ref("correct");
 const loading = ref(true);
@@ -80,6 +82,7 @@ async function finishGame() {
     try {
         const response = await axios.post(route("finishGame"), {
             answers: userAnswers.value,
+            mode: page.props.mode,
         });
         gameResults.value = response.data;
         gameFinished.value = true;

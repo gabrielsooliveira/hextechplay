@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ClickChallenger;
 
 use App\Http\Controllers\Controller;
+use App\Services\AchievementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,14 +23,21 @@ class ClickChallengerController extends Controller
         ]);
     }
 
-    public function submitScore(Request $request, \App\Services\AchievementService $achievementService)
+    public function submitScore(Request $request, AchievementService $achievementService)
     {
         $validated = $request->validate([
             'score' => 'required|integer|min:0',
+            'mode' => 'nullable|string',
         ]);
 
         if (auth()->check()) {
-            $unlockedBadges = $achievementService->updateHighScoreAndCheck(auth()->user(), 'ClickChallenger', 'score', $validated['score']);
+            $unlockedBadges = $achievementService->updateHighScoreAndCheck(
+                auth()->user(),
+                'ClickChallenger',
+                'score',
+                $validated['score'],
+                $validated['mode'] ?? null
+            );
             return response()->json(['success' => true, 'new_badges' => $unlockedBadges]);
         }
 

@@ -65,9 +65,9 @@ const getTierColorClass = (tier, unlocked) => {
                 <p class="text-light opacity-75 lead mb-0">Gerencie sua conta e visualize suas conquistas no HextechPlay.</p>
             </div>
             <div class="col-md-4 mt-4 mt-md-0 text-md-end">
-                <div class="glass-panel p-3 d-inline-block text-center border-warning border-opacity-50 shadow-lg">
+                <div class="p-3 d-inline-block text-center border-warning border-opacity-50 shadow-lg">
                     <div class="text-warning small text-uppercase fw-bold mb-1">Taxa de Conclusão</div>
-                    <div class="fs-3 fw-bold text-white">{{ stats.total_badges }} / {{ stats.max_badges }}</div>
+                    <div class="fs-4 fw-bold text-white">{{ stats.total_badges }} / {{ stats.max_badges }}</div>
                 </div>
             </div>
         </div>
@@ -75,7 +75,7 @@ const getTierColorClass = (tier, unlocked) => {
         <div class="row g-4">
             <!-- Sidebar / Tabs -->
             <div class="col-lg-3">
-                <div class="glass-panel p-3 sticky-top" style="top: 100px; z-index: 10;">
+                <div class="p-3">
                     <ul class="nav flex-column nav-pills gap-2">
                         <li class="nav-item">
                             <button 

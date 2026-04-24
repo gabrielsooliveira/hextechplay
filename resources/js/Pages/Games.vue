@@ -56,26 +56,6 @@ const games = computed(() => [
         <p class="lead text-light opacity-75">
             Diversão rápida e desafiadora te espera. Jogue agora e divirta-se com os clássicos!
         </p>
-
-        <div class="d-flex justify-content-center flex-wrap mt-4">
-            <div class="stat-badge me-2 mb-2">
-                <font-awesome-icon
-                    icon="fas fa-gamepad"
-                    class="text-accent me-1"
-                ></font-awesome-icon>
-                {{ games.length }} Jogos
-            </div>
-            <div class="stat-badge me-2 mb-2">
-                <font-awesome-icon icon="fas fa-users" class="text-accent me-1"></font-awesome-icon>
-                {{ games.reduce((sum, g) => sum + g.players, 0).toLocaleString() }}
-                Jogadores Diários
-            </div>
-            <div class="stat-badge me-2 mb-2">
-                <font-awesome-icon icon="fas fa-star" class="text-accent me-1"></font-awesome-icon>
-                {{ (games.reduce((sum, g) => sum + g.rating, 0) / games.length).toFixed(1) }}
-                Média de Avaliação
-            </div>
-        </div>
     </section>
 
     <section class="container py-5">

@@ -7,6 +7,7 @@ use App\DTOs\GameSettingsDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoreQuestion\AwserRequest;
 use App\Http\Requests\LoreQuestion\SettingsRequest;
+use App\Services\AchievementService;
 use App\UseCases\LoreQuestion\FinishGameUseCase;
 use App\UseCases\LoreQuestion\StartRoleplayGameUseCase;
 use App\UseCases\LoreQuestion\StartGameUseCase;
@@ -34,7 +35,9 @@ class LoreQuestionController extends Controller
         $settings = GameSettingsDTO::fromArray($request->validated());
         $this->startRoleplayGame->execute($settings);
 
-        return inertia('LoreQuestion/Game');
+        return inertia('LoreQuestion/Game', [
+            'mode' => $request->difficulty
+        ]);
     }
 
     public function startGame(): JsonResponse
@@ -58,9 +61,13 @@ class LoreQuestionController extends Controller
         $result = $useCase->execute($answers, $locale);
 
         if (auth()->check() && count($result->correctAnswers) > 0) {
-            $achievementService = app(\App\Services\AchievementService::class);
-            $unlockedBadges = $achievementService->incrementStatAndCheck(auth()->user(), 'LoreQuestion', 'correct_answers', count($result->correctAnswers));
-            // Since this is an API call, we could return it in the json
+            $unlockedBadges = app(AchievementService::class)->incrementStatAndCheck(
+                auth()->user(),
+                'LoreQuestion',
+                'correct_answers',
+                count($result->correctAnswers),
+                $request->mode ?? null
+            );
             $resultArray = $result->toArray();
             $resultArray['new_badges'] = $unlockedBadges;
             return response()->json($resultArray);
