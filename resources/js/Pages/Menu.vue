@@ -4,6 +4,7 @@ import { ref, computed } from "vue";
 import ModalDialog from "@/js/Components/Modals/ModalDialog.vue";
 import LoreQuestionForm from "@/js/Components/LoreQuestion/FormSettings.vue";
 import ClickChallengerForm from "@/js/Components/ClickChallenger/FormSettings.vue";
+import GuessTheRankForm from "@/js/Components/GuessTheRank/FormSettings.vue";
 
 import LoreBackground from "@/assets/images/lorequestion.png";
 import ClickBackground from "@/assets/images/clickchallenger.png";
@@ -38,6 +39,21 @@ const gameMetadata = computed(() => {
             ]
         };
     }
+    if (currentRoute?.includes("guesstherank")) {
+        return {
+            id: "guesstherank",
+            title: "Guess the Rank",
+            description: "Adivinhe o elo dos jogadores em jogadas épicas de League of Legends!",
+            bg: LoreBackground, // Placeholder
+            icon: "fas fa-trophy",
+            guide: [
+                "Assista ao vídeo da jogada atentamente.",
+                "Analise o posicionamento, mecânica e tomada de decisão.",
+                "Escolha qual elo você acredita que o jogador pertence.",
+                "Ganhe mais pontos por acertos em elos mais altos."
+            ]
+        };
+    }
     return {
         id: "lorequestion",
         title: "LoreQuestions",
@@ -51,6 +67,12 @@ const gameMetadata = computed(() => {
             "No final, veja o detalhamento de cada resposta."
         ]
     };
+});
+
+const isAuthenticated = computed(() => !!page.props.auth?.user);
+const canPlay = computed(() => {
+    if (gameMetadata.value.id === 'guesstherank') return true;
+    return isAuthenticated.value;
 });
 </script>
 
@@ -81,14 +103,23 @@ const gameMetadata = computed(() => {
                         </div>
                         <h3 class="fw-bold mb-3">Modo Normal</h3>
                         <p class="opacity-75 small mb-4">
-                            A experiência clássica para testar suas habilidades de forma casual e divertida.
+                            {{ canPlay ? 'A experiência clássica para testar suas habilidades de forma casual e divertida.' : 'Este modo requer login para ser acessado.' }}
                         </p>
+                        
                         <button
+                            v-if="canPlay"
                             @click="openModal"
                             class="btn game-btn w-100 py-3 mt-auto"
                         >
                             <font-awesome-icon icon="fas fa-play" class="me-2" /> Jogar Agora
                         </button>
+                        <Link
+                            v-else
+                            :href="route('login')"
+                            class="btn btn-outline-warning w-100 py-3 mt-auto rounded-pill"
+                        >
+                            <font-awesome-icon icon="fas fa-lock" class="me-2" /> Login para Jogar
+                        </Link>
                     </div>
                 </div>
 
@@ -136,7 +167,8 @@ const gameMetadata = computed(() => {
         @close="closeModal"
         title="Configurações de Partida"
     >
-        <ClickChallengerForm v-if="gameMetadata.id === 'clickchallenger'" />
+        <GuessTheRankForm v-if="gameMetadata.id === 'guesstherank'" />
+        <ClickChallengerForm v-else-if="gameMetadata.id === 'clickchallenger'" />
         <LoreQuestionForm v-else />
     </ModalDialog>
 </template>

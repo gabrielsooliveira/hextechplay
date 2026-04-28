@@ -34,6 +34,15 @@ const games = computed(() => [
         players: 5800,
         rating: 4.6,
     },
+    {
+        id: 4,
+        title: "Guess the Rank",
+        description: "Assista a jogadas incríveis e tente adivinhar o elo dos jogadores. Você consegue identificar um Desafiante de um Bronze?",
+        image: LolQuestionBackground, // Using same as placeholder
+        route: "guesstherank.index",
+        players: 3200,
+        rating: 4.9,
+    },
 ]);
 
 </script>

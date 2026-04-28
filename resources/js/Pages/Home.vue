@@ -53,6 +53,15 @@ const featuredGames = computed(() => [
         players: 1800,
         rating: 4.6,
     },
+    {
+        id: 3,
+        title: "Guess the Rank",
+        description: "Assista jogadas e adivinhe o elo dos jogadores. Gratuito e sem login!",
+        image: LolQuestionBackground,
+        route: "guesstherank.index",
+        players: 3200,
+        rating: 4.9,
+    },
 ]);
 
 const recentAchievements = computed(() => [
