@@ -1,5 +1,9 @@
 <script setup>
-import { useForm } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
+import { computed } from "vue";
+
+const page = usePage();
+const isAuthenticated = computed(() => !!page.props.auth?.user);
 
 const form = useForm({
     mode: "classic",
@@ -22,8 +26,12 @@ const modes = [
             <div v-for="mode in modes" :key="mode.id" class="col-12">
                 <div 
                     class="option-card d-flex align-items-center justify-content-between" 
-                    :class="{ 'active': form.mode === mode.id }"
-                    @click="form.mode = mode.id"
+                    :class="{ 
+                        'active': form.mode === mode.id,
+                        'disabled opacity-50': !isAuthenticated && form.mode !== mode.id
+                    }"
+                    @click="isAuthenticated ? form.mode = mode.id : null"
+                    :style="!isAuthenticated ? 'cursor: not-allowed' : ''"
                 >
                     <div class="text-start">
                         <div class="fw-bold">{{ mode.label }}</div>

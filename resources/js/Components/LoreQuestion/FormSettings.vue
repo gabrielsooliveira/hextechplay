@@ -1,9 +1,13 @@
 <script setup>
-import { useForm } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
+import { computed } from "vue";
+
+const page = usePage();
+const isAuthenticated = computed(() => !!page.props.auth?.user);
 
 const form = useForm({
     difficulty: "easy",
-    questionQuant: 1,
+    questionQuant: 5,
 });
 
 const saveSettings = () => {
@@ -25,8 +29,12 @@ const difficulties = [
             <div v-for="diff in difficulties" :key="diff.id" class="col-12 col-md-4">
                 <div 
                     class="option-card text-center" 
-                    :class="{ 'active': form.difficulty === diff.id }"
-                    @click="form.difficulty = diff.id"
+                    :class="{ 
+                        'active': form.difficulty === diff.id,
+                        'disabled opacity-50': !isAuthenticated && form.difficulty !== diff.id
+                    }"
+                    @click="isAuthenticated ? form.difficulty = diff.id : null"
+                    :style="!isAuthenticated ? 'cursor: not-allowed' : ''"
                 >
                     <div class="fw-bold mb-1">{{ diff.label }}</div>
                     <div class="small opacity-50">{{ diff.desc }}</div>
@@ -46,6 +54,7 @@ const difficulties = [
                 max="10"
                 id="questionQuant"
                 v-model="form.questionQuant"
+                :disabled="!isAuthenticated"
             />
         </div>
 

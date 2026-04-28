@@ -32,11 +32,18 @@ class LoreQuestionController extends Controller
 
     public function roleplay(SettingsRequest $request)
     {
-        $settings = GameSettingsDTO::fromArray($request->validated());
+        $data = $request->validated();
+
+        if (!auth()->check()) {
+            $data['difficulty'] = 'easy';
+            $data['questionQuant'] = 5;
+        }
+
+        $settings = GameSettingsDTO::fromArray($data);
         $this->startRoleplayGame->execute($settings);
 
         return inertia('LoreQuestion/Game', [
-            'mode' => $request->difficulty
+            'mode' => $data['difficulty']
         ]);
     }
 

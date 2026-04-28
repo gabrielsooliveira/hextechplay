@@ -18,8 +18,14 @@ class ClickChallengerController extends Controller
 
     public function roleplay(Request $request)
     {
+        $mode = $request->input('mode', 'classic');
+
+        if (!auth()->check()) {
+            $mode = 'classic';
+        }
+
         return inertia('ClickChallenger/Game', [
-            'mode' => $request->mode
+            'mode' => $mode
         ]);
     }
 
