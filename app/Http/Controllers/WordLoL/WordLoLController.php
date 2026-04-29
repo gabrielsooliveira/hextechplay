@@ -5,8 +5,11 @@ namespace App\Http\Controllers\WordLoL;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\DailyWord;
+use App\Models\WordLolAttempt;
 use Carbon\Carbon;
 use App\Services\AchievementService;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cookie;
 
 class WordLoLController extends Controller
 {
@@ -19,38 +22,20 @@ class WordLoLController extends Controller
 
     public function index(Request $request)
     {
-        $session = $request->session();
         $today = Carbon::now('America/Sao_Paulo')->toDateString();
-
         $daily = DailyWord::with('word')->where('date', $today)->first();
+
         if (!$daily) {
             abort(404, "Palavra do dia ainda não definida.");
         }
 
-        $word = strtoupper($daily->word->name);
-        $maxAttempts = $daily->word->max_attempts;
-
-        if ($session->has('wordlol') && $session->get('wordlol.date') === $today) {
-            $state = $session->get('wordlol');
-        } else {
-            $state = [
-                'date' => $today,
-                'word' => $word,
-                'guessed' => [],
-                'wrongLetters' => [],
-                'wrong' => 0,
-                'attempts' => 0,
-                'maxAttempts' => $maxAttempts,
-                'lost' => false,
-                'won' => false,
-                'finished' => false,
-            ];
-            $session->put('wordlol', $state);
-        }
+        $guestId = $this->getOrCreateGuestId($request);
+        $attempt = $this->getAttempt($daily, $guestId);
+        $state = $attempt->state;
 
         $timeRemaining = $this->getTimeRemaining();
 
-        return inertia('WordLoL/Game', [
+        $response = inertia('WordLoL/Game', [
             'displayWord' => $this->getDisplayWord($state),
             'guessed' => $state['guessed'],
             'wrongLetters' => $state['wrongLetters'],
@@ -63,12 +48,26 @@ class WordLoLController extends Controller
             'word' => $state['lost'] || $state['won'] ? $state['word'] : null,
             'timeRemaining' => $timeRemaining
         ]);
+
+        if (!$request->cookie('wordlol_guest_id')) {
+            $response->withCookie(cookie()->forever('wordlol_guest_id', $guestId));
+        }
+
+        return $response;
     }
 
     public function guess(Request $request)
     {
-        $session = $request->session();
-        $state = $session->get('wordlol');
+        $today = Carbon::now('America/Sao_Paulo')->toDateString();
+        $daily = DailyWord::with('word')->where('date', $today)->first();
+
+        if (!$daily) {
+            return response()->json(['error' => 'Palavra do dia não encontrada.'], 404);
+        }
+
+        $guestId = $this->getOrCreateGuestId($request);
+        $attempt = $this->getAttempt($daily, $guestId);
+        $state = $attempt->state;
 
         if ($state['finished']) {
             return response()->json([
@@ -89,9 +88,7 @@ class WordLoLController extends Controller
         $wordInput = strtoupper($request->input('word', ''));
 
         if ($wordInput) {
-            // Tentativa de adivinhar palavra inteira
             $state['attempts']++;
-
             if ($wordInput === $state['word']) {
                 $state['won'] = true;
             } else {
@@ -101,7 +98,6 @@ class WordLoLController extends Controller
                 }
             }
         } elseif ($letter && !in_array($letter, $state['guessed'])) {
-            // Tentativa de letra
             $state['attempts']++;
             $state['guessed'][] = $letter;
 
@@ -124,16 +120,18 @@ class WordLoLController extends Controller
             if ($state['won'] && auth()->check()) {
                 $unlockedBadges = $this->achievementService->incrementStatAndCheck(auth()->user(), 'WordLoL', 'wins');
                 if (!empty($unlockedBadges)) {
-                    $session->flash('new_badges', $unlockedBadges);
+                    $request->session()->flash('new_badges', $unlockedBadges);
                 }
             }
         }
 
-        $session->put('wordlol', $state);
+        $attempt->state = $state;
+        $attempt->finished = $state['finished'];
+        $attempt->save();
 
         $timeRemaining = $this->getTimeRemaining();
 
-        return response()->json([
+        $response = response()->json([
             'displayWord' => $this->getDisplayWord($state),
             'guessed' => $state['guessed'],
             'wrongLetters' => $state['wrongLetters'],
@@ -145,6 +143,74 @@ class WordLoLController extends Controller
             'maxAttempts' => $state['maxAttempts'],
             'word' => $state['lost'] || $state['won'] ? $state['word'] : null,
             'timeRemaining' => $timeRemaining
+        ]);
+
+        if (!$request->cookie('wordlol_guest_id')) {
+            $response->withCookie(cookie()->forever('wordlol_guest_id', $guestId));
+        }
+
+        return $response;
+    }
+
+    private function getOrCreateGuestId(Request $request)
+    {
+        return $request->cookie('wordlol_guest_id') ?? (string) Str::uuid();
+    }
+
+    private function getAttempt(DailyWord $daily, string $guestId)
+    {
+        $userId = auth()->id();
+
+        // 1. Tentar encontrar por usuário
+        if ($userId) {
+            $attempt = WordLolAttempt::where('user_id', $userId)
+                ->where('daily_word_id', $daily->id)
+                ->first();
+
+            if ($attempt) {
+                return $attempt;
+            }
+
+            // 2. Se não encontrou por usuário, tentar migrar do guest_id se existir
+            $guestAttempt = WordLolAttempt::where('guest_id', $guestId)
+                ->where('daily_word_id', $daily->id)
+                ->whereNull('user_id')
+                ->first();
+
+            if ($guestAttempt) {
+                $guestAttempt->user_id = $userId;
+                $guestAttempt->save();
+                return $guestAttempt;
+            }
+        } else {
+            // 3. Tentar encontrar por guest_id
+            $attempt = WordLolAttempt::where('guest_id', $guestId)
+                ->where('daily_word_id', $daily->id)
+                ->whereNull('user_id')
+                ->first();
+
+            if ($attempt) {
+                return $attempt;
+            }
+        }
+
+        // 4. Se não existir, criar novo
+        return WordLolAttempt::create([
+            'user_id' => $userId,
+            'guest_id' => $userId ? null : $guestId,
+            'daily_word_id' => $daily->id,
+            'state' => [
+                'date' => $daily->date->toDateString(),
+                'word' => strtoupper($daily->word->name),
+                'guessed' => [],
+                'wrongLetters' => [],
+                'wrong' => 0,
+                'attempts' => 0,
+                'maxAttempts' => $daily->word->max_attempts,
+                'lost' => false,
+                'won' => false,
+                'finished' => false,
+            ]
         ]);
     }
 
