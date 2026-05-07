@@ -22,6 +22,8 @@ const navLinks = computed(() => {
     return [
         { name: "Início", route: "home", active: route().current("home") },
         { name: "Jogos", route: "games", active: route().current("games") || currentUrl.startsWith("/clickchallenger") || currentUrl.startsWith("/lorequestion") || currentUrl.startsWith("/wordlol") },
+        { name: "Times", route: "teams.index", active: route().current("teams.*") },
+        { name: "Jogadores", route: "players.index", active: route().current("players.*") },
         { name: "Parceiros", route: "partners", active: route().current("partners") },
         { name: "Contato", route: "contact", active: route().current("contact") },
     ];
