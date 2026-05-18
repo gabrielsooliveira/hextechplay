@@ -1,14 +1,14 @@
 <script setup>
 import { Head, Link } from "@inertiajs/vue3";
 import { computed } from "vue";
-
-import CardInfo from "@/js/Components/Cards/CardInfo.vue";
 import CardGame from "@/js/Components/Cards/CardGame.vue";
+import JsonLd from "@/js/Components/Seo/JsonLd.vue";
 import HeroBackground from "@/assets/images/wallpaper.jpg";
 import Ezreal from "@/assets/images/home-image-2.png";
 import Logo from "@/assets/images/icon.png";
 import LolQuestionBackground from "@/assets/images/lorequestion.png";
 import WordLoLBackground from "@/assets/images/wordlol.png";
+import ClickChallengerBackground from "@/assets/images/clickchallenger.png";
 
 const stats = computed(() => [
     {
@@ -49,6 +49,15 @@ const featuredGames = computed(() => [
         title: "WordLoL",
         description: "Adivinhe nomes de locais, feitiços ou campeões de League of Legends com limite de tempo e dicas dinâmicas.",
         image: WordLoLBackground,
+        route: "wordlol.game",
+        players: 1800,
+        rating: 4.6,
+    },
+    {
+        id: 3,
+        title: "Click Challenger",
+        description: "Adivinhe nomes de locais, feitiços ou campeões de League of Legends com limite de tempo e dicas dinâmicas.",
+        image: ClickChallengerBackground,
         route: "wordlol.game",
         players: 1800,
         rating: 4.6,
@@ -110,6 +119,18 @@ const features = computed(() => [
         <link rel="canonical" href="https://hextechplay.com" />
     </Head>
 
+    <JsonLd :schema="{
+        '@type': 'WebSite',
+        'name': 'HextechPlay',
+        'url': 'https://hextechplay.com',
+        'description': 'HextechPlay - Jogue mini games rápidos e divertidos inspirados em League of Legends!',
+        'potentialAction': {
+            '@type': 'SearchAction',
+            'target': 'https://hextechplay.com/search?q={search_term_string}',
+            'query-input': 'required name=search_term_string'
+        }
+    }" />
+
     <section
         class="d-flex align-items-center justify-content-center hero-background-base min-vh-100"
         :style="{ '--hero-bg-url': `url(${HeroBackground})` }"
@@ -119,7 +140,7 @@ const features = computed(() => [
                 :src="Logo"
                 class="img-fluid hover-zoom mb-4"
                 width="280"
-                alt="HextechPlay Logo"
+                alt="Logo oficial da plataforma HextechPlay de minigames do LoL"
             />
 
             <h1 class="display-1 fw-bold mb-4">
@@ -145,14 +166,14 @@ const features = computed(() => [
                 <img
                     :src="Ezreal"
                     class="img-fluid hover-zoom"
-                    alt="Imagem ilustrativa de Ezreal"
+                    alt="Ezreal de League of Legends, explorador e personagem dos minigames HextechPlay"
                     loading="lazy"
                 />
             </div>
             <div class="col-lg-6 order-lg-1">
-                <h3 class="display-5 fw-semibold mb-4">
+                <h2 class="display-5 fw-semibold mb-4">
                     O que é a HextechPlay?
-                </h3>
+                </h2>
                 <p class="text-light opacity-75 lead mb-4">
                     HextechPlay é uma plataforma de mini-games rápida e divertida, inspirada no universo de LoL. Aqui você pode testar seu conhecimento, desafiar seus amigos e se diverte.
                 </p>
@@ -206,6 +227,40 @@ const features = computed(() => [
                     :players="game.players"
                     :rating="game.rating"
                 />
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section for SEO -->
+    <section class="container py-5 mb-5">
+        <div class="row">
+            <div class="col-md-6">
+                <h2 class="display-4 fw-bold mb-3">
+                    Dúvidas Frequentes sobre a HextechPlay
+                </h2>
+                <p class="text-light opacity-75 lead">
+                    Tudo o que você precisa saber sobre nossa plataforma de quizzes e minigames de League of Legends
+                </p>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <h3 class="h4 text-accent fw-bold">Como funcionam os minigames de LoL?</h3>
+                    <p class="text-light opacity-75">
+                        Nossos minigames são rápidos e testam seus conhecimentos sobre o universo de Runeterra. Você pode jogar quizzes sobre a história (Lore), tentar adivinhar nomes no WordLoL, e competir para ver quem tem os reflexos mais rápidos no Click Challenger.
+                    </p>
+                </div>
+                <div class="mb-4">
+                    <h3 class="h4 text-accent fw-bold">É necessário pagar para jogar no HextechPlay?</h3>
+                    <p class="text-light opacity-75">
+                        Não! Todos os nossos minigames e quizzes focados em League of Legends são 100% gratuitos. Basta acessar, escolher o seu jogo favorito e começar a testar seus conhecimentos.
+                    </p>
+                </div>
+                <div class="mb-4">
+                    <h3 class="h4 text-accent fw-bold">A plataforma é atualizada com novos campeões?</h3>
+                    <p class="text-light opacity-75">
+                        Sim, a equipe da HextechPlay trabalha constantemente para incluir novos campeões, histórias e atualizações da Lore oficial de League of Legends em nossos minigames.
+                    </p>
+                </div>
             </div>
         </div>
     </section>

@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 
 <head>
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XD3SJVR73S"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
